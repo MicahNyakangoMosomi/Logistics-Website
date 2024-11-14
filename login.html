@@ -12,45 +12,43 @@
     <link href="assets/vendor/aos/aos.css" rel="stylesheet">
     <title>Login Page</title>
 </head>
-<body>
-    <div class="d-flex justify-content-center align-items-centerr" style="height: 100vh;background-color: rgb(182, 188, 194);" >
-        <main id="login" class="container row w-60 h-50 border-2 border-secondary p-5">
-            <div class="c1 col-4 bg-primary d-flex align-items-center text-white rounded-start">
-                <div class="text-center">
-                    <h3 class="fw-bold">WELCOME BACK</h3>
+<body class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: rgb(182, 188, 194);">
+
+    <main id="login" class="container border-2 border-secondary p-5">
+        <div class="row">
+            <div class="col-lg-4 bg-primary d-flex align-items-center text-white rounded-start">
+                <div class="text-center w-100 p-3">
+                    <h3 class="fw-bold">PAYMENT</h3>
                     <p class="fw-light">To keep connected with us please login with your personal info</p>
                 </div>
-    
             </div>
-    
-            <div class="c2 col-6 bg-white rounded-end">
+
+            <div class="col-lg-8 bg-white rounded-end">
                 <div class="wrapper my-5">
                     <form action="" class="user-input-2 p-5">
-                        <div class="input-box my-4">
-                            <input type="text" placeholder="Username" class="w-100 p-2" required>
+                        <div class="form-group mb-4">
+                            <input type="text" placeholder="Username" class="form-control" required>
                         </div>
-                        <div class="input-box my-4">
-                            <input type="password" placeholder="password" class="w-100 p-2" required>
-                        <div class="remember-forgot d-flex justify-content-between mt-2">
-                            <label input type="checkbox"> Remember me</label>
+                        <div class="form-group mb-4">
+                            <input type="password" placeholder="Password" class="form-control" required>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input"> Remember me
+                            </label>
                             <a href="#">Forgot password?</a>
                         </div>
                         <div class="container mt-3">
-                            <button type="submit" class="btn btn-primary w-100"> <a href="#service" class="text-white">LOG IN</a></button>
+                            <button type="submit" class="btn btn-primary w-100"><span class="text-white">LOG IN</span></button>
                         </div>
-                        <div class="text-center">
+                        <div class="text-center mt-3">
                             <a href="signup.html">Don't have an account</a>
-    
                         </div>  
                     </form>
-    
                 </div>
-    
             </div>
-            
-        </main>
+        </div>
+    </main>
 
-    </div>
-    
 </body>
 </html>

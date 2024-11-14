@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="assets/css/main.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <title>Payment Page</title>
+    <script>
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function showAlert(event) {
+            event.preventDefault();
+            alert("Payment has been done successfully!");
+            // Optionally, you can redirect the user to another page after the alert
+            // window.location.href = 'success.html';
+        }
+
+        window.onload = function() {
+            var amount = getQueryParam('amount');
+            document.getElementById('amount').value = amount || '';
+            document.getElementById('paymentForm').addEventListener('submit', showAlert);
+        }
+    </script>
+</head>
+<body class="d-flex justify-content-center align-items-center" style="height: 100vh; background-color: rgb(182, 188, 194);">
+
+    <main id="login" class="container border-2 border-secondary p-5">
+        <div class="row">
+            <div class="col-lg-4 bg-primary d-flex align-items-center text-white rounded-start">
+                <div class="text-center w-100 p-3">
+                    <h3 class="fw-bold">WELCOME BACK</h3>
+                    <p class="fw-light">We are thrilled to have you here. Thank you for considering us and for placing your trust in Muhidin Logistics. Your satisfaction and trust are paramount to us.</p>
+                </div>
+            </div>
+
+            <div class="col-lg-8 bg-white rounded-end">
+                <div class="wrapper my-5">
+                    <form id="paymentForm" action="process_payment.php" method="post" class="user-input-2 p-5">
+                        <div class="form-group mb-4">
+                            <input type="text" name="mpesa_number" placeholder="M-Pesa Number" class="form-control" required pattern="\d{10}" maxlength="10" title="Please enter a 10-digit number">
+                        </div>
+                        <div class="form-group mb-4">
+                            <input type="text" id="amount" name="amount" placeholder="Amount" class="form-control" readonly required>
+                        </div>
+                        <div class="container mt-3">
+                            <button type="submit" class="btn btn-primary w-100">Proceed</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -940,7 +940,7 @@ span{
 
 .pricing .buy-btn:hover {
   background: var(--color-primary);
-  color: #fff;
+  color: blue;
 }
 
 .pricing .featured {
