@@ -29,64 +29,86 @@
   
   </style>
 
+  <script>
+    window.onload = function() {
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+        if (loggedInUser) {
+            document.getElementById('welcome-message').innerText = `Welcome, ${loggedInUser.userName}!`;
+            document.getElementById('get-started-btn').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'block';
+        }
+    };
+
+    function logoutUser() {
+        localStorage.removeItem('loggedInUser');
+        document.getElementById('welcome-message').innerText = 'Log in to Explore Our Services';
+        document.getElementById('get-started-btn').style.display = 'block';
+        document.getElementById('logout-btn').style.display = 'none';
+    }
+  </script>
+
+
+
   
 </head>
 
 <body>
 
-  <!--  Header  -->
-  <header id="header" class="header d-flex align-items-center fixed-top">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+<!-- Header -->
+<header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
-       
-        <h1>Muhidin<span> Logistics</span> </h1>
-      </a>
-
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="pricing.html">Pricing</a></li>
-        <ul class="nav">
-  <li class="nav-item  Drivers">
-    <a class="nav-link" href="#">
-      <span>Shipping</span> 
-      <i class="bi bi-chevron-down dropdown-indicator"></i>
+    <a href="index.html" class="logo d-flex align-items-center">
+      <h1>Muhidin<span> Logistics</span></h1>
     </a>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Ship quickly &amp; simply</a></li>
-      <li class="dropdown">
-        <a class="dropdown-item" href="#">
-          <span>Shipping tools</span> 
-          <i class="bi bi-chevron-down dropdown-indicator"></i>
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Bus</a></li>
-          <li><a class="dropdown-item" href="#">Bikes</a></li>
-          <li><a class="dropdown-item" href="#">Flight</a></li>
-          <li><a class="dropdown-item" href="#">Cubs</a></li>
-          <li><a class="dropdown-item" href="#">Taxis</a></li>
-        </ul>
-      </li>
-      <li><a class="dropdown-item" href="#">Get rates and transit times</a></li>
-      <li><a class="dropdown-item" href="#">Packaging and shipping supplies</a></li>
-      <li><a class="dropdown-item" href="#">Scheduling and managing pick-ups</a></li>
-    </ul>
-  </li>
-</ul>
- 
-          <li><a href="contact.html">Contact</a></li>
-          <li><a class="get-a-quote" href="get-a-quote.html">Get a Quote</a></li>
-        </ul>
-      </nav><!-- .navbar -->
 
-    </div>
-  </header><!-- End Header -->
-  <!-- End Header -->
+    <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
+    <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
+    
+    <nav id="navbar" class="navbar">
+      <ul>
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="pricing.html">Pricing</a></li>
+        
+        <ul class="nav">
+          <li class="nav-item Drivers">
+            <a class="nav-link" href="#">
+              <span>Shipping</span>
+              <i class="bi bi-chevron-down dropdown-indicator"></i>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="#">Ship quickly &amp; simply</a></li>
+              <li class="dropdown">
+                <a class="dropdown-item" href="#">
+                  <span>Shipping tools</span>
+                  <i class="bi bi-chevron-down dropdown-indicator"></i>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">Bus</a></li>
+                  <li><a class="dropdown-item" href="#">Bikes</a></li>
+                  <li><a class="dropdown-item" href="#">Flight</a></li>
+                  <li><a class="dropdown-item" href="#">Cubs</a></li>
+                  <li><a class="dropdown-item" href="#">Taxis</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="#">Get rates and transit times</a></li>
+              <li><a class="dropdown-item" href="#">Packaging and shipping supplies</a></li>
+              <li><a class="dropdown-item" href="#">Scheduling and managing pick-ups</a></li>
+            </ul>
+          </li>
+        </ul>
+        
+        <li><a href="contact.html">Contact</a></li>
+        <li><a class="get-a-quote" href="get-a-quote.html">Get a Quote</a></li>
+      </ul>
+    </nav><!-- .navbar -->
+
+  </div>
+</header><!-- End Header -->
+<!-- End Header -->
 
   <!--  Hero Section -->
   <section id="hero" class="hero d-flex align-items-center">
@@ -97,10 +119,18 @@
           <p data-aos="fade-up" data-aos-delay="100">Muhidin Logis is a unique and modern site built for any business operating in transportation and logistics, including cargo, shipping, home movers, logistics warehouse, storage, trucking, and packaging services. It comes with a wide range of features and layouts that will fit any transportation industry size.</p>
 
           <div class="d-flex justify-content-between bg-white border border-secondary rounded p-2">
-            <p class="fw-bold text-black pt-4">Log in to Explore Our Services</p>
-            <button class="btn btn-primary"> <a href="login.html" style="color: black;">Get started</a></button>
-            
-          </div>
+            <p id="welcome-message" class="fw-bold text-black pt-4" style="font-size: 1.5rem;color: #000;font-weight: bold; padding-top: 1rem; text-align: center;">
+                Log in to Explore Our Services
+            </p>
+            <button id="get-started-btn" class="btn btn-primary">
+                <a href="signin.html" style="color: black;">Get started</a>
+            </button>
+            <button id="logout-btn" class="btn btn-primary" style="display: none;" onclick="logoutUser()">
+                Log Out
+            </button>
+        </div>
+        
+        
 
           <div class="row gy-4" data-aos="fade-up" data-aos-delay="400">
 
