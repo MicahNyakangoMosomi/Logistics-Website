@@ -36,6 +36,22 @@
   * Author: BootstrapMade.com
   * License: https://bootstrapmade.com/license/
   ======================================================== -->
+
+  <!-- Add this script inside the body or as an external JS file -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector(".php-email-form"); // Select the form
+    const button = form.querySelector("button"); // Select the button inside the form
+
+    button.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent default form submission
+      alert("Thank you for requesting a quote! Your information has been received.");
+      form.reset(); // Reset all inputs in the form
+    });
+  });
+</script>
+
+  
 </head>
 
 <body>
@@ -148,7 +164,7 @@
                   <div class="error-message"></div>
                   <div class="sent-message">Your quote request has been sent successfully. Thank you!</div>
 
-                  <button type="submit">Get a quote</button>
+                  <button  class="btn btn-primary">Get a quote</button>
                 </div>
 
               </div>
