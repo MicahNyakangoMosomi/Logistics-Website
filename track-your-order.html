@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Logis</title>
+  <title>[Template] Sample Inner Page</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -27,9 +27,16 @@
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
   <link href="assets/css/main.css" rel="stylesheet">
 
- 
+  <!-- =======================================================
+  * Template Name: Logis
+  * Updated: Aug 30 2023 with Bootstrap v5.3.1
+  * Template URL: https://bootstrapmade.com/logis-bootstrap-logistics-website-template/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
 
 <body>
@@ -38,8 +45,9 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="#index.html" class="logo d-flex align-items-center">
-       
+      <a href="index.html" class="logo d-flex align-items-center">
+        <!-- Uncomment the line below if you also wish to use an image logo -->
+        <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1>Logis</h1>
       </a>
 
@@ -47,11 +55,11 @@
       <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html" class="active">Home</a></li>
           <li><a href="about.html">About</a></li>
           <li><a href="services.html">Services</a></li>
           <li><a href="pricing.html">Pricing</a></li>
-          <li><a href="contact.html" class="active">Contact</a></li>
+          <li><a href="contact.html">Contact</a></li>
           <li><a class="get-a-quote" href="get-a-quote.html">Get a Quote</a></li>
         </ul>
       </nav><!-- .navbar -->
@@ -68,12 +76,8 @@
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
-              <h2>Contact</h2>
-              <p class="text-secondary">At our company, we are dedicated to providing exceptional logistics services and personalized support to every client we serve. Our team of experienced professionals is here to help you navigate the complexities of your supply chain and find tailored solutions to meet your unique business needs.
-                If you have any questions, require a customized logistics proposal,
-                 or need assistance with any aspect of our services, please don't hesitate to reach out. We welcome the opportunity to discuss your objectives,
-                  understand your challenges,
-                 and collaborate on strategies to optimize your operations and drive success.</p>
+              <h2>Track Your Order</h2>
+              <p>Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo odio sint voluptas consequatur ut a odio voluptatem. Sit dolorum debitis veritatis natus dolores. Quasi ratione sint. Sit quaerat ipsum dolorem.</p>
             </div>
           </div>
         </div>
@@ -82,87 +86,61 @@
         <div class="container">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li>Contact</li>
+            <li>Sample Inner Page</li>
           </ol>
         </div>
       </nav>
     </div><!-- End Breadcrumbs -->
 
-    <!-- ======= Contact Section ======= -->
-    <section id="contact" class="contact">
+    <section class="sample-page">
       <div class="container" data-aos="fade-up">
-
-        <section class="sample-page">
-          <div class="container" data-aos="fade-up">
-            <div class="ratio ratio-16x9">
-              <iframe 
-                class="track-map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7922033966543!2d36.78581708489966!3d-1.2994776322414492!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f109993a4db3b%3A0x935a305c457e3dd0!2sNgong%20Rd%2C%20Nairobi!5e0!3m2!1sen!2ske!4v1740337331545!5m2!1sen!2ske"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-              </iframe>
+        
+        <!-- User Information Form -->
+        <div id="user-info-form">
+          <h3>Enter Your Details</h3>
+          <form id="user-form">
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name:</label>
+              <input type="text" id="name" class="form-control" placeholder="Enter your full name" required>
             </div>
-          </div>
-        </section>
-
-        <div class="row gy-4 mt-4">
-
-          <div class="col-lg-4">
-
-            <div class="info-item d-flex">
-              <i class="bi bi-geo-alt flex-shrink-0"></i>
-              <div>
-                <h4>Location:</h4>
-                <p>Ngong Road, Kenya, Nairobi</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex">
-              <i class="bi bi-envelope flex-shrink-0"></i>
-              <div>
-                <h4>Email:</h4>
-                <p>muhidinosman@gnail.com</p>
-              </div>
-            </div><!-- End Info Item -->
-
-            <div class="info-item d-flex">
-              <i class="bi bi-phone flex-shrink-0"></i>
-              <div>
-                <h4>Call:</h4>
-                <p>+254 79 2679 384</p>
-              </div>
-            </div><!-- End Info Item -->
-
-          </div>
-
-          <div class="col-lg-8">
-            <form action="forms/send_email.php" method="POST" role="form" class="php-email-form"> 
-              <div class="row"> 
-                <div class="col-md-6 form-group"> 
-                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required> 
-                </div> 
-                <div class="col-md-6 form-group mt-3 mt-md-0"> 
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required> 
-                </div> </div> <div class="form-group mt-3"> 
-                  <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required> 
-                </div> 
-                <div class="form-group mt-3"> 
-                  <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea> 
-                </div> 
-                <div class="my-3"> 
-                  <div class="loading">Loading</div> 
-                <div class="error-message"></div> 
-                <div class="sent-message">Your message has been sent. Thank you!</div> 
-              </div> 
-              <div class="text-center"><button class="btn btn-primary">Send Message</button></div> </form>
-          </div><!-- End Contact Form -->
-
+            <div class="mb-3">
+              <label for="contact" class="form-label">Contact Info:</label>
+              <input type="text" id="contact" class="form-control" placeholder="Enter phone or email" required>
+            </div>
+            <div class="mb-3">
+              <label for="weight" class="form-label">Load Weight (Kg):</label>
+              <input type="number" id="weight" class="form-control" placeholder="Enter weight in kg" required>
+            </div>
+            <div class="mb-3">
+              <label for="warehouse" class="form-label">Choose Warehouse:</label>
+              <select id="warehouse" class="form-select">
+                <option value="-1.299477,36.785817" selected>Ngong Road</option>
+                <option value="-1.2833,36.8219">CBD</option>
+                <option value="-1.3227,36.8729">Karen</option>
+                <option value="-1.2514,36.6632">Ruiru</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="destination" class="form-label">Enter Destination:</label>
+              <input type="text" id="destination" class="form-control" placeholder="e.g. Westlands, Nairobi" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate Tracking ID</button>
+          </form>
         </div>
-
+    
+        <!-- Enter Tracking ID Form -->
+        <div id="tracking-form" style="display: none;">
+          <h3>Enter Your Tracking ID</h3>
+          <p>Please copy your tracking ID and use it to check the status of your shipment.</p>
+          <p><strong>Your Tracking ID: <span id="tracking-id"></span></strong></p>
+          <input type="text" id="tracking-input" class="form-control" placeholder="Enter Tracking ID" required>
+          <button id="track-btn" class="btn btn-success mt-2">Track Shipment</button>
+        </div>
+    
+        <!-- MapLibre Container -->
+        <div id="map-container" style="width: 100%; height: 500px; display: none;"></div>
       </div>
-    </section><!-- End Contact Section -->
-
+    </section>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -250,6 +228,79 @@
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
+<!-- Include MapLibre and Nominatim API for Geocoding -->
+
+<script src="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.js"></script>
+<script>
+  let map;
+  let generatedTrackingId;
+  let storedWarehouse, storedDestination, storedWeight;
+
+  function initMap() {
+    console.log("Initializing Map...");
+    map = new maplibregl.Map({
+      container: 'map-container',
+      style: 'https://demotiles.maplibre.org/style.json',
+      center: [36.785817, -1.299477],
+      zoom: 13
+    });
+  }
+
+  document.getElementById("user-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+    generatedTrackingId = "TRK" + Math.floor(100000 + Math.random() * 900000);
+    storedWarehouse = document.getElementById("warehouse").value.split(",");
+    storedDestination = document.getElementById("destination").value;
+    storedWeight = document.getElementById("weight").value;
+    
+    document.getElementById("tracking-id").innerText = generatedTrackingId;
+    document.getElementById("user-info-form").style.display = "none";
+    document.getElementById("tracking-form").style.display = "block";
+  });
+
+  document.getElementById("track-btn").addEventListener("click", async function() {
+    let enteredTrackingId = document.getElementById("tracking-input").value;
+    if (enteredTrackingId === generatedTrackingId) {
+      document.getElementById("tracking-form").style.display = "none";
+      document.getElementById("map-container").style.display = "block";
+      
+      initMap();
+      
+      new maplibregl.Marker().setLngLat([parseFloat(storedWarehouse[1]), parseFloat(storedWarehouse[0])]).addTo(map);
+      
+      const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(storedDestination)}`);
+      const geoData = await geoResponse.json();
+      
+      if (geoData.length > 0) {
+        let destCoords = [parseFloat(geoData[0].lon), parseFloat(geoData[0].lat)];
+        new maplibregl.Marker().setLngLat(destCoords).addTo(map);
+        
+        map.addLayer({
+          "id": "route",
+          "type": "line",
+          "source": {
+            "type": "geojson",
+            "data": {
+              "type": "Feature",
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [[parseFloat(storedWarehouse[1]), parseFloat(storedWarehouse[0])], destCoords]
+              }
+            }
+          },
+          "layout": { "line-join": "round", "line-cap": "round" },
+          "paint": { "line-color": "#007bff", "line-width": 4 }
+        });
+      } else {
+        alert("Destination not found. Please enter a valid place name.");
+      }
+    } else {
+      alert("Invalid Tracking ID. Please enter the correct one.");
+    }
+  });
+</script>
+
 
 </body>
 
