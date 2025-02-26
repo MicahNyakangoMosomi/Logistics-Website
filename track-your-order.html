@@ -231,6 +231,7 @@
 
 <!-- Include MapLibre and Nominatim API for Geocoding -->
 
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
 <script src="https://unpkg.com/maplibre-gl@2.1.9/dist/maplibre-gl.js"></script>
 <script>
   let map;
@@ -241,10 +242,29 @@
     console.log("Initializing Map...");
     map = new maplibregl.Map({
       container: 'map-container',
-      style: 'https://demotiles.maplibre.org/style.json',
+      style: {
+        version: 8,
+        sources: {
+          osm: {
+            type: 'raster',
+            tiles: ["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256
+          }
+        },
+        layers: [
+          {
+            id: "osm-layer",
+            type: "raster",
+            source: "osm",
+            minzoom: 0,
+            maxzoom: 19
+          }
+        ]
+      },
       center: [36.785817, -1.299477],
       zoom: 13
     });
+    
   }
 
   document.getElementById("user-form").addEventListener("submit", function(event) {
@@ -300,8 +320,3 @@
     }
   });
 </script>
-
-
-</body>
-
-</html>
