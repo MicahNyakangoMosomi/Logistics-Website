@@ -5,8 +5,8 @@ if(isset($_POST['submit'])){
   date_default_timezone_set('Africa/Nairobi');
 
   # access token
-  $consumerKey = 'zMiELmMerTTGJ5g85IDYXXvWr7yQI12TseXLf45GOYg6sjXW'; //Fill with your app Consumer Key
-  $consumerSecret = 'PUiYf3tjg9wnNRcSC3JAw8K2qojtWA3EyFp44pW6AjPrS23zXLsYbSxWgAQMffId'; // Fill with your app Secret
+  $consumerKey = 'eDTxlPP36FQQBJPW3ntbBb571HZT2EG7EshlJ3gY2mEUzo7G'; //Fill with your app Consumer Key
+  $consumerSecret = 'gGBZbc1RVq3AA5a4zYd69IrbYfGWMNO6N0pZGKVSJZbXtlhdvRw9cNJ3tCnGhld3'; // Fill with your app Secret
 
   # define the variales
   # provide the following details, this part is found on your test credentials on the developer account
@@ -23,10 +23,10 @@ if(isset($_POST['submit'])){
     for developer/test accounts, this money will be reversed automatically by midnight.
   */
   
-   $PartyA = $_POST['phone']; // This is your phone number, 
+  $PartyA = $_POST['phone']; // This is your phone number, 
   $AccountReference = '2255';
   $TransactionDesc = 'Test Payment';
-  $Amount = $_POST['amount'];;
+  $Amount = $_POST['amount'];
  
   # Get the timestamp, format YYYYmmddhms -> 20181004151020
   $Timestamp = date('YmdHis');    
@@ -42,7 +42,7 @@ if(isset($_POST['submit'])){
   $initiate_url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
   # callback url
-  $CallBackURL = 'https://github.com/punkjoker/daraja-API.git';  
+  $CallBackURL = 'https://secret-badlands-80365-33b636054694.herokuapp.com/callback_url.php';  
 
   $curl = curl_init($access_token_url);
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);

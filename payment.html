@@ -44,15 +44,15 @@
 
             <div class="col-lg-8 bg-white rounded-end">
                 <div class="wrapper my-5">
-                    <form id="paymentForm" action="process_payment.php" method="post" class="user-input-2 p-5">
+                    <form id="paymentForm" action="./stk_initiate.php" method="POST" class="user-input-2 p-5">
                         <div class="form-group mb-4">
-                            <input type="text" name="mpesa_number" placeholder="M-Pesa Number" class="form-control" required pattern="\d{10}" maxlength="10" title="Please enter a 10-digit number">
+                            <input type="text" name="phone" placeholder="M-Pesa Number" class="form-control" maxlength="12" title="Please enter Mpesa number" required>
                         </div>
                         <div class="form-group mb-4">
                             <input type="text" id="amount" name="amount" placeholder="Amount" class="form-control" readonly required>
                         </div>
                         <div class="container mt-3">
-                            <button type="submit" class="btn btn-primary w-100">Proceed</button>
+                            <button type="submit" class="btn btn-success w-100">Proceed</button>
                         </div>
                     </form>
                 </div>
