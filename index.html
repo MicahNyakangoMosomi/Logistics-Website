@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Muhidin Logistics </title>
+  <title>Mashirikiano Sacco </title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -23,44 +23,16 @@
 
   <!--  Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-  <style>
- 
-  
-  </style>
-
-  <script>
-    window.onload = function() {
-        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-
-        if (loggedInUser) {
-            document.getElementById('welcome-message').innerText = `Welcome, ${loggedInUser.userName}!`;
-            document.getElementById('get-started-btn').style.display = 'none';
-            document.getElementById('logout-btn').style.display = 'block';
-        }
-    };
-
-    function logoutUser() {
-        localStorage.removeItem('loggedInUser');
-        document.getElementById('welcome-message').innerText = 'Log in to Explore Our Services';
-        document.getElementById('get-started-btn').style.display = 'block';
-        document.getElementById('logout-btn').style.display = 'none';
-    }
-  </script>
-
-
-
-  
 </head>
 
 <body>
 
 <!-- Header -->
-<header id="header" class="header d-flex align-items-center fixed-top">
+<header id="header" class="header d-flex align-items-center fixed-top ">
   <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-    <a href="index.html" class="logo d-flex align-items-center">
-      <h1>Muhidin<span> Logistics</span></h1>
+    <a href="index.html" class="logo d-flex align-items-center ">
+      <img src="./assets/img/logo.png" alt="">
     </a>
 
     <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
@@ -79,25 +51,7 @@
               <span>Shipping</span>
               <i class="bi bi-chevron-down dropdown-indicator"></i>
             </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Ship quickly &amp; simply</a></li>
-              <li class="dropdown">
-                <a class="dropdown-item" href="#">
-                  <span>Shipping tools</span>
-                  <i class="bi bi-chevron-down dropdown-indicator"></i>
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Bus</a></li>
-                  <li><a class="dropdown-item" href="#">Bikes</a></li>
-                  <li><a class="dropdown-item" href="#">Flight</a></li>
-                  <li><a class="dropdown-item" href="#">Cubs</a></li>
-                  <li><a class="dropdown-item" href="#">Taxis</a></li>
-                </ul>
-              </li>
-              <li><a class="dropdown-item" href="#">Get rates and transit times</a></li>
-              <li><a class="dropdown-item" href="#">Packaging and shipping supplies</a></li>
-              <li><a class="dropdown-item" href="#">Scheduling and managing pick-ups</a></li>
-            </ul>
+            
           </li>
         </ul>
         

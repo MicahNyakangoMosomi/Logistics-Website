@@ -9,7 +9,17 @@
   --color-default:#130d0a;
   --color-primary:#310df;
   --color-secondary:#0e1d34;
+  --color-orange: rgb(221, 93, 2);
+  --color-green: rgb(60, 141, 21);
+  --color-blue: rgb(1, 79, 153);
 }
+
+/* 
+
+build the above predefined colors into custom colors  
+
+
+*/
 
 
 :root {
@@ -276,6 +286,7 @@ span{
   transition: all 0.5s;
   z-index: 997;
   padding: 30px 0;
+  background-color: var(--color-green);
 }
 
 .header.sticked {
