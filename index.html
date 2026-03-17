@@ -21,6 +21,11 @@
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
 
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
   <!--  Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 </head>
@@ -33,6 +38,7 @@
 
     <a href="index.html" class="logo d-flex align-items-center ">
       <img src="./assets/img/logo.png" alt="">
+      <h5>Mashirikiano Sacco</h5>
     </a>
 
     <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
@@ -56,11 +62,7 @@
         </ul>
         
         <li><a href="contact.html">Contact</a></li>
-        <li><a class="get-a-quote" href="get-a-quote.html">Get a Quote</a></li>
-<<<<<<< HEAD
-=======
-        <li><a class="get-a-quote" href="track-your-order.html">Track Your Order</a></li>
->>>>>>> 9b92e8e (map)
+        <li><a class="get-a-quote" href="get-a-quote.html">Download</a></li>
       </ul>
     </nav><!-- .navbar -->
 
@@ -70,65 +72,44 @@
 
   <!--  Hero Section -->
   <section id="hero" class="hero d-flex align-items-center">
-    <div class="container">
-      <div class="row gy-4 d-flex justify-content-between">
-        <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-          <h2 data-aos="fade-up">Your real quick Delivery Partner</h2>
-          <p data-aos="fade-up" data-aos-delay="100">Muhidin Logis is a unique and modern site built for any business operating in transportation and logistics, including cargo, shipping, home movers, logistics warehouse, storage, trucking, and packaging services. It comes with a wide range of features and layouts that will fit any transportation industry size.</p>
-
-          <div class="d-flex justify-content-between bg-white border border-secondary rounded p-2">
-            <p id="welcome-message" class="fw-bold text-black pt-4" style="font-size: 1.5rem;color: #000;font-weight: bold; padding-top: 1rem; text-align: center;">
-                Log in to Explore Our Services
-            </p>
-            <button id="get-started-btn" class="btn btn-primary">
-                <a href="signin.html" style="color: black;">Get started</a>
-            </button>
-            <button id="logout-btn" class="btn btn-primary" style="display: none;" onclick="logoutUser()">
-                Log Out
-            </button>
-        </div>
-        
-        
-
-          <div class="row gy-4" data-aos="fade-up" data-aos-delay="400">
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="232" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Clients</p>
-              </div>
-            </div><!-- End Stats Item -->
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Projects</p>
-              </div>
-            </div>
-            <!-- End Stats Item -->
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Support</p>
-              </div>
-            </div><!-- End Stats Item -->
-
-            <div class="col-lg-3 col-6">
-              <div class="stats-item text-center w-100 h-100">
-                <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1" class="purecounter"></span>
-                <p>Workers</p>
-              </div>
-            </div><!-- End Stats Item -->
-
+    <div id="carouselExampleCaptions" class="carousel carousel-dark carousel-fade slide" data-bs-ride="carousel" data-bs-touch="false">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
+          aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="4000">
+          <img src="./assets/img/group_pic.jpeg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="orange">Giving Youth, men and Women equal Opportunity to Succeed</h5>
+            <p class=""></p>
           </div>
         </div>
-
-        <div class="col-lg-5 order-1 order-lg-2 hero-img" data-aos="zoom-out">
-          <img src="assets/img/hero-img.svg" class="img-fluid mb-3 mb-lg-0" alt="">
+        <div class="carousel-item" data-bs-interval="4000">
+          <img src="./assets/img/meeting_pic.jpeg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="orange">Your Future, Our Concern</h5>
+            <p></p>
+          </div>
         </div>
-
+        <div class="carousel-item" data-bs-interval="4000">
+          <img src="./assets/img/meeting_pic2.jpeg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+            <h5 class="orange">Investing and creating impact through innovation</h5>
+            <p></p>
+          </div>
+        </div>
       </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
     </div>
   </section>
   <!-- End Hero Section -->
@@ -145,31 +126,32 @@
         <div class="row gy-4">
 
           <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up">
-            <div class="icon flex-shrink-0"><i class="fa-solid fa-cart-flatbed"></i></div>
+            
             <div>
-              <h4 class="title">International delivery services</h4>
-              <p class="description">Whether you’re sending critical documents, packages or freight internationally, we are here to serve your worldwide shipping needs. Choose from a variety of shipping services and find the best option for your international shipments.</p>
-              <a href="International-service.html" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+              <h4 class="title orange">Join us</h4>
+              <p class="description">Become Part of Our trusted Insititution built on serice and growth.</p>
+              <a href="International-service.html" class="readmore stretched-link"><span class="green">Learn More</span><i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
    <!-- End Service Item -->
 
           <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
-            <div class="icon flex-shrink-0"><i class="fa-solid fa-truck"></i></div>
+            
             <div>
-              <h4 class="title">Locally delivery dervices</h4>
-              <p class="description">Here, we deliver within the county, that is so fast and reliable. Suffient means of transport to move around</p>
-              <a href="local-service.html" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+              <h4 class="title orange">Borrow From Us</h4>
+              <p class="description">Access Flexible loan options tailored to your needs and goals.</p>
+              <a href="local-service.html" class="readmore stretched-link"><span class="green">Learn More</span><i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
           <!-- End Service Item -->
 
           <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
-            <div class="icon flex-shrink-0"><i class="fa-solid fa-truck-ramp-box"></i></div>
+            
             <div>
-              <h4 class="title">Metro politan delivery</h4>
-              <p class="description">Deliveries within the city,basically with the city premises</p>
-              <a href="metropolitan-service.html" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+              <h4 class="title orange">Invest & Save With Us</h4>
+              <p class="description">Secure your future with high- return investment and savings plan
+              </p>
+              <a href="metropolitan-service.html" class="readmore stretched-link"><span class="green">Learn More</span><i class="bi bi-arrow-right"></i></a>
             </div>
           </div>
           <!-- End Service Item -->
@@ -190,36 +172,41 @@
             <a href="https://www.youtube.com/watch?v=MMyZ9Pu01RI" class="glightbox play-btn"></a>
           </div>
           <div class="col-lg-6 content order-last  order-lg-first">
-            <h3>About Us</h3>
-            <p>
+            <h3 class="orange">About Mashirikiano SACCO</h3>
+            <p class="">
            logis logistics is a Cargo and freight agents that take orders from customers and arrange transportation of the freight to the loading platform. We prepare all necessary documents, such as insurance forms and descriptions of the cargo: amount, type, weight, and dimensions.
             </p>
             <ul>
               <li data-aos="fade-up" data-aos-delay="100">
                 <i class="bi bi-diagram-3"></i>
                 <div>
-                  <h5>Fragile goods</h5>
-                  <p>Some example of fragile goods can be and are not restricted to: glass items, laboratory materials, musical instruments, technological accessories, marble, tiles, porcelains, optical instruments, and valuable collectibles. Fragile goods require special storage and solid packaging due to their fragile nature.</p>
+                  <h5 class="" >OUR VISION</h5>
+                  <p>To be the most trusted SACCO in Kenya and the East African region, known for excellence in service delivery, innovation,
+                  and member empowerment..</p>
                 </div>
               </li>
               <li data-aos="fade-up" data-aos-delay="200">
                 <i class="bi bi-fullscreen-exit"></i>
                 <div>
-                  <h5>None fragile</h5>
-                  <p>Medium (3.0 ft2) boxes, aka 3-cubes, are meant to hold non-fragile items: clothes, pots and pans, toys and games, a tray of silverware, the contents of a desk drawer, a mantelpiece's worth of dusty knick-knacks and small picture frames.</p>
+                  <h5>OUR PURPOSE</h5>
+                  <p>We empower our members to live with dignity and accomplishment throughout their lives. Empowerment is about members
+                  experiencing more joy of saving, having peace of mind because they are confident to face financial uncertainties; and
+                  satisfaction and fulfilment because they are part of a SACCO that cares and provides them with opportunities for
+                  advancement and personal growth.</p>
                 </div>
               </li>
               <li data-aos="fade-up" data-aos-delay="300">
                 <i class="bi bi-broadcast"></i>
                 <div>
-                  <h5>Internet of things </h5>
-                  <p>Smart appliances.
-                    Connected security systems.
-                    Smart agriculture equipment.
-                    Connected retail.
-                    Connected healthcare monitors.
-                    Connected manufacturing equipment.
-                    Connected cities.</p>
+                  <h5>OUR CORE VALUES </h5>
+                  <p><span class="green">Accountability & Empowerment:</span> We hold people accountable for performance and We give our people the legitimate right to
+                  make judgement, form conclusions, reach decisions, and then act.
+                  
+                  <span class="green">Service & Empathy:</span> We are obsessed with serving our members and We step into the shoes of our members to understand
+                  their feelings and perspectives, and use that understanding to guide our actions.
+                  
+                </p>
+                
                 </div>
               </li>
             </ul>
@@ -235,7 +222,7 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">
-          <span>Our Services</span>
+          <span>Services</span>
           <h2>Our Services</h2>
 
         </div>
@@ -247,8 +234,12 @@
               <div class="card-img">
                 <img src="assets/img/storage-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Storage</a></h3>
-              <p>The most common warehouse storage systems include pallet racks, multi-tier racks, static shelving, mobile shelving, and mezzanine flooring. Below you'll find a definition for each system, as well as specific use cases that work best for these techniques</p>
+              <h3><a href="#service-details.html" class="stretched-link">Membership Deposits</a></h3>
+              <p>Member deposits are a form of savings/Investment:
+              Used to borrow loan x3 or x4
+              Used to gurantee loans for other members
+              Incase of death, the Sink fund (insurance) scheme doubles the deposits of the deceased member and pays it to the next of
+              kin</p>
             </div>
           </div><!-- End Card Item -->
 
@@ -257,11 +248,11 @@
               <div class="card-img">
                 <img src="assets/img/logistics-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Logistics</a></h3>
-              <p>
-                ∙ Choose area
-               Good Logistics
-               Good Logistics has been operating in the international transportation industry market since 2014. We work with any kind of cargo, facilitating shipments of goods via air, sea, road and rail transport to more than 200 countries around the world.</p>
+              <h3><a href="#service-details.html" class="stretched-link">Karibu Loan</a></h3>
+              <p>Looking to establish yourself quickly and begin your journey toward financial freedom after joining our SACCO? The
+              Karibu Loan is your ideal solution. True to its name ("Karibu" meaning "welcome"), this product is specifically designed
+              to help new members access development capital - even with limited savings - without waiting through the traditional
+              6-month period. With the Karibu Loan, you can immediately start turning your aspirations into reality.</p>
             </div>
           </div>
           <!-- End Card Item -->
@@ -271,10 +262,10 @@
               <div class="card-img">
                 <img src="assets/img/cargo-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Cargo</a></h3>
+              <h3><a href="#service-details.html" class="stretched-link">Development Loan</a></h3>
               <p>
-                Cargo Logistics | Managing Cargo & Logistics | Trans Global
-                Cargo logistics apply to the process of handling your cargo, inspecting it, and following it along on its journey from point A to its final destination. Using organized cargo and logistics protocols allow your carrier to ensure safe transportation for your shipment.</p>
+                Looking to fund an important investment or purchase property? Our Development Loan offers a cost-effective, multipurpose
+                financing solution designed to help members improve or fully finance their investments at competitive, affordable rates.</p>
             </div>
           </div>
           <!-- End Card Item -->
@@ -284,8 +275,10 @@
               <div class="card-img">
                 <img src="assets/img/trucking-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Trucking</a></h3>
-              <p>A business trucking service is a carrier or provider that allows someone to transport goods from point A to point B. This is usually done by trucking companies that specialize in hauling services, and others are focusing on small scale delivery logistics of small and medium businesses.</p>
+              <h3><a href="#service-details.html" class="stretched-link">Emergency Loan</a></h3>
+              <p>Financial emergencies don't have to be stressful. Our Emergency Loan provides members with quick and convenient access
+              to funds when unexpected needs arise. We prioritize rapid disbursement, understanding that urgent situations demand
+              immediate solutions. Experience the peace of mind that comes with knowing financial support is just moments away.</p>
             </div>
           </div>
           <!-- End Card Item -->
@@ -295,8 +288,10 @@
               <div class="card-img">
                 <img src="assets/img/packaging-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Packaging</a></h3>
-              <p>Packaging is the wrapping material around a consumer item that serves to contain, identify, describe, protect, display, promote and otherwise make the product marketable and keep it clean</p>
+              <h3><a href="#service-details.html" class="stretched-link">Salary In Advance</a></h3>
+              <p>When urgent financial needs arise, our Salary-In-Advance provides a quick solution for members whose salaries are
+              processed through FOSA. This short-term facility gives you access to funds when you need them most, with convenient
+              repayment from your next salary</p>
             </div>
           </div>
           <!-- End Card Item -->
@@ -306,8 +301,11 @@
               <div class="card-img">
                 <img src="assets/img/warehousing-service.jpg" alt="" class="img-fluid">
               </div>
-              <h3><a href="#service-details.html" class="stretched-link">Warehousing</a></h3>
-              <p>Storage and warehousing, order processing, pick and pack, product distribution, returns and exchanges, call center, invoicing, and order administration are some of the most basic services provided, depending on the customer.</p>
+              <h3><a href="#service-details.html" class="stretched-link">Junior Account</a></h3>
+              <p>"Children see in their parents their past, parents see in their children their future..."
+              
+              Our Toto Junior Account nurtures financial responsibility from an early age while helping parents invest in their
+              children's future.</p>
             </div>
           </div>
           <!-- End Card Item -->
@@ -318,25 +316,15 @@
     </section>
     <!-- End Services Section -->
 
-    <!--  Call To Action Section -->
-    <section id="call-to-action" class="call-to-action">
-      <div class="container" data-aos="zoom-out">
-
-        <div class="row justify-content-center">
-          <div class="col-lg-8 text-center">
-            <h3>Call To Action</h3>
-            <p>A Call to Action, also known as a CTA, is a clear and direct statement used within the advertising creative to direct visitors to the related content or form etc. A Call to Action is used as a sort of marketing strategy to give potential customers clear instruction on what they need to do next after visiting a website.
-
-              For example, a Specialty Food Website is advertising a product, say flavored salt. Within the Advertising Creative the Call to Action could be either Buy Now or Add to Cart..</p>
-            <a class="cta-btn" href="#">Call To Action</a>
-          </div>
-        </div>
-
-      </div>
-    </section>
+    
 
     <!--  Features Section -->
     <section id="features" class="features">
+      <div class="section-header">
+        <span>Our Achievements</span>
+        <h2>Our Achievements</h2>
+      
+      </div>
       <div class="container">
 
         <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
@@ -345,15 +333,20 @@
             <img src="assets/img/features-1.jpg" class="img-fluid" alt="">
           </div>
           <div class="col-md-7">
-            <h3>Suprise gifts.</h3>
+            <h3>Recognized for Excellence in the Cooperative Movement</h3>
             <p class="fst-italic">
-              Once the prospect makes their selection, the gift is shipped directly to the address they provide—or, if they don't want anything, they can donate the monetary value of the gift to charity. The process is the same for corporate clients looking to give employee or customer gifts.
+              Mashirikiano SACCO has a longstanding history of excellence, empowering members through innovative financial solutions
+              and a commitment to community development.
+              
+              With Years of experience, we have developed a process that ensures high productivity and profitability for
+              our members. Our expertise spans various financial services, tailored to meet the evolving needs of our diverse
+              membership.
             </p>
-            <ul>
+            <!-- <ul>
               <li><i class="bi bi-check"></i> Embrace the sentimental.</li>
               <li><i class="bi bi-check"></i> Think beyond the moment of exchange.</li>
               <li><i class="bi bi-check"></i> Make things easier on yourself.</li>
-            </ul>
+            </ul> -->
           </div>
         </div>
         <!-- Features Item -->
@@ -565,6 +558,7 @@
                 </h3>
                 <div id="faq-content-3" class="accordion-collapse collapse" data-bs-parent="#faqlist">
                   <div class="accordion-body">
+                    
                     Beyond all the service details and industry experience, you also want a supplier who does business in a way that aligns with your own company's culture. This helps to minimize friction as you build the relationship, as well as giving you a deeper insight into what values the company holds.
                   </div>
                 </div>
