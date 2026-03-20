@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="0 0 640 640" role="img" aria-label="Default profile image">
+  <rect width="640" height="640" fill="#e9edf5"/>
+  <circle cx="320" cy="240" r="110" fill="#b7c3d6"/>
+  <path d="M120 560c20-105 105-170 200-170s180 65 200 170" fill="#b7c3d6"/>
+  <text x="320" y="605" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#6b7c97">Replace Image</text>
+</svg>
