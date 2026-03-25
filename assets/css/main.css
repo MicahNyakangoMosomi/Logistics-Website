@@ -318,6 +318,14 @@ span {
   font-family: var(--font-primary);
 }
 
+.header .logo h5 {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-primary);
+}
+
 @media (min-width: 1280px) {
   .navbar {
     padding: 0;
@@ -340,13 +348,30 @@ span {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 0 10px 30px;
+    padding: 10px 14px;
+    margin: 0 4px;
+    border-radius: 999px;
+    position: relative;
     font-family: var(--font-primary);
     font-size: 16px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.6);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.82);
     white-space: nowrap;
-    transition: 0.3s;
+    transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .navbar a::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 4px;
+    height: 2px;
+    border-radius: 2px;
+    background: #fff;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
   }
 
   .navbar a i,
@@ -361,21 +386,41 @@ span {
   .navbar .active:focus,
   .navbar li:hover>a {
     color: #fff;
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+  }
+
+  .navbar a:hover::after,
+  .navbar .active::after,
+  .navbar li:hover>a::after {
+    transform: scaleX(1);
   }
 
   .navbar .get-a-quote,
   .navbar .get-a-quote:focus {
     background: var(--color-primary);
     padding: 8px 20px;
-    margin-left: 30px;
-    border-radius: 4px;
+    margin-left: 20px;
+    border-radius: 999px;
     color: #fff;
+    box-shadow: 0 8px 22px rgba(49, 13, 255, 0.28);
+  }
+
+  .navbar .get-a-quote::after {
+    display: none;
   }
 
   .navbar .get-a-quote:hover,
   .navbar .get-a-quote:focus:hover {
     color: #fff;
     background: #2756ff;
+    transform: translateY(-2px);
+  }
+
+  .navbar .get-a-quote.active,
+  .navbar .get-a-quote.active:focus {
+    background: #1f46d8;
+    box-shadow: 0 10px 24px rgba(39, 86, 255, 0.45);
   }
 
   .navbar .dropdown ul {
@@ -483,12 +528,14 @@ span {
     align-items: center;
     justify-content: space-between;
     padding: 12px 20px;
+    margin: 3px 12px;
+    border-radius: 10px;
     font-family: var(--font-primary);
     font-size: 16px;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.7);
     white-space: nowrap;
-    transition: 0.3s;
+    transition: color 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
   }
 
   .navbar a i,
@@ -503,15 +550,23 @@ span {
   .navbar .active:focus,
   .navbar li:hover>a {
     color: #fff;
+    background: rgba(255, 255, 255, 0.16);
+    transform: translateX(2px);
+  }
+
+  .navbar .active,
+  .navbar .active:focus {
+    border-left: 3px solid var(--color-orange);
   }
 
   .navbar .get-a-quote,
   .navbar .get-a-quote:focus {
     background: var(--color-primary);
     padding: 8px 20px;
-    border-radius: 4px;
+    border-radius: 999px;
     margin: 15px;
     color: #fff;
+    border-left: none;
   }
 
   .navbar .get-a-quote:hover,
@@ -1050,7 +1105,7 @@ span {
 
 .testimonials {
   padding: 80px 0;
-  background: url("../img/testimonials-bg.jpg") no-repeat;
+  background: url("../img/testimonials-bg.jfif");
   background-position: center center;
   background-size: cover;
   position: relative;
@@ -1096,14 +1151,7 @@ span {
   margin: 0 0 15px 0;
 }
 
-.testimonials .testimonial-item .stars {
-  margin-bottom: 15px;
-}
 
-.testimonials .testimonial-item .stars i {
-  color: #ffc107;
-  margin: 0 1px;
-}
 
 .testimonials .testimonial-item .quote-icon-left,
 .testimonials .testimonial-item .quote-icon-right {
@@ -1675,12 +1723,18 @@ span {
 
 
 .carousel-caption {
-  bottom: 400px;
+  top: 50%;
+  bottom: auto;
+  left: 50%;
+  right: auto;
+  transform: translate(-50%, -50%);
+  width: min(90%, 980px);
+  text-align: center;
 }
 
 .carousel-caption h5 {
   font-size: 50px;
-
+  margin-bottom: 0;
 }
 
 
@@ -1702,7 +1756,12 @@ span {
   }
 
   .carousel-caption {
-    bottom: 2rem;
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    width: 92%;
   }
 
   .carousel-caption h5 {

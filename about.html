@@ -34,31 +34,41 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header d-flex align-items-center fixed-top">
+      <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="#index.html" class="logo d-flex align-items-center">
-        <h1>Mashirikiano SACCO</h1>
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
+        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
 
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html" class="active">About</a></li>
-          <li><a href="index.html#service">Services</a></li>
-          <li><a href="membership.html">Membership</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-          <li><a class="get-a-quote" href="member_registration.html">Join Now</a></li>
-        </ul>
-      </nav><!-- .navbar -->
-      <!-- .navbar -->
+      <!-- Quick Actions for Mobile/Desktop visibility before hamburger -->
+      <div class="d-flex align-items-center gap-2 ms-auto me-2 order-lg-last">
+        <a href="member_registration.html" class="btn btn-primary d-flex justify-content-center align-items-center shadow-sm" style="border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">Join Us</a>
+        <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="btn btn-success d-flex justify-content-center align-items-center gap-1 shadow-sm" style="background-color: #25D366; border-color: #25D366; border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">
+          <i class="bi bi-whatsapp"></i> <span style="margin-top: 1px;">Chat</span>
+        </a>
+      </div>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list order-last ms-1"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x order-last ms-1"></i>
+
+      <nav id="navbar" class="navbar order-lg-1">
+
+
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="index.html#service">Services</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        
+      </ul>
+    </nav><!-- .navbar -->
 
     </div>
   </header><!-- End Header -->
-  <!-- End Header -->
 
   <main id="main">
 
@@ -240,87 +250,7 @@
       <div class="container">
 
         <div class="slides-1 swiper" data-aos="fade-up">
-          <div class="swiper-wrapper">
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img" alt="">
-                <h3>Saul Goodman</h3>
-                <h4>Ceo &amp; Founder</h4>
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                </div>
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  Saul Goodman is the CEO and Founder of this organization. His leadership and vision have been instrumental in driving the company's success, as evidenced by the stellar reviews featured in the testimonial. Goodman's expertise and strategic acumen have positioned the company as a leader in its field, inspiring confidence and trust among its clients and partners.
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                <h3>Sara Wilsson</h3>
-                <h4>Designer</h4>
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                </div>
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  As a talented designer, Sara Wilsson plays a crucial role in shaping the visual identity and user experiences of our products and services. Her keen eye for aesthetics, coupled with a deep understanding of design principles, allows her to create visually striking and highly functional designs that resonate with our target audience. Sara's expertise in both digital and print media ensures a cohesive and compelling brand presentation across all channels.
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                <h3>Jena Karlis</h3>
-                <h4>Store Owner</h4>
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                </div>
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  Jena Karlis is the store owner, responsible for overseeing the day-to-day operations and management of this establishment. Her leadership and dedication to providing exceptional customer service have earned her glowing reviews from clients, as evidenced by the 5-star rating displayed. Jena's deep understanding of the business and unwavering commitment to her team and customers are key factors in the store's success.
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                <h3>Matt Brandon</h3>
-                <h4>Freelancer</h4>
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                </div>
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  Matt Brandon is a skilled freelancer who has earned a stellar reputation, as evidenced by the 5-star rating in the testimonial section. His expertise and dedication to his craft are clearly valued by his clients, who have provided glowing reviews praising his work. As a freelancer, Matt leverages his versatile skillset to deliver exceptional results across a wide range of projects, contributing to the success of the businesses and individuals he collaborates with.
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
-            <div class="swiper-slide">
-              <div class="testimonial-item">
-                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                <h3>John Larson</h3>
-                <h4>Entrepreneur</h4>
-                <div class="stars">
-                  <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                </div>
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  Todd Warren is an experienced consultant who has earned a strong reputation, as evident from the 5-star rating in the testimonial section. His expertise and valuable insights have helped businesses navigate complex challenges and achieve their goals. As a consultant, Todd leverages his extensive knowledge and problem-solving skills to provide tailored solutions that drive success for his clients. His dedication and ability to deliver exceptional results have made him a trusted advisor in his field.
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-              </div>
-            </div><!-- End testimonial item -->
-
+          <div class="swiper-wrapper" id="testimonials-wrapper">
           </div>
           <div class="swiper-pagination"></div>
         </div>
@@ -412,6 +342,9 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Dynamic Testimonials JS -->
+  <script src="js/testimonials.js"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>

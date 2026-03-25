@@ -6,7 +6,8 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Member Registration | Mashirikiano SACCO</title>
-  <meta content="Register to join Mashirikiano SACCO by submitting your details and required documents online." name="description">
+  <meta content="Register to join Mashirikiano SACCO by submitting your details and required documents online."
+    name="description">
   <meta content="Mashirikiano SACCO registration, member application, upload documents, join sacco" name="keywords">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mashirikianosacco.co.ke/member_registration.html">
@@ -16,7 +17,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
 
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
@@ -68,15 +71,28 @@
 </head>
 
 <body>
-  <header id="header" class="header d-flex align-items-center fixed-top">
+      <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
+
       <a href="index.html" class="logo d-flex align-items-center">
-        <h1>Mashirikiano SACCO</h1>
+        <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
+        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
 
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-      <nav id="navbar" class="navbar">
+      <!-- Quick Actions for Mobile/Desktop visibility before hamburger -->
+      <div class="d-flex align-items-center gap-2 ms-auto me-2 order-lg-last">
+        <a href="member_registration.html" class="btn btn-primary d-flex justify-content-center align-items-center shadow-sm" style="border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">Join Us</a>
+        <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="btn btn-success d-flex justify-content-center align-items-center gap-1 shadow-sm" style="background-color: #25D366; border-color: #25D366; border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">
+          <i class="bi bi-whatsapp"></i> <span style="margin-top: 1px;">Chat</span>
+        </a>
+      </div>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list order-last ms-1"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x order-last ms-1"></i>
+
+      <nav id="navbar" class="navbar order-lg-1">
+
+
         <ul>
           <li><a href="index.html">Home</a></li>
           <li><a href="about.html">About</a></li>
@@ -84,20 +100,20 @@
           <li><a href="membership.html">Membership</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
-          <li><a class="get-a-quote active" href="member_registration.html">Join Now</a></li>
+          
         </ul>
       </nav><!-- .navbar -->
-    </div>
-  </header><!-- End Header -->
 
-  <main id="main">
+    </div>
+  </header><!-- End Header -->`r`n`r`n <main id="main">
     <div class="breadcrumbs">
-      <div class="page-header d-flex align-items-center" style="background-image: url('assets/img/page-header.jpg');">
+      <div class="page-header d-flex align-items-center" style="background-image: url('assets/img/logo.png');">
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-8 text-center">
               <h2>Member Registration</h2>
-              <p class="text-light">Complete the application and upload all required documents. Your details will be sent directly to the SACCO email for review.</p>
+              <p class="text-light">Complete the application and upload all required documents. Your details will be
+                sent directly to the SACCO email for review.</p>
             </div>
           </div>
         </div>
@@ -115,15 +131,26 @@
     <section class="pt-4">
       <div class="container" data-aos="fade-up">
         <div class="register-card">
-          <div class="mb-4">
-            <h3 class="mb-2">Required Documents</h3>
-            <p class="mb-2">Download and complete the SACCO membership registration form before submitting:</p>
-            <a href="assets/forms/membership-registration-form-template.txt" download class="btn btn-outline-primary btn-sm">
-              <i class="bi bi-download"></i> Download Membership Registration Form
-            </a>
+          <div class="mb-4 d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div>
+              <h3 class="mb-2">Required Documents</h3>
+              <p class="mb-2">Download and complete the SACCO membership registration form before submitting:</p>
+              <a href="assets/forms/membership-registration-form-template.txt" download
+                class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-download"></i> Download Membership Registration Form
+              </a>
+            </div>
+            <div>
+              <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join."
+                target="_blank" class="btn btn-success px-4 py-2 shadow-sm"
+                style="background-color: #25D366; border-color: #25D366; font-weight: 600;">
+                <i class="bi bi-whatsapp"></i> Chat on WhatsApp
+              </a>
+            </div>
           </div>
 
-          <form action="forms/member_registration.php" method="POST" enctype="multipart/form-data" class="php-email-form">
+          <form action="forms/member_registration.php" method="POST" enctype="multipart/form-data"
+            class="php-email-form">
             <div class="row g-3">
               <div class="col-md-6">
                 <label for="full_name" class="form-label required-label">Full Name</label>
@@ -156,7 +183,8 @@
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
-                <input type="file" class="d-none" id="id_passport_file" name="id_passport_file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <input type="file" class="d-none" id="id_passport_file" name="id_passport_file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
               </div>
 
               <div class="col-md-6">
@@ -165,7 +193,8 @@
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
-                <input type="file" class="d-none" id="passport_photo_file" name="passport_photo_file" accept=".jpg,.jpeg,.png,.pdf" required>
+                <input type="file" class="d-none" id="passport_photo_file" name="passport_photo_file"
+                  accept=".jpg,.jpeg,.png,.pdf" required>
               </div>
 
               <div class="col-md-6">
@@ -174,7 +203,8 @@
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
-                <input type="file" class="d-none" id="registration_form_file" name="registration_form_file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <input type="file" class="d-none" id="registration_form_file" name="registration_form_file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
               </div>
 
               <div class="col-md-6">
@@ -183,7 +213,8 @@
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
-                <input type="file" class="d-none" id="kra_certificate_file" name="kra_certificate_file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <input type="file" class="d-none" id="kra_certificate_file" name="kra_certificate_file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
               </div>
 
               <div class="col-md-6">
@@ -192,11 +223,18 @@
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
-                <input type="file" class="d-none" id="payslip_file" name="payslip_file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                <input type="file" class="d-none" id="payslip_file" name="payslip_file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+              </div>
+
+              <div class="col-12 my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your registration request has been sent successfully. Thank you!</div>
               </div>
 
               <div class="col-12 text-center mt-3">
-                <button type="submit" class="btn btn-primary px-4">Submit Registration</button>
+                <button type="submit" class="btn btn-primary px-4 mb-2">Submit Registration</button>
               </div>
             </div>
           </form>
@@ -212,13 +250,15 @@
           <a href="index.html" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
-          <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey.</p>
+          <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your
+            savings, loans, and financial growth journey.</p>
         </div>
       </div>
     </div>
   </footer>
 
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
   <div id="preloader"></div>
 
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -230,32 +270,32 @@
   <script src="assets/js/main.js"></script>
 
   <script>
-    document.querySelectorAll('.drop-zone').forEach(function(zone) {
+    document.querySelectorAll('.drop-zone').forEach(function (zone) {
       const input = document.getElementById(zone.dataset.input);
       const fileName = zone.querySelector('.file-name');
 
-      const updateName = function(file) {
+      const updateName = function (file) {
         fileName.textContent = file ? file.name : 'No file selected';
       };
 
-      zone.addEventListener('click', function() {
+      zone.addEventListener('click', function () {
         input.click();
       });
 
-      input.addEventListener('change', function() {
+      input.addEventListener('change', function () {
         updateName(input.files[0]);
       });
 
-      zone.addEventListener('dragover', function(e) {
+      zone.addEventListener('dragover', function (e) {
         e.preventDefault();
         zone.classList.add('dragover');
       });
 
-      zone.addEventListener('dragleave', function() {
+      zone.addEventListener('dragleave', function () {
         zone.classList.remove('dragover');
       });
 
-      zone.addEventListener('drop', function(e) {
+      zone.addEventListener('drop', function (e) {
         e.preventDefault();
         zone.classList.remove('dragover');
         if (e.dataTransfer.files.length > 0) {
@@ -268,4 +308,3 @@
 </body>
 
 </html>
-

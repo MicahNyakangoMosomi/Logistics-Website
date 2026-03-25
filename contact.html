@@ -34,28 +34,41 @@
 <body>
 
   <!-- ======= Header ======= -->
-  <header id="header" class="header d-flex align-items-center fixed-top">
+      <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center"><h1>Mashirikiano SACCO</h1></a>
+      <a href="index.html" class="logo d-flex align-items-center">
+        <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
+        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
+      </a>
 
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="index.html#service">Services</a></li>
-          <li><a href="membership.html">Membership</a></li>
-          <li><a href="contact.html" class="active">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-          <li><a class="get-a-quote" href="member_registration.html">Join Now</a></li>
-        </ul>
-      </nav><!-- .navbar -->
+      <!-- Quick Actions for Mobile/Desktop visibility before hamburger -->
+      <div class="d-flex align-items-center gap-2 ms-auto me-2 order-lg-last">
+        <a href="member_registration.html" class="btn btn-primary d-flex justify-content-center align-items-center shadow-sm" style="border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">Join Us</a>
+        <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="btn btn-success d-flex justify-content-center align-items-center gap-1 shadow-sm" style="background-color: #25D366; border-color: #25D366; border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">
+          <i class="bi bi-whatsapp"></i> <span style="margin-top: 1px;">Chat</span>
+        </a>
+      </div>
+
+      <i class="mobile-nav-toggle mobile-nav-show bi bi-list order-last ms-1"></i>
+      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x order-last ms-1"></i>
+
+      <nav id="navbar" class="navbar order-lg-1">
+
+
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="index.html#service">Services</a></li>
+        <li><a href="membership.html">Membership</a></li>
+        <li><a href="contact.html" class="active">Contact</a></li>
+        <li><a href="faq.html">FAQ</a></li>
+        
+      </ul>
+    </nav><!-- .navbar -->
 
     </div>
   </header><!-- End Header -->
-  <!-- End Header -->
 
   <main id="main">
 
