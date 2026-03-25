@@ -1,21 +1,21 @@
 <?php
 /**
  * Mashirikiano SACCO
- * Member Registration Processing Script
+ * Member Registration Processing Script via MailerSend
  */
 
-// Return JSON or Text based on the php-email-form JS validation script (it expects 'OK' as success)
+// Return "OK" for success as expected by php-email-form frontend
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fullName = strip_tags(trim($_POST["full_name"] ?? ''));
     $email = filter_var(trim($_POST["email"] ?? ''), FILTER_SANITIZE_EMAIL);
     $phone = strip_tags(trim($_POST["phone"] ?? ''));
-    $payslipId = strip_tags(trim($_POST["payslip_id"] ?? ''));
-    $joinMessage = strip_tags(trim($_POST["join_message"] ?? ''));
+    $payslipId = strip_tags(trim($_POST["payslip_id"] ?? '')); // Optional
+    $joinMessage = strip_tags(trim($_POST["join_message"] ?? '')); // Optional
 
-    // Validate textual data
-    if (empty($fullName) || empty($email) || empty($phone) || empty($payslipId) || empty($joinMessage)) {
+    // Validate required physical details
+    if (empty($fullName) || empty($email) || empty($phone)) {
         http_response_code(400);
-        echo "Please fill out all required physical details.";
+        echo "Please fill out all required details (Name, Email, Phone).";
         exit;
     }
 
@@ -25,33 +25,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-    // Set up secure upload directory
-    $uploadDir = '../uploads/';
-    if (!is_dir($uploadDir)) {
-        if (!mkdir($uploadDir, 0755, true)) {
-            http_response_code(500);
-            echo "System error: Unable to create uploads directory.";
-            exit;
-        }
-    }
-
-    $uploadedFiles = [];
-    $fileFields = [
+    $requiredFiles = [
         'id_passport_file' => 'ID or Passport',
         'passport_photo_file' => 'Passport Photo',
         'registration_form_file' => 'Registration Form',
-        'kra_certificate_file' => 'KRA Certificate',
-        'payslip_file' => 'Payslip'
+        'kra_certificate_file' => 'KRA Certificate'
     ];
     
+    $optionalFiles = [
+        'payslip_file' => 'Payslip'
+    ];
+
     $allowed_extensions = ['pdf', 'jpg', 'jpeg', 'png', 'doc', 'docx'];
     $max_size = 10 * 1024 * 1024; // 10MB
-    $timestamp = time();
+    $attachments = [];
 
-    // Process each document securely
-    foreach ($fileFields as $field => $label) {
+    // Helper to process files for MailerSend
+    function processFileForAttachment($field, $label, $isRequired, &$attachments, $allowed_extensions, $max_size) {
         if (isset($_FILES[$field]) && $_FILES[$field]['error'] === UPLOAD_ERR_OK) {
-            
             if ($_FILES[$field]['size'] > $max_size) {
                 http_response_code(400);
                 echo "The file for $label is too large. Maximum size is 10MB.";
@@ -67,55 +58,91 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             $tmpName = $_FILES[$field]['tmp_name'];
-            $uniqueName = $timestamp . '_' . $field . '_' . preg_replace("/[^a-zA-Z0-9.-]/", "_", $fileName);
-            $destination = $uploadDir . $uniqueName;
-
-            if (move_uploaded_file($tmpName, $destination)) {
-                $uploadedFiles[$label] = $uniqueName;
-            } else {
-                http_response_code(500);
-                echo "Error uploading $label document. Please try again.";
-                exit;
-            }
-        } else {
+            $fileData = file_get_contents($tmpName);
+            $base64Body = base64_encode($fileData);
+            
+            // MailerSend expects the raw base64 string
+            $attachments[] = [
+                'content' => $base64Body,
+                'filename' => $field . '_' . $fileName,
+                'disposition' => 'attachment'
+            ];
+        } else if ($isRequired) {
             http_response_code(400);
-            echo "Missing or invalid file for: $label.";
+            echo "Missing or invalid required file: $label.";
             exit;
         }
     }
 
-    // Construct Email to SACCO Admin
-    $to = "mashirikianosacco@gmail.com";
-    $subject = "New Member Registration Request from $fullName";
-    
-    $emailContent = "A new member registration request has been submitted.\n\n";
-    $emailContent .= "Applicant Details:\n";
-    $emailContent .= "------------------\n";
-    $emailContent .= "Name: $fullName\n";
-    $emailContent .= "Email: $email\n";
-    $emailContent .= "Phone: $phone\n";
-    $emailContent .= "Payslip ID: $payslipId\n\n";
-    $emailContent .= "Joining Message:\n";
-    $emailContent .= "$joinMessage\n\n";
-    
-    $emailContent .= "Uploaded Documents (Saved securely in Server /uploads/ directory):\n";
-    $emailContent .= "---------------------------------------------------------\n";
-    foreach ($uploadedFiles as $label => $filename) {
-        $emailContent .= "- $label: $filename\n";
+    foreach ($requiredFiles as $field => $label) {
+        processFileForAttachment($field, $label, true, $attachments, $allowed_extensions, $max_size);
+    }
+    foreach ($optionalFiles as $field => $label) {
+        processFileForAttachment($field, $label, false, $attachments, $allowed_extensions, $max_size);
     }
 
-    // Basic headers
-    $headers = "From: no-reply@mashirikianosacco.co.ke\r\n";
-    $headers .= "Reply-To: $email\r\n";
+    // Construct Email Content
+    $emailHtml = "<h3>New Member Registration Request</h3>";
+    $emailHtml .= "<p><strong>Name:</strong> {$fullName}</p>";
+    $emailHtml .= "<p><strong>Email:</strong> {$email}</p>";
+    $emailHtml .= "<p><strong>Phone:</strong> {$phone}</p>";
+    if (!empty($payslipId)) {
+        $emailHtml .= "<p><strong>Payslip ID:</strong> {$payslipId}</p>";
+    }
+    if (!empty($joinMessage)) {
+        $emailHtml .= "<p><strong>Message:</strong><br/>" . nl2br($joinMessage) . "</p>";
+    }
+    $emailHtml .= "<p><em>The required documents have been attached to this email.</em></p>";
 
-    // Attempt delivery via basic PHP mail()
-    if (mail($to, $subject, $emailContent, $headers)) {
+    $emailText = strip_tags(str_replace(['<br/>', '</p>'], "\n", $emailHtml));
+
+    // Prepare JSON payload for MailerSend
+    $mailersendToken = 'mlsn.b0eec52127937d7022b8558cd1227b3f3047d9be645e246a2c9463ae42113245';
+    
+    // Note: MailerSend requires the 'from.email' to match a verified domain in their dashboard
+    $payload = json_encode([
+        'from' => [
+            'email' => 'info@mashirikianosacco.co.ke', 
+            'name' => 'Mashirikiano SACCO'
+        ],
+        'to' => [
+            [
+                'email' => 'nyakangomicah4@gmail.com',
+                'name' => 'Mashirikiano Admin'
+            ]
+        ],
+        'subject' => 'requestion to join',
+        'html' => $emailHtml,
+        'text' => $emailText,
+        'attachments' => $attachments
+    ]);
+
+    $ch = curl_init('https://api.mailersend.com/v1/email');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'X-Requested-With: XMLHttpRequest',
+        'Authorization: Bearer ' . $mailersendToken
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode == 200 || $httpCode == 202) {
         http_response_code(200);
-        // "OK" signals success to the PHP Email Form validation library
         echo "OK";
     } else {
         http_response_code(500);
-        echo "There was a problem dispatching the registration notification email, but your files were uploaded successfully.";
+        $errorMsg = json_decode($response, true);
+        if (isset($errorMsg['message'])) {
+            // Note: if there's a domain verify error, it usually returns 403 or 422 with a message
+            echo "Email Provider Error: " . $errorMsg['message'] . ". Ensure the domain mashirikianosacco.co.ke is verified on MailerSend.";
+        } else {
+            echo "There was a problem dispatching the registration notification email via MailerSend. HTTP Code: " . $httpCode;
+        }
     }
 
 } else {

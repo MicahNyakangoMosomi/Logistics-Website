@@ -12,9 +12,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mashirikianosacco.co.ke/member_registration.html">
 
-  <link href="assets/img/favicon.png" rel="icon">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-
+  <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
@@ -71,18 +69,24 @@
 </head>
 
 <body>
-      <header id="header" class="header d-flex align-items-center fixed-top">
+  <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
-        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
+        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">
+          Mashirikiano</h5>
       </a>
 
       <!-- Quick Actions for Mobile/Desktop visibility before hamburger -->
       <div class="d-flex align-items-center gap-2 ms-auto me-2 order-lg-last">
-        <a href="member_registration.html" class="btn btn-primary d-flex justify-content-center align-items-center shadow-sm" style="border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">Join Us</a>
-        <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="btn btn-success d-flex justify-content-center align-items-center gap-1 shadow-sm" style="background-color: #25D366; border-color: #25D366; border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">
+        <a href="member_registration.html"
+          class="btn btn-primary d-flex justify-content-center align-items-center shadow-sm"
+          style="border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">Join
+          Us</a>
+        <a href="https://wa.me/254713784007?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join."
+          target="_blank" class="btn btn-success d-flex justify-content-center align-items-center gap-1 shadow-sm"
+          style="background-color: #25D366; border-color: #25D366; border-radius: 50rem; font-weight: 600; font-size: 14px; width: 100px; height: 38px; padding: 0;">
           <i class="bi bi-whatsapp"></i> <span style="margin-top: 1px;">Chat</span>
         </a>
       </div>
@@ -100,7 +104,7 @@
           <li><a href="membership.html">Membership</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
-          
+
         </ul>
       </nav><!-- .navbar -->
 
@@ -135,7 +139,7 @@
             <div>
               <h3 class="mb-2">Required Documents</h3>
               <p class="mb-2">Download and complete the SACCO membership registration form before submitting:</p>
-              <a href="assets/forms/membership-registration-form-template.txt" download
+              <a href="assets/forms/membership-registration-form-template.pdf" download
                 class="btn btn-outline-primary btn-sm">
                 <i class="bi bi-download"></i> Download Membership Registration Form
               </a>
@@ -168,13 +172,13 @@
               </div>
 
               <div class="col-md-6">
-                <label for="payslip_id" class="form-label required-label">Current Payslip ID/Reference</label>
-                <input type="text" class="form-control" id="payslip_id" name="payslip_id" required>
+                <label for="payslip_id" class="form-label">Current Payslip ID/Reference (Optional)</label>
+                <input type="text" class="form-control" id="payslip_id" name="payslip_id">
               </div>
 
               <div class="col-12">
-                <label for="join_message" class="form-label required-label">Message Requesting to Join</label>
-                <textarea class="form-control" id="join_message" name="join_message" rows="4" required></textarea>
+                <label for="join_message" class="form-label">Message Requesting to Join (Optional)</label>
+                <textarea class="form-control" id="join_message" name="join_message" rows="4"></textarea>
               </div>
 
               <div class="col-md-6">
@@ -218,21 +222,20 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label required-label">Current Payslip (Upload)</label>
+                <label class="form-label">Current Payslip (Upload - Optional)</label>
                 <div class="drop-zone" data-input="payslip_file">
                   <p>Drag and drop file here or click to browse</p>
                   <div class="file-name">No file selected</div>
                 </div>
                 <input type="file" class="d-none" id="payslip_file" name="payslip_file"
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" required>
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
               </div>
 
               <div class="col-12 my-3">
-                <div class="loading">Loading</div>
-                <div class="error-message"></div>
-                <div class="sent-message">Your registration request has been sent successfully. Thank you!</div>
+                <div class="loading text-center text-primary"></div>
+                <div class="error-message text-center text-danger"></div>
+                <div class="sent-message text-center text-success"></div>
               </div>
-
               <div class="col-12 text-center mt-3">
                 <button type="submit" class="btn btn-primary px-4 mb-2">Submit Registration</button>
               </div>
