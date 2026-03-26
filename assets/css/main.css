@@ -195,23 +195,83 @@ span {
   visibility: hidden;
   opacity: 0;
   right: 15px;
-  bottom: 15px;
+  bottom: 10px;
   z-index: 99999;
-  background: var(--color-primary);
+  background: rgba(199, 199, 199, 0.8);
   width: 40px;
   height: 40px;
   border-radius: 4px;
   transition: all 0.4s;
 }
 
+/* Floating Action Buttons */
+.floating-container {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 99998;
+}
+
+.float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-weight: 600;
+  color: #fff;
+}
+
+.float-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  color: #fff;
+}
+
+.float-whatsapp {
+  background-color: #25D366;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+}
+
+.float-join {
+  background-color: var(--color-primary);
+  padding: 10px 20px;
+  font-size: 14px;
+  height: 50px;
+}
+
+@media (max-width: 768px) {
+  .floating-container {
+    bottom: 20px;
+    left: 20px;
+    gap: 10px;
+  }
+  
+  .float-whatsapp {
+    width: 45px;
+    height: 45px;
+    font-size: 22px;
+  }
+}
+
+
 .scroll-top i {
   font-size: 24px;
   color: #fff;
   line-height: 0;
+ 
+  
 }
 
 .scroll-top:hover {
-  background: rgba(13, 66, 255, 0.8);
+  background: rgba(199, 199, 199, 0.8);
 }
 
 .scroll-top.active {
@@ -597,7 +657,7 @@ span {
     line-height: 0;
     transition: 0.5s;
     z-index: 9999;
-    margin-right: 10px;
+    margin-right: 25px;
   }
 
   .mobile-nav-hide {
