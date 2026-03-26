@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/mashirikianosacc/public_html/
+    - /bin/cp -R mashirikiano-Website/* $DEPLOYPATH

@@ -1,4 +1,5 @@
-#Mashirikiano SACCO Website
+# Mashirikiano SACCO Website
+- mashirikianosacco.co.ke
 
 A modern, responsive website for Mashirikiano SACCO built with HTML, CSS, and JavaScript. This site serves as a digital front for the SACCO, providing information about its services, membership, and contact details.
 
