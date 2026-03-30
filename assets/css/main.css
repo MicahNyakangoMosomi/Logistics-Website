@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
 :root {
   --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-primary: "Inter", sans-serif;
@@ -1795,7 +1796,37 @@ span {
 .carousel-caption h5 {
   font-size: 50px;
   margin-bottom: 0;
+  font-family: "Archivo Black", sans-serif;
 }
+
+.carousel .carousel-item .carousel-img{
+  /* darker overlay on carousel */
+  position: relative;
+  /* add the overlay */
+ 
+
+  
+
+}
+
+.carousel .carousel-item .carousel-img::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.614);
+  pointer-events: none;
+  z-index: 10;
+}
+
+.carousel .carousel-caption{
+  z-index: 20;
+  width: 500px;
+  
+}
+
 
 
 @media screen {}
