@@ -1769,7 +1769,7 @@ span {
   color: var(--color-primary);
 }
 
-.carousel {
+.carousel{
   width: 100vw;
   height: 80vh;
   color: rgba(255, 255, 255, 0.8);
@@ -1781,7 +1781,6 @@ span {
   height: 80vh;
   object-fit: cover;
 }
-
 
 .carousel-caption {
   top: 50%;
@@ -1823,8 +1822,6 @@ span {
 }
 
 
-
-@media screen {}
 
 
 
