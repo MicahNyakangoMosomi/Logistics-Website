@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap');
-:root {
-  --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-primary: "Inter", sans-serif;
-  --font-secondary: "Poppins", sans-serif;
-}
+  
 
 :root {
+  --font-default: "Open Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --font-primary: "Inter", sans-serif;
+    --font-secondary: "Poppins", sans-serif;
+  
   --color-default: #130d0a;
   --color-primary: #310dff;
   --color-secondary: #0e1d34;
@@ -1800,12 +1800,7 @@ span {
 }
 
 .carousel .carousel-item .carousel-img{
-  /* darker overlay on carousel */
   position: relative;
-  /* add the overlay */
- 
-
-  
 
 }
 
