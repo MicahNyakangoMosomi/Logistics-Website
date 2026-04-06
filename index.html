@@ -74,12 +74,27 @@
 <body>
 
   <!-- Header -->
-      <header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="top-bar d-none d-lg-block">
+    <div class="container-fluid container-xl d-flex justify-content-between align-items-center">
+      <div>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Help Centre</a>
+        <a href="faq.html">FAQs</a>
+      </div>
+      <div>
+        <a href="#"><i class="bi bi-search"></i></a>
+        <a href="member_registration.html">Member Portal</a>
+      </div>
+    </div>
+  </div>
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
       <a href="index.html" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
+        <span class="d-none d-xl-block ms-4" style="font-family: 'Archivo Black', sans-serif; font-size: 12px; color: rgba(255,255,255,0.7); border-left: 2px solid var(--color-orange); padding-left: 15px;">Empowering your financial journey</span>
       </a>
 
 
@@ -93,7 +108,7 @@
         <ul>
           <li><a href="index.html" class="active">Home</a></li>
           <li><a href="about.html">About</a></li>
-          <li><a href="index.html#service">Services</a></li>
+          <li><a href="index.html#features">Services</a></li>
           <li><a href="membership.html">Membership</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
@@ -105,8 +120,8 @@
   </header><!-- End Header -->
 
   <!--  Hero Section -->
-  <section id="hero" class="hero d-flex align-items-center">
-    <div id="carouselExampleCaptions" class="carousel carousel-dark carousel-fade slide" data-bs-ride="carousel"
+  <section id="hero" class="hero d-flex align-items-center p-0">
+    <div id="carouselExampleCaptions" class="carousel carousel-dark carousel-fade slide w-100" data-bs-ride="carousel"
       data-bs-touch="false">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
@@ -119,32 +134,41 @@
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="4000">
           <div class="carousel-img">
-            <img src="./assets/img/group_pic.jpeg" class="d-block w-100" alt="...">
+            <img src="./assets/img/group_pic.jpeg" class="d-block w-100" style="height: 650px; object-fit: cover;" alt="...">
           </div>
           
-          <div class="carousel-caption">
-            <h5 class="text-white">Mashirikiano SACCO Official Business Number 4048759</h5>
-            <p class="text-white">ACCOUNT NO: YOUR ID NUMBER</p>
+          <div class="carousel-caption" style="top: 50%; bottom: auto; left: 0; right: 0; transform: translateY(-50%); z-index: 40; padding: 0 15px;">
+            <h5 class="text-white text-center hero-title">Mashirikiano SACCO</h5>
+            <p class="text-white text-center hero-subtitle">Official Business Number 4048759</p>
+            <div class="text-center">
+              <a href="invest_and_save.html" class="btn-outline-custom" style="margin-top: 15px;">TOP UP TODAY</a>
+            </div>
           </div>
         </div>
         <div class="carousel-item" data-bs-interval="4000">
           <div class="carousel-img">
-            <img src="./assets/img/meeting_pic.jpeg" class="d-block w-100" alt="...">
+            <img src="./assets/img/meeting_pic.jpeg" class="d-block w-100" style="height: 650px; object-fit: cover;" alt="...">
           </div>
           
-          <div class="carousel-caption">
-            <h5 class="text-white">We are the best managed Sacco countryWide</h5>
-            <p></p>
+          <div class="carousel-caption" style="top: 50%; bottom: auto; left: 0; right: 0; transform: translateY(-50%); z-index: 40; padding: 0 15px;">
+            <h5 class="text-white text-center hero-title">The Best Managed Sacco</h5>
+            <p class="text-white text-center hero-subtitle">CountryWide</p>
+            <div class="text-center">
+              <a href="about.html" class="btn-outline-custom" style="margin-top: 15px;">DISCOVER MORE</a>
+            </div>
           </div>
         </div>
         <div class="carousel-item" data-bs-interval="4000">
           <div class="carousel-img">
-            <img src="./assets/img/meeting_pic2.jpeg" class="d-block w-100" alt="...">
+            <img src="./assets/img/meeting_pic2.jpeg" class="d-block w-100" style="height: 650px; object-fit: cover;" alt="...">
           </div>
           
-          <div class="carousel-caption">
-            <h5 class="text-white">Enjoy premium Returns on your Savings</h5>
-            <p></p>
+          <div class="carousel-caption" style="top: 50%; bottom: auto; left: 0; right: 0; transform: translateY(-50%); z-index: 40; padding: 0 15px;">
+            <h5 class="text-white text-center hero-title">Enjoy premium Returns</h5>
+            <p class="text-white text-center hero-subtitle">On your Savings</p>
+            <div class="text-center">
+              <a href="invest_and_save.html" class="btn-outline-custom" style="margin-top: 15px;">START SAVING</a>
+            </div>
           </div>
         </div>
       </div>
@@ -159,58 +183,39 @@
         <span class="visually-hidden">Next</span>
       </button>
     </div>
+
+    <!-- Floating Right CTA Card -->
+    <div class="hero-overlaid-card d-none d-lg-block">
+      <h3>Join the best Sacco</h3>
+      <p class="mt-3 text-light" style="font-size: 15px;">Experience financial freedom with our tailored savings, loans, and investment products designed for your growth.</p>
+      <ul class="list-unstyled mt-4 mb-4" style="font-size: 15px;">
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> High Dividend Returns</li>
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Quick Loan Processing</li>
+        <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Affordable Interest Rates</li>
+      </ul>
+      <a href="member_registration.html" class="btn btn-warning w-100 rounded-1 shadow-sm text-dark mt-2" style="padding: 12px; font-weight: 700; background-color: #FFB800; border: none;">BECOME A MEMBER</a>
+    </div>
   </section>
   <!-- End Hero Section -->
 
-  <!---Start log in page-->
-
-
   <main id="main">
 
-    <!--Featured Services Section -->
-    <section id="featured-services" class="featured-services">
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up">
-
-            <div>
-              <h4 class="title orange">Membership Fee</h4>
-              <p class="description">Membership registration fee is ksh. 1,000 (one time payment to paybill 4048759)</p>
-              <a href="join_us.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="100">
-
-            <div>
-              <h4 class="title orange">Requirements</h4>
-              <p class="description">National ID, Filled registration form<a href="./assets/forms/membership-registration-form-template.pdf" download class="btn primary blue btn-sm">(download here)</a>, KRA pin, Passport,Registered Phone Number, Next of kin, </p>
-              
-            </div>
-          </div>
-          <!-- End Service Item -->
-
-          <div class="col-lg-4 col-md-6 service-item d-flex" data-aos="fade-up" data-aos-delay="200">
-
-            <div>
-              <h4 class="title orange">Invest & Save With Us</h4>
-              <p class="description">Secure your future with high- return investment and savings plan
-              </p>
-              <a href="invest_and_save.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
-            </div>
-          </div>
-          <!-- End Service Item -->
-
+    <!-- Quick Services Section -->
+    <section class="quick-services">
+      <div class="container text-center">
+        <h3 class="text-white mb-4 fw-bold pb-2" style="font-family: var(--font-secondary);">How can we help you?</h3>
+        <div class="d-flex justify-content-center">
+          <input type="text" class="search-bar-custom" placeholder="Search for products, loans, or services...">
         </div>
-
+        <div class="d-flex flex-wrap justify-content-center mt-3">
+          <a href="invest_and_save.html" class="btn-pill">Savings Options <i class="bi bi-arrow-right"></i></a>
+          <a href="borrow_from_us.html" class="btn-pill">Credit Facilities <i class="bi bi-arrow-right"></i></a>
+          <a href="membership.html" class="btn-pill">Account Opening <i class="bi bi-arrow-right"></i></a>
+          <a href="contact.html" class="btn-pill">Help & Support <i class="bi bi-arrow-right"></i></a>
+        </div>
       </div>
     </section>
-    <!-- End Featured Services Section -->
+    <!-- End Quick Services Section -->
 
     <!--  About Us Section  -->
     <section id="about" class="about pt-0">
@@ -276,220 +281,124 @@
     </section>
     <!-- End About Us Section -->
 
-    <!--  Services Section -->
-    <section id="service" class="services pt-0">
+    <!--  Products & Services Section -->
+    <section id="features" class="services pt-5" style="background-color: #f6f9ff;">
       <div class="container" data-aos="fade-up">
 
         <div class="section-header">
-          <span>Services</span>
-          <h2>Our Services</h2>
-
+          <span>Products</span>
+          <h2>Our Products & Services</h2>
         </div>
 
-        <div class="row gy-4">
+        <div class="row gy-4 pb-5">
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/member_deposite.jfif" alt="" class="img-fluid">
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="product-card">
+              <div class="product-card-img" style="background-image: url('assets/img/member_deposite.jfif');"></div>
+              <div class="product-card-body">
+                <h4>Membership Deposits</h4>
+                <p>Invest in your future and secure your borrowings with our robust member deposit schemes.</p>
+                <a href="membership_deposits.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
-              <h3><a href="membership_deposits.html" class="stretched-link">Membership Deposits</a></h3>
-              <p>Member deposits are a form of savings/Investment:
-                Used to borrow loan x3 or x4
-                Used to gurantee loans for other members
-                Incase of death, the Sink fund (insurance) scheme doubles the deposits of the deceased member and pays
-                it to the next of
-                kin</p>
-              <a href="membership_deposits.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
-            </div>
-          </div><!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/karibu_loan.jfif" alt="" class="img-fluid">
-              </div>
-              <h3><a href="karibu_loan.html" class="stretched-link">Karibu Loan</a></h3>
-              <p>Looking to establish yourself quickly and begin your journey toward financial freedom after joining our
-                SACCO? The
-                Karibu Loan is your ideal solution. True to its name ("Karibu" meaning "welcome"), this product is
-                specifically designed
-                to help new members access development capital - even with limited savings - without waiting through the
-                traditional
-                6-month period. With the Karibu Loan, you can immediately start turning your aspirations into reality.
-              </p>
-              <a href="karibu_loan.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
             </div>
           </div>
-          <!-- End Card Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/development_loan.jfif" alt="" class="img-fluid">
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="product-card">
+              <div class="product-card-img" style="background-image: url('assets/img/karibu_loan.jfif');"></div>
+              <div class="product-card-body">
+                <h4>Karibu Loan</h4>
+                <p>Establish yourself quickly with our Karibu Loan, specifically designed for new members.</p>
+                <a href="karibu_loan.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
-              <h3><a href="development_loan.html" class="stretched-link">Development Loan</a></h3>
-              <p>
-                Looking to fund an important investment or purchase property? Our Development Loan offers a
-                cost-effective, multipurpose
-                financing solution designed to help members improve or fully finance their investments at competitive,
-                affordable rates.</p>
-              <a href="development_loan.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
             </div>
           </div>
-          <!-- End Card Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/emergency _loans.jfif" alt="" class="img-fluid">
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="product-card solid-blue">
+              <div class="product-card-body d-flex flex-column justify-content-center text-center">
+                <i class="bi bi-briefcase text-warning" style="font-size: 3.5rem; margin-bottom: 25px;"></i>
+                <h4>Development Loan</h4>
+                <p>Fund your important investments and property purchases with our cost-effective financing at competitive rates.</p>
+                <a href="development_loan.html" class="link-arrow mt-auto justify-content-center">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
-              <h3><a href="emergency_loan.html" class="stretched-link">Emergency Loan</a></h3>
-              <p>Financial emergencies don't have to be stressful. Our Emergency Loan provides members with quick and
-                convenient access
-                to funds when unexpected needs arise. We prioritize rapid disbursement, understanding that urgent
-                situations demand
-                immediate solutions. Experience the peace of mind that comes with knowing financial support is just
-                moments away.</p>
-              <a href="emergency_loan.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
             </div>
           </div>
-          <!-- End Card Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/salary_in_advance.jfif" alt="" class="img-fluid">
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="product-card">
+              <div class="product-card-img" style="background-image: url('assets/img/emergency _loans.jfif');"></div>
+              <div class="product-card-body">
+                <h4>Emergency Loan</h4>
+                <p>Quick and convenient funds to ease the stress when unexpected needs arise.</p>
+                <a href="emergency_loan.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
-              <h3><a href="salary_advance.html" class="stretched-link">Salary In Advance</a></h3>
-              <p>When urgent financial needs arise, our Salary-In-Advance provides a quick solution for members whose
-                salaries are
-                processed through FOSA. This short-term facility gives you access to funds when you need them most, with
-                convenient
-                repayment from your next salary</p>
-              <a href="salary_advance.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
             </div>
           </div>
-          <!-- End Card Item -->
-
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-            <div class="card">
-              <div class="card-img">
-                <img src="assets/img/junior.jfif" alt="" class="img-fluid">
+          
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="product-card">
+              <div class="product-card-img" style="background-image: url('assets/img/salary_in_advance.jfif');"></div>
+              <div class="product-card-body">
+                <h4>Salary In Advance</h4>
+                <p>Short-term access to funds with convenient repayment from your next salary.</p>
+                <a href="salary_advance.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
-              <h3><a href="junior_account.html" class="stretched-link">Junior Account</a></h3>
-              <p>"Children see in their parents their past, parents see in their children their future..."
-
-                Our Toto Junior Account nurtures financial responsibility from an early age while helping parents invest
-                in their
-                children's future.</p>
-              <a href="junior_account.html" class="readmore stretched-link"><span class="green">Learn More</span><i
-                  class="bi bi-arrow-right"></i></a>
             </div>
           </div>
-          <!-- End Card Item -->
+          
+          <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="600">
+            <div class="product-card">
+              <div class="product-card-img" style="background-image: url('assets/img/junior.jfif');"></div>
+              <div class="product-card-body">
+                <h4>Junior Account</h4>
+                <p>Nurturing financial responsibility early, securing a bright future for your children.</p>
+                <a href="junior_account.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6 col-md-12" data-aos="fade-up" data-aos-delay="700">
+            <div class="product-card text-white text-center" style="background: url('assets/img/about.jpg') center/cover; position: relative;">
+               <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(rgba(14,29,52,0.85), rgba(1,79,153,0.9)); pointer-events:none;"></div>
+               <div class="product-card-body d-flex flex-column justify-content-center position-relative z-1">
+                <h4 class="text-white" style="font-size: 28px; font-weight: 700;">Become A Member Today</h4>
+                <p class="text-light mx-md-4 mt-2">Join thousands of members enjoying secure savings, fast loans, and premium dividend returns. Open an account instantly and begin your journey.</p>
+                <a href="member_registration.html" class="btn btn-warning rounded-pill px-5 py-3 mt-4 fw-bold mx-auto text-dark" style="background-color: #FFB800; border: none; width: fit-content; text-transform: uppercase;">Open Account Now</a>
+              </div>
+            </div>
+          </div>
 
         </div>
 
       </div>
     </section>
-    <!-- End Services Section -->
+    <!-- End Products Section -->
 
 
 
-    <!--  Features Section -->
-    <section id="features" class="features">
-      <div class="section-header">
-        <span>Our Achievements</span>
-        <h2>Our Achievements</h2>
-
+    <!-- Legacy Section -->
+    <div class="container" data-aos="fade-up">
+      <div class="legacy-box">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <h3 class="mb-3">Recognized for Excellence in the Cooperative Movement</h3>
+            <p class="text-muted" style="font-size: 16px; line-height: 1.8;">
+              Mashirikiano SACCO has a longstanding history of excellence, empowering members through innovative financial solutions and a commitment to community development. Our expertise spans various financial services, perfectly tailored to meet the evolving real-world needs of our diverse membership.
+            </p>
+            <div class="d-flex flex-wrap mt-4">
+              <div class="me-4 mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Fast Loan Processing</div>
+              <div class="me-4 mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Member-Centered Support</div>
+              <div class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> Secure Investments</div>
+            </div>
+          </div>
+          <div class="col-lg-4 text-center mt-4 mt-lg-0">
+            <img src="assets/img/excellence.jfif" class="img-fluid rounded shadow-sm" alt="Excellence">
+          </div>
+        </div>
       </div>
-      <div class="container">
-
-        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-
-          <div class="col-md-5">
-            <img src="assets/img/excellence.jfif" class="img-fluid" alt="">
-          </div>
-          <div class="col-md-7">
-            <h3>Recognized for Excellence in the Cooperative Movement</h3>
-            <p class="fst-italic">
-              Mashirikiano SACCO has a longstanding history of excellence, empowering members through innovative
-              financial solutions
-              and a commitment to community development.
-
-              With Years of experience, we have developed a process that ensures high productivity and profitability for
-              our members. Our expertise spans various financial services, tailored to meet the evolving needs of our
-              diverse
-              membership.
-            </p>
-            <!-- <ul>
-              <li><i class="bi bi-check"></i> Embrace the sentimental.</li>
-              <li><i class="bi bi-check"></i> Think beyond the moment of exchange.</li>
-              <li><i class="bi bi-check"></i> Make things easier on yourself.</li>
-            </ul> -->
-          </div>
-        </div>
-        <!-- Features Item -->
-
-        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-          <div class="col-md-5 order-1 order-md-2">
-            <img src="assets/img/loan.jfif" class="img-fluid" alt="">
-          </div>
-          <div class="col-md-7 order-2 order-md-1">
-            <h3>Fast Loan Processing</h3>
-            <p class="fst-italic">
-              We process eligible loan applications quickly and transparently so members can respond to opportunities
-              and urgent needs without unnecessary delays.
-
-            </p>
-            <p>
-
-            </p>
-          </div>
-        </div>
-        <!-- Features Item -->
-
-        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-          <div class="col-md-5">
-            <img src="assets/img/member_centred.jfif" class="img-fluid" alt="">
-          </div>
-          <div class="col-md-7">
-            <h3>Member-Centered Financial Support</h3>
-            <p>Our products are designed around real member needs at every stage of life and business growth.</p>
-            <ul>
-              <li><i class="bi bi-check"></i>Affordable development and emergency loans.</li>
-              <li><i class="bi bi-check"></i>Reliable savings and deposit products.</li>
-              <li><i class="bi bi-check"></i>Financial literacy and member guidance.</li>
-            </ul>
-          </div>
-        </div>
-        <!-- Features Item -->
-
-        <div class="row gy-4 align-items-center features-item" data-aos="fade-up">
-          <div class="col-md-5 order-1 order-md-2">
-            <img src="assets/img/Investment.jfif" class="img-fluid" alt="">
-          </div>
-          <div class="col-md-7 order-2 order-md-1">
-            <h3>Secure Savings & Investments</h3>
-            <p class="fst-italic">
-
-            </p>
-            <p>
-              Members build long-term security through disciplined saving and investment plans supported by transparent
-              systems, professional governance, and a strong cooperative culture.
-            </p>
-          </div>
-        </div><!-- Features Item -->
-
-      </div>
-    </section>
-    <!-- End Features Section -->
+    </div>
+    <!-- End Legacy Section -->
 
 
     <!-- Testimonials Section  -->
@@ -509,17 +418,14 @@
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
-  <footer id="footer" class="footer">
-
+  <footer id="footer" class="footer" style="background-color: var(--color-secondary); padding-top: 60px;">
     <div class="container">
       <div class="row gy-4">
-        <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center">
-            <span>Mashirikiano SACCO</span>
+        <div class="col-lg-3 col-md-6 footer-info">
+          <a href="index.html" class="logo d-flex align-items-center mb-3">
+            <span class="text-white" style="font-family: var(--font-primary); font-size: 24px;">Mashirikiano SACCO</span>
           </a>
-          <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your
-            savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for
-            updates and member education.</p>
+          <p class="text-light opacity-75" style="font-size: 14px; line-height: 1.6;">For all your SACCO needs, connect with us. Our team is ready to support your savings, loans, and financial growth journey. Follow us for updates.</p>
           <div class="social-links d-flex mt-4">
             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -529,54 +435,55 @@
         </div>
 
         <div class="col-lg-2 col-6 footer-links">
-          <h4>Useful Links</h4>
+          <h4 class="text-white" style="font-family: var(--font-secondary);">Quick Links</h4>
           <ul>
             <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="index.html#service">Services</a></li>
-            <li><a href="#">Terms of service</a></li>
-            <li><a href="#">Privacy policy</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="index.html#features">Our Products</a></li>
+            <li><a href="faq.html">Help Centre / FAQ</a></li>
+            <li><a href="member_registration.html">Member Portal</a></li>
           </ul>
         </div>
 
-        <div class="col-lg-2 col-6 footer-links">
-          <h4>Our Services</h4>
-          <ul>
-            <li><a href="invest_and_save.html">Savings Accounts</a></li>
-            <li><a href="membership_deposits.html">Member Deposits</a></li>
-            <li><a href="borrow_from_us.html">Loan Products</a></li>
-            <li><a href="contact.html">Financial Advisory</a></li>
-            <li><a href="membership.html">Insurance &amp; Benevolent Fund</a></li>
-          </ul>
-        </div>
-
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact Us</h4>
-          <p>
+        <div class="col-lg-3 col-6 footer-contact text-center text-md-start">
+          <h4 class="text-white" style="font-family: var(--font-secondary);">Contact Us</h4>
+          <p class="text-light opacity-75" style="font-size: 14px; line-height: 1.8;">
             Makongeni Centre, off Thika Garissa Road<br>
             P.O. Box 33_01000<br>
             Makongeni, Thika<br><br>
-            <strong>Phone:</strong>0758500557<br>
+            <strong>Phone:</strong> 0758500557<br>
             <strong>Email:</strong> info@mashirikianosacco.co.ke<br>
           </p>
         </div>
 
+        <div class="col-lg-4 col-md-12">
+          <h4 class="text-white" style="font-family: var(--font-secondary);">Write Us A Message</h4>
+          <p class="text-light opacity-75 mb-3" style="font-size: 14px;">Leave your details and we'll get back to you shortly.</p>
+          <form class="footer-contact-form">
+            <input type="text" class="form-control" placeholder="Your Name" required>
+            <input type="email" class="form-control" placeholder="Your Email" required>
+            <textarea class="form-control" rows="3" placeholder="Message" required></textarea>
+            <button type="submit" class="btn-submit">SEND MESSAGE</button>
+          </form>
+        </div>
+
       </div>
     </div>
 
-    <div class="container mt-4">
-      <div class="copyright">
-        &copy; Copyright <strong><span>Mashirikiano SACCO</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Contact form integration customized for Mashirikiano SACCO. -->
-        Designed by Micah Mosomi
+    <div class="container mt-5 pt-3 border-top" style="border-color: rgba(255,255,255,0.1) !important;">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center text-md-start">
+          <div class="copyright text-light opacity-75" style="font-size: 14px;">
+            &copy; Copyright 2026 <strong><span>Mashirikiano SACCO</span></strong>. All Rights Reserved
+          </div>
+        </div>
+        <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
+          <div class="credits text-light opacity-50" style="font-size: 13px;">
+            Designed by Micah Mosomi
+          </div>
+        </div>
       </div>
     </div>
-
   </footer><!-- End Footer -->
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
