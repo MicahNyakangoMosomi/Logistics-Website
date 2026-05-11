@@ -1773,6 +1773,444 @@ span {
   color: var(--color-primary);
 }
 
+/* Service pages */
+.service-hero-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 28px;
+  box-shadow: 0 12px 34px rgba(14, 29, 52, 0.09);
+  border-top: 4px solid var(--color-orange);
+  height: 100%;
+}
+
+.service-hero-card .icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(60, 141, 21, 0.12);
+  color: var(--color-green);
+  font-size: 24px;
+  margin-bottom: 18px;
+}
+
+.loan-product-card {
+  background: #fff;
+  border-radius: 8px;
+  height: 100%;
+  padding: 28px;
+  border: 1px solid rgba(14, 29, 52, 0.08);
+  box-shadow: 0 8px 26px rgba(14, 29, 52, 0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.loan-product-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(1, 79, 153, 0.28);
+  box-shadow: 0 16px 36px rgba(14, 29, 52, 0.12);
+}
+
+.loan-product-card .loan-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--color-blue);
+  font-size: 22px;
+  margin-bottom: 18px;
+}
+
+.loan-product-card:nth-child(3n+2) .loan-icon {
+  background: #0c538e;
+}
+
+.loan-product-card:nth-child(3n) .loan-icon {
+  background: var(--color-orange);
+}
+
+.loan-product-card h3 {
+  font-family: var(--font-secondary);
+  color: var(--color-secondary);
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.loan-product-card p {
+  color: #5f6f86;
+  margin-bottom: 18px;
+}
+
+.loan-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.loan-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f3f6fa;
+  color: var(--color-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.service-check-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.service-check-list li {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(14, 29, 52, 0.08);
+}
+
+.service-check-list li:last-child {
+  border-bottom: 0;
+}
+
+.service-check-list i {
+  color: var(--color-green);
+  font-size: 20px;
+  line-height: 1.4;
+}
+
+.collateral-step {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  border-left: 4px solid var(--color-blue);
+  box-shadow: 0 8px 24px rgba(14, 29, 52, 0.06);
+  height: 100%;
+}
+
+.collateral-step.is-orange {
+  border-left-color: var(--color-orange);
+}
+
+.collateral-step.is-green {
+  border-left-color: var(--color-green);
+}
+
+.payment-code {
+  border-radius: 8px;
+  background: var(--color-secondary);
+  color: #fff;
+  padding: 24px;
+  border-bottom: 4px solid var(--color-orange);
+}
+
+.payment-code .number {
+  color: #fff;
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 800;
+  letter-spacing: 4px;
+  line-height: 1;
+}
+
+.payment-code .label {
+  color: rgba(255, 255, 255, 0.72);
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.resource-section {
+  background: #f7f9fc;
+}
+
+.download-category,
+.career-card,
+.event-card {
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid rgba(14, 29, 52, 0.08);
+  box-shadow: 0 8px 26px rgba(14, 29, 52, 0.06);
+  padding: 26px;
+}
+
+.download-category h3,
+.career-card h3,
+.event-card h3 {
+  color: var(--color-secondary);
+  font-family: var(--font-secondary);
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.download-list {
+  display: grid;
+  gap: 12px;
+}
+
+.download-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: #f4f8fb;
+  color: var(--color-secondary);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.download-item:hover {
+  background: rgba(1, 79, 153, 0.1);
+  color: var(--color-blue);
+  transform: translateX(3px);
+}
+
+.download-item span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.download-item i {
+  color: var(--color-orange);
+  font-size: 20px;
+}
+
+.download-item strong {
+  color: var(--color-green);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.career-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid rgba(14, 29, 52, 0.08);
+}
+
+.career-filter button {
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: #eef3f8;
+  color: var(--color-secondary);
+  font-weight: 700;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.career-filter button.active,
+.career-filter button:hover {
+  background: var(--color-blue);
+  color: #fff;
+}
+
+.career-list {
+  display: grid;
+  gap: 18px;
+}
+
+.career-card {
+  border-left: 4px solid var(--color-blue);
+}
+
+.career-card.is-hidden {
+  display: none;
+}
+
+.career-badge {
+  display: inline-flex;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: rgba(1, 79, 153, 0.12);
+  color: var(--color-blue);
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.career-badge.green {
+  background: rgba(60, 141, 21, 0.14);
+  color: var(--color-green);
+}
+
+.career-badge.orange {
+  background: rgba(221, 93, 2, 0.14);
+  color: var(--color-orange);
+}
+
+.event-card {
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+}
+
+.event-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-bottom: 4px solid #0c538e;
+  overflow: hidden;
+}
+
+.event-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.event-card:hover .event-image img {
+  transform: scale(1.04);
+}
+
+.event-card h3,
+.event-card p,
+.event-card .loan-meta {
+  margin-left: 26px;
+  margin-right: 26px;
+}
+
+.event-card h3 {
+  margin-top: 24px;
+}
+
+.event-card .loan-meta {
+  margin-bottom: 26px;
+}
+
+.forms-downloads-page {
+  background: #fff;
+}
+
+.forms-library {
+  display: grid;
+  gap: 46px;
+}
+
+.forms-group h3 {
+  color: var(--color-blue);
+  font-family: var(--font-secondary);
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 24px;
+  padding-bottom: 14px;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.forms-group h3::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 74px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-green), var(--color-orange));
+  border-radius: 999px;
+}
+
+.forms-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 26px;
+}
+
+.form-download-card {
+  min-height: 150px;
+  padding: 24px 18px;
+  border-radius: 6px;
+  background: #fff;
+  border: 1px solid rgba(14, 29, 52, 0.08);
+  box-shadow: 0 10px 28px rgba(14, 29, 52, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.form-download-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(60, 141, 21, 0.34);
+  box-shadow: 0 18px 38px rgba(14, 29, 52, 0.14);
+}
+
+.form-download-card h4 {
+  color: var(--color-secondary);
+  font-family: var(--font-secondary);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 22px;
+}
+
+.form-download-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 118px;
+  min-height: 40px;
+  padding: 10px 18px;
+  border-radius: 3px;
+  background: #0c538e;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 18px rgba(12, 83, 142, 0.22);
+}
+
+.form-download-card:nth-child(3n+2) .form-download-btn {
+  background: #0c538e;
+  box-shadow: 0 8px 18px rgba(12, 83, 142, 0.22);
+}
+
+.form-download-card:nth-child(3n) .form-download-btn {
+  background: #0c538e;
+  box-shadow: 0 8px 18px rgba(12, 83, 142, 0.22);
+}
+
+.form-download-btn:hover {
+  color: #fff;
+  filter: brightness(0.95);
+}
+
+@media (max-width: 1199px) {
+  .forms-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .forms-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .forms-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .carousel{
   width: 100vw;
   height: 80vh;
@@ -1960,4 +2398,4 @@ h6 {
   color: var(--color-orange);
 }
 
-/* End of main CSS */
+/* End of main CSS */
