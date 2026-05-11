@@ -117,14 +117,8 @@
                 <h4>Loan Application Form</h4>
                 <a href="loans.html" class="form-download-btn">DOWNLOAD</a>
               </div>
-              <div class="form-download-card">
-                <h4>Interest on Deposit Form</h4>
-                <a href="membership_deposits.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
-              <div class="form-download-card">
-                <h4>Deposit Boost Loan Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
+              
+              
               <div class="form-download-card">
                 <h4>Shares Transfer Form</h4>
                 <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
@@ -143,43 +137,17 @@
                 <h4>Member Rejoining Form</h4>
                 <a href="join_us.html" class="form-download-btn">DOWNLOAD</a>
               </div>
-              <div class="form-download-card">
-                <h4>Membership Confidentiality Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
-              <div class="form-download-card">
-                <h4>Voluntary Assignment Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
+              
+              
               <div class="form-download-card">
                 <h4>Guarantor Substitution Form</h4>
                 <a href="loan-security-collateral-services.html" class="form-download-btn">DOWNLOAD</a>
               </div>
-              <div class="form-download-card">
-                <h4>Next of Kin Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
+              
             </div>
           </div>
 
-          <div class="forms-group">
-            <h3>SAVING SCHEME FORMS</h3>
-            <div class="forms-grid">
-              <div class="form-download-card">
-                <h4>Junior Savings Joining Form</h4>
-                <a href="junior_account.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
-              <div class="form-download-card">
-                <h4>Deposits Withdrawal Form</h4>
-                <a href="membership_deposits.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
-              <div class="form-download-card">
-                <h4>Savings Withdrawal Form</h4>
-                <a href="invest_and_save.html" class="form-download-btn">DOWNLOAD</a>
-              </div>
-            </div>
-          </div>
-
+          
           <div class="forms-group">
             <h3>COMPLAINT FORM</h3>
             <div class="forms-grid">
@@ -216,7 +184,7 @@
             </div>
           </div>
 
-          <div class="forms-group">
+          <!-- <div class="forms-group">
             <h3>MASHIRIKIANO SACCO ANNUAL REPORTS</h3>
             <div class="forms-grid">
               <div class="form-download-card"><h4>2024 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
@@ -228,9 +196,9 @@
               <div class="form-download-card"><h4>2018 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
               <div class="form-download-card"><h4>2017 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
             </div>
-          </div>
+          </div> -->
 
-          <div class="forms-group">
+          <!-- <div class="forms-group">
             <h3>MASHIRIKIANO SACCO NEWSLETTERS</h3>
             <div class="forms-grid">
               <div class="form-download-card"><h4>Newsletter Issue No. 001</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
@@ -238,7 +206,7 @@
               <div class="form-download-card"><h4>Newsletter Issue No. 003</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
               <div class="form-download-card"><h4>Newsletter Issue No. 004</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </section>
@@ -311,8 +279,7 @@
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Contact form integration customized for Mashirikiano SACCO. -->
-        Designed by Micah Mosomi
-      </div>
+</div>
     </div>
 
   </footer><!-- End Footer -->
@@ -341,11 +308,68 @@
   <script src="assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cards = document.querySelectorAll('.form-download-card');
+      const pdfjs = window.pdfjsLib;
+
+      if (pdfjs) {
+        pdfjs.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+
+      const showPlaceholder = (preview, message) => {
+        preview.innerHTML = `
+          <div class="pdf-preview-placeholder">
+            <i class="bi bi-file-earmark-pdf"></i>
+            <span>${message}</span>
+          </div>
+        `;
+      };
+
+      const renderPdfPreview = async (preview, pdfUrl) => {
+        if (!pdfjs) {
+          showPlaceholder(preview, 'PDF preview library could not load.');
+          return;
+        }
+
+        try {
+          const pdf = await pdfjs.getDocument(pdfUrl).promise;
+          const page = await pdf.getPage(1);
+          const viewport = page.getViewport({ scale: 1.25 });
+          const canvas = document.createElement('canvas');
+          const context = canvas.getContext('2d');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          preview.innerHTML = '';
+          preview.appendChild(canvas);
+          await page.render({ canvasContext: context, viewport }).promise;
+        } catch (error) {
+          showPlaceholder(preview, 'PDF preview will appear here once a valid PDF link is added.');
+        }
+      };
+
+      cards.forEach((card) => {
+        const link = card.querySelector('.form-download-btn');
+        const pdfUrl = card.dataset.pdf || (link && link.href.toLowerCase().includes('.pdf') ? link.getAttribute('href') : '');
+        const preview = document.createElement('div');
+        preview.className = 'pdf-preview';
+        card.prepend(preview);
+
+        if (pdfUrl) {
+          renderPdfPreview(preview, pdfUrl);
+        } else {
+          showPlaceholder(preview, 'Set this card link to a PDF to preview its first page.');
+        }
+      });
+    });
+  </script>
 
 </body>
 
 </html>
+
 
 
 
