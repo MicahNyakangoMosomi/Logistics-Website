@@ -7,9 +7,9 @@ const testimonials = [
   },
   {
     name: "Micah Mosomi",
-    role: "IT Assistant",
+    role: "ICT manager",
     quote: "We leverage modern digital systems to provide you with secure, efficient, and reliable financial services.",
-    image: "assets/img/default-profile.svg"
+    image: "assets/img/micah-mosomi2.jpeg"
   },
   {
     name: "Vice Chairperson",
