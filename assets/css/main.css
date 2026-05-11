@@ -1330,6 +1330,10 @@ span {
 .team .member img {
   margin: -1px -1px 30px -1px;
 }
+.team .member .img-box{
+  height: 300px;
+  overflow: hidden;
+}
 
 .team .member .member-content {
   padding: 0 20px 30px 20px;
