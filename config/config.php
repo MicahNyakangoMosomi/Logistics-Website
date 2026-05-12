@@ -51,15 +51,36 @@ function env_required(string $key)
  * 4. CONFIG ARRAY
  */
 return [
+    /**
+     * DATABASE CONFIG
+     */
     'db' => [
-        'host' => env_required('DB_HOST'),
-        'name' => env_required('DB_NAME'),
-        'user' => env_required('DB_USER'),
-        'pass' => env_required('DB_PASS'),
+        'host'    => env_required('DB_HOST'),
+        'name'    => env_required('DB_NAME'),
+        'user'    => env_required('DB_USER'),
+        'pass'    => env_required('DB_PASS'),
         'charset' => env('DB_CHARSET', 'utf8mb4'),
     ],
 
+    /**
+     * APPLICATION CONFIG
+     */
     'app' => [
-        'name' => env('APP_NAME', 'App'),
+        'name' => env('APP_NAME', 'My App'),
+        'env'  => env('APP_ENV', 'production'),
+    ],
+
+    /**
+     * M-PESA CONFIG (FIXED - THIS WAS MISSING)
+     */
+    'mpesa' => [
+        'environment'     => env('MPESA_ENV', 'sandbox'), // sandbox | production
+        'consumer_key'    => env_required('MPESA_CONSUMER_KEY'),
+        'consumer_secret' => env_required('MPESA_CONSUMER_SECRET'),
+        'shortcode'       => env_required('MPESA_SHORTCODE'),
+
+        // optional but useful later
+        'passkey'         => env('MPESA_PASSKEY'),
+        'callback_url'    => env('MPESA_CALLBACK_URL'),
     ],
 ];
