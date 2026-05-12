@@ -154,6 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
 function initiatePlan(plan, amount) {
   alert(plan + " plan has been initiated!");
   setTimeout(function() {
-      window.location.href = 'payment.html?plan=' + encodeURIComponent(plan) + '&amount=' + encodeURIComponent(amount);
+      window.location.href = 'payments.php?plan=' + encodeURIComponent(plan) + '&amount=' + encodeURIComponent(amount);
   }, 3000);
 }

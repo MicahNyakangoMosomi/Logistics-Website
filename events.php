@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Membership | Mashirikiano SACCO</title>
-  <meta content="View Mashirikiano SACCO membership requirements, benefits, and eligibility details." name="description">
-  <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika" name="keywords">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/membership.html">
   <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <title>Events | Mashirikiano SACCO</title>
+  <meta content="Upcoming Mashirikiano SACCO events, member education sessions, annual meetings, and community activities." name="description">
+  <meta content="Mashirikiano SACCO events, member education, AGM, community activities" name="keywords">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/events.php">
+<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,7 +44,7 @@
       <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
@@ -58,18 +58,25 @@
 
 
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
-        <li><a href="membership.html" class="active">Membership</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQ</a></li>
+        <li class="dropdown"><a href="#" class="active"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+          <ul>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
+          </ul>
+        </li>
+        <li><a href="membership.php">Membership</a></li>
+        <li><a href="contact.php">Contact</a></li>
+        <li><a href="faq.php">FAQ</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -79,15 +86,13 @@
 
   <main id="main">
 
-    <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
-      <div class="page-header d-flex align-items-center" style="background-image: url('assets/img//logo.png');">
+      <div class="page-header d-flex align-items-center" style="background-image: url('assets/img/page-header.jpg');">
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
-            <div class="col-lg-6 text-center">
-              <h2>MemberShip</h2>
-              <p class="text-secondary">Mashirikiano SACCO has been empowering its members economically, socially, and financially through the provision of
-              financial services tailored to meet their needs.</p>
+            <div class="col-lg-7 text-center">
+              <h2>Events</h2>
+              <p class="text-light">Member meetings, education forums, community days, and SACCO updates will be published here.</p>
             </div>
           </div>
         </div>
@@ -95,78 +100,87 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>Membership</li>
+            <li><a href="index.php">Home</a></li>
+            <li>Events</li>
           </ol>
         </div>
       </nav>
-    </div><!-- End Breadcrumbs -->
+    </div>
 
- 
+    <section class="resource-section">
+      <div class="container" data-aos="fade-up">
 
+        <div class="row gy-4 align-items-stretch">
+          <div class="col-lg-4">
+            <div class="service-hero-card">
+              <div class="icon"><i class="bi bi-calendar-event"></i></div>
+              <h3>Stay Connected</h3>
+              <p>Events help members learn, ask questions, participate in SACCO decisions, and stay close to the community.</p>
+              <ul class="service-check-list mt-3">
+                <li><i class="bi bi-check-circle"></i><span>Member education and financial literacy forums.</span></li>
+                <li><i class="bi bi-check-circle"></i><span>Annual and special member meetings.</span></li>
+                <li><i class="bi bi-check-circle"></i><span>Community outreach and SACCO awareness days.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <img src="assets/img/meeting_pic.jpeg" alt="Mashirikiano SACCO members at an event" class="img-fluid services-img">
+            <h3>Upcoming and featured events</h3>
+            <p>Details will be updated as dates are confirmed. Members can also contact the office for meeting notices, education sessions, and participation guidance.</p>
+          </div>
+        </div>
 
-    
-<!-- ======= Pricing Section ======= -->
-<section id="pricing" class="pricing">
-  <div class="container" data-aos="fade-up">
-    <h3 class="orange fs-2">Be a Member</h3>
-      <div class="row gy-4">
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-              <div class="pricing-item">
-                  <h3 class="fs-2">REQUIREMENTS</h3>
-                  <h4 class="fs-1">An aspiring member is required to:</h4>
-                  <ul>
-                      <li><i class="bi bi-check"></i>Provide the dully filled membership application form accompanied by a copy of their national ID (Passport for
-                      non-Kenyans), employment letter or pay slip and a passport size photograph.</li>
-                      <li><i class="bi bi-check"></i>For kin members, a birth certificate (for children membership) or marriage certificate/marriage affidavit (for spouse
-                      membership) is required.</li>
-                      
-                  </ul>
-                  <!--</a href="javascript:void(0);" class="buy-btn" onclick="initiatePlan('Free', 0)">Buy Now</a> -->
+        <div class="row gy-4 mt-4">
+          <div class="col-md-6 col-xl-4">
+            <div class="event-card">
+              <div class="event-image">
+                <img src="assets/img/meeting_pic2.jpeg" alt="Member education forum">
               </div>
-          </div><!-- End Pricing Item -->
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
-              <div class="pricing-item">
-                  <h3 class="fs-2">BENEFITS OF BEING A MEMBER</h3>
-                  <h4 class="fs-1">Join Mashirikiano SACCO for finacial exellence:</h4>
-                  <ul>
-                      <li><i class="bi bi-check"></i>Opportunity to save</li>
-                      <li><i class="bi bi-check"></i>High returns on investment</li>
-                      <li><i class="bi bi-check"></i>Access to affordable credit products</li>
-                      <li><i class="bi bi-check"></i>Education on proper management of finances and investment practices</li>
-                      
-                  </ul>
-                  
+              <div class="event-content">
+                <h3>Member Education Forum</h3>
+                <p>A practical session on savings discipline, loan readiness, guarantor responsibilities, and using SACCO services confidently.</p>
+                <div class="loan-meta"><span><i class="bi bi-geo-alt"></i> Venue to be confirmed</span></div>
               </div>
-          </div><!-- End Pricing Item -->
-
-          <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
-              <div class="pricing-item">
-                  <h3 class="fs-2">MEMBERSHIP IS OPEN TO</h3>
-                  <h4 class="fs-1">Who are able to join the sacco?:</h4>
-                  <ul>
-                      <li><i class="bi bi-check"></i>Any Kenyan Citizen</li>
-                      <li><i class="bi bi-check"></i>Immediate family members of the primary members – Spouses and Children</li>
-                      
-                  </ul>
-                  
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="event-card">
+              <div class="event-image">
+                <img src="assets/img/group_pic.jpeg" alt="Annual members meeting">
               </div>
-          </div><!-- End  Item -->
+              <div class="event-content">
+                <h3>Annual Members Meeting</h3>
+                <p>Formal member engagement for SACCO updates, reports, resolutions, and shared planning once the date is announced.</p>
+                <div class="loan-meta"><span><i class="bi bi-people"></i> Members only</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-xl-4">
+            <div class="event-card">
+              <div class="event-image">
+                <img src="assets/img/member_centred.jfif" alt="Community outreach day">
+              </div>
+              <div class="event-content">
+                <h3>Community Outreach Day</h3>
+                <p>A community-focused activity for financial awareness, member recruitment, and strengthening local SACCO relationships.</p>
+                <div class="loan-meta"><span><i class="bi bi-megaphone"></i> Public notice coming</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-  </div>
-</section><!-- End  Section -->
-
+    </section><!-- End Service Details Section -->
 
   </main><!-- End #main -->
 
+  
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
 
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="index.php" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
@@ -181,9 +195,9 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="loans.html">Services</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About us</a></li>
+            <li><a href="loans.php">Services</a></li>
 
             <li><a href="#">Terms of service</a></li>
             <li><a href="#">Privacy policy</a></li>
@@ -193,11 +207,11 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="invest_and_save.html">Savings Accounts</a></li>
-            <li><a href="membership_deposits.html">Member Deposits</a></li>
-            <li><a href="loans.html">Loan Products</a></li>
-            <li><a href="contact.html">Financial Advisory</a></li>
-            <li><a href="membership.html">Insurance &amp; Benevolent Fund</a></li>
+            <li><a href="invest_and_save.php">Savings Accounts</a></li>
+            <li><a href="membership_deposits.php">Member Deposits</a></li>
+            <li><a href="loans.php">Loan Products</a></li>
+            <li><a href="contact.php">Financial Advisory</a></li>
+            <li><a href="membership.php">Insurance &amp; Benevolent Fund</a></li>
           </ul>
         </div>
 
@@ -231,13 +245,14 @@
   </footer><!-- End Footer -->
   <!-- End Footer -->
 
+
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
   <div class="floating-container">
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>
@@ -258,6 +273,7 @@
 </body>
 
 </html>
+
 
 
 

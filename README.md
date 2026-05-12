@@ -23,7 +23,7 @@ A modern, responsive website for Mashirikiano SACCO built with HTML, CSS, and Ja
    ```bash
    git clone <repository-url>
    ```
-2. Open `index.html` in your web browser.
+2. Open `index.php` in your web browser.
 
 ## Usage
 

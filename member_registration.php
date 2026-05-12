@@ -10,7 +10,7 @@
     name="description">
   <meta content="Mashirikiano SACCO registration, member application, upload documents, join sacco" name="keywords">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/member_registration.html">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/member_registration.php">
 
   <link rel="icon" type="image/x-icon" href="/assets/img/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -72,7 +72,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">
           Mashirikiano</h5>
@@ -86,25 +86,25 @@
 
 
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="about.php">About</a></li>
           <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
           <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="faq.php">FAQ</a></li>
 
         </ul>
       </nav><!-- .navbar -->
@@ -128,7 +128,7 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li>Member Registration</li>
           </ol>
         </div>
@@ -253,7 +253,7 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="index.php" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your
@@ -269,7 +269,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>

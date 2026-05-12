@@ -5,11 +5,11 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
 
-  <title>Karibu Loan | Mashirikiano SACCO</title>
+  <title>Junior Account | Mashirikiano SACCO</title>
   <meta content="Mashirikiano SACCO offers member-focused savings, deposits, and affordable loan products to support financial growth and community empowerment in Kenya." name="description">
   <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika" name="keywords">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/karibu_loan.html">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/junior_account.php">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
       <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
@@ -40,25 +40,25 @@
 
 
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#" class="active"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
         <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+        <li><a href="contact.php">Contact</a></li>
+        <li><a href="faq.php">FAQ</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -72,13 +72,13 @@
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
-              <h2>Karibu Loan</h2>
-              <p class="text-light">A welcome loan product that helps new members access development funds early.</p>
+              <h2>Junior Account</h2>
+              <p class="text-light">Secure your child's future through structured savings plans.</p>
             </div>
           </div>
         </div>
       </div>
-      <nav><div class="container"><ol><li><a href="index.html">Home</a></li><li>Karibu Loan</li></ol></div></nav>
+      <nav><div class="container"><ol><li><a href="index.php">Home</a></li><li>Junior Account</li></ol></div></nav>
     </div>
 
     <section id="service-details" class="service-details">
@@ -86,27 +86,27 @@
         <div class="row gy-4">
           <div class="col-lg-4">
             <div class="services-list">
-              <a href="membership_deposits.html" >Membership Deposits</a>
-              <a href="karibu_loan.html" class="active">Karibu Loan</a>
-              <a href="development_loan.html" >Development Loan</a>
-              <a href="emergency_loan.html" >Emergency Loan</a>
-              <a href="salary_advance.html" >Salary In Advance</a>
-              <a href="junior_account.html" >Junior Account</a>
+              <a href="membership_deposits.php" >Membership Deposits</a>
+              <a href="karibu_loan.php" >Karibu Loan</a>
+              <a href="development_loan.php" >Development Loan</a>
+              <a href="emergency_loan.php" >Emergency Loan</a>
+              <a href="salary_advance.php" >Salary In Advance</a>
+              <a href="junior_account.php" class="active">Junior Account</a>
             </div>
-            <h4>Start Strong</h4>
-            <p>Karibu Loan helps new members begin projects without long waiting periods.</p>
+            <h4>Save For The Next Generation</h4>
+            <p>Junior Account helps families build consistent savings for children.</p>
           </div>
           <div class="col-lg-8">
-            <img src="assets/img/karibu_loan.jfif" alt="" class="img-fluid services-img">
-            <h3>Karibu Loan Details</h3>
-            <p>This facility supports recently joined members who need quick development financing.</p>
+            <img src="assets/img/junior.jfif" alt="" class="img-fluid services-img">
+            <h3>Junior Account Features</h3>
+            <p>Designed for parents and guardians planning education and long-term goals for children.</p>
             <ul>
-              <li><i class="bi bi-check-circle"></i> <span>Designed for new members.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Faster access than standard development products.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Clear repayment structure.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Encourages an early saving culture.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Supports education planning.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Flexible deposits based on income flow.</span></li>
             </ul>
-            <p>The product helps members take timely opportunities.</p>
-            <p>Our team guides members on eligibility and repayment planning.</p>
+            <p>Regular contributions reduce future financial pressure.</p>
+            <p>Our SACCO team can help set realistic monthly targets.</p>
           </div>
         </div>
       </div>
@@ -117,23 +117,23 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center"><span>Mashirikiano SACCO</span></a>
+          <a href="index.php" class="logo d-flex align-items-center"><span>Mashirikiano SACCO</span></a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
         </div>
         <div class="col-lg-2 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li><li><a href="about.html">About us</a></li><li><a href="loans.html">Services</a></li>
+            <li><a href="index.php">Home</a></li><li><a href="about.php">About us</a></li><li><a href="loans.php">Services</a></li>
           </ul>
         </div>
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="membership_deposits.html">Membership Deposits</a></li>
-            <li><a href="karibu_loan.html">Karibu Loan</a></li>
-            <li><a href="development_loan.html">Development Loan</a></li>
-            <li><a href="emergency_loan.html">Emergency Loan</a></li>
-            <li><a href="salary_advance.html">Salary In Advance</a></li>
+            <li><a href="membership_deposits.php">Membership Deposits</a></li>
+            <li><a href="karibu_loan.php">Karibu Loan</a></li>
+            <li><a href="development_loan.php">Development Loan</a></li>
+            <li><a href="emergency_loan.php">Emergency Loan</a></li>
+            <li><a href="salary_advance.php">Salary In Advance</a></li>
           </ul>
         </div>
         <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
@@ -157,7 +157,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>

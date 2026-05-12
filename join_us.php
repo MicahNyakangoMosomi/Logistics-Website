@@ -1,32 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
 
-  <title>Development Loan | Mashirikiano SACCO</title>
+  <title>Join Us | Mashirikiano SACCO</title>
   <meta content="Mashirikiano SACCO offers member-focused savings, deposits, and affordable loan products to support financial growth and community empowerment in Kenya." name="description">
   <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika" name="keywords">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/development_loan.html">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/join_us.php">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Mashirikiano SACCO
+  * Updated: Aug 30 2023 with Bootstrap v5.3.1
+  * Template URL: https://mashirikianosacco.co.ke/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
 </head>
+
 <body>
+
+  <!-- ======= Header ======= -->
       <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
@@ -40,25 +58,25 @@
 
 
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#" class="active"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
         <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+        <li><a href="contact.php">Contact</a></li>
+        <li><a href="faq.php">FAQ</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -67,75 +85,117 @@
   </header><!-- End Header -->
 
   <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
     <div class="breadcrumbs">
       <div class="page-header d-flex align-items-center" style="background-image: url('assets/img/page-header.jpg');">
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
-              <h2>Development Loan</h2>
-              <p class="text-light">Finance major investments through affordable SACCO credit.</p>
+              <h2>Join Us</h2>
+              <p class="text-light">Become part of Mashirikiano SACCO and start your journey toward stable savings, affordable credit, and long-term financial growth.</p>
             </div>
           </div>
         </div>
       </div>
-      <nav><div class="container"><ol><li><a href="index.html">Home</a></li><li>Development Loan</li></ol></div></nav>
-    </div>
+      <nav>
+        <div class="container">
+          <ol>
+            <li><a href="index.php">Home</a></li>
+            <li>Join Us</li>
+          </ol>
+        </div>
+      </nav>
+    </div><!-- End Breadcrumbs -->
 
+    <!-- ======= Service Details Section ======= -->
     <section id="service-details" class="service-details">
       <div class="container" data-aos="fade-up">
+
         <div class="row gy-4">
+
           <div class="col-lg-4">
             <div class="services-list">
-              <a href="membership_deposits.html" >Membership Deposits</a>
-              <a href="karibu_loan.html" >Karibu Loan</a>
-              <a href="development_loan.html" class="active">Development Loan</a>
-              <a href="emergency_loan.html" >Emergency Loan</a>
-              <a href="salary_advance.html" >Salary In Advance</a>
-              <a href="junior_account.html" >Junior Account</a>
+              <a href="#" class="active">Membership</a>
+              <a href="#">Member Deposits</a>
+              <a href="#">Development Loans</a>
+              <a href="#">Emergency Loans</a>
+              <a href="#">Salary Advance</a>
+              <a href="#">Junior Account</a>
             </div>
-            <h4>Fund Your Big Goals</h4>
-            <p>Development Loan is ideal for long-term personal and business projects.</p>
-          </div>
-          <div class="col-lg-8">
-            <img src="assets/img/development_loan.jfif" alt="" class="img-fluid services-img">
-            <h3>Development Loan Benefits</h3>
-            <p>Suitable for construction, education, business expansion, and asset acquisition.</p>
-            <ul>
-              <li><i class="bi bi-check-circle"></i> <span>Higher limits based on deposits.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Competitive SACCO interest rates.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Flexible repayment tenure.</span></li>
-            </ul>
-            <p>Structured to support growth while staying affordable.</p>
-            <p>Members receive guidance on documentation and planning.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
 
+            <h4>Membership Made Simple</h4>
+            <p>We offer a clear and guided onboarding process to help new members start saving, borrowing, and building financial confidence without delays.</p>
+          </div>
+
+          <div class="col-lg-8">
+            <img src="assets/img/logo.png" alt="" class="img-fluid services-img">
+            <h3>Why Join Mashirikiano SACCO?</h3>
+            <p>
+              Joining Mashirikiano SACCO gives you access to cooperative financial solutions designed to improve your daily life and strengthen your long-term plans.
+            </p>
+            <ul>
+              <li><i class="bi bi-check-circle"></i> <span>Affordable and flexible loan products for different needs.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Consistent savings and deposit growth opportunities.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Member education and personalized financial guidance.</span></li>
+            </ul>
+            <p>
+              Our team supports every member with clear product information, transparent processes, and timely support.
+            </p>
+            <p>
+              With strong governance and a member-first culture, we continue to create financial opportunities that empower individuals, families, and communities.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Service Details Section -->
+
+  </main><!-- End #main -->
+
+  
+  <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
+
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center"><span>Mashirikiano SACCO</span></a>
+          <a href="index.php" class="logo d-flex align-items-center">
+            <span>Mashirikiano SACCO</span>
+          </a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
+          <div class="social-links d-flex mt-4">
+            <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+            <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+          </div>
         </div>
+
         <div class="col-lg-2 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li><li><a href="about.html">About us</a></li><li><a href="loans.html">Services</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About us</a></li>
+            <li><a href="loans.php">Services</a></li>
+
+            <li><a href="#">Terms of service</a></li>
+            <li><a href="#">Privacy policy</a></li>
           </ul>
         </div>
+
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="membership_deposits.html">Membership Deposits</a></li>
-            <li><a href="karibu_loan.html">Karibu Loan</a></li>
-            <li><a href="development_loan.html">Development Loan</a></li>
-            <li><a href="emergency_loan.html">Emergency Loan</a></li>
-            <li><a href="salary_advance.html">Salary In Advance</a></li>
+            <li><a href="invest_and_save.php">Savings Accounts</a></li>
+            <li><a href="membership_deposits.php">Member Deposits</a></li>
+            <li><a href="loans.php">Loan Products</a></li>
+            <li><a href="contact.php">Financial Advisory</a></li>
+            <li><a href="membership.php">Insurance &amp; Benevolent Fund</a></li>
           </ul>
         </div>
+
         <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
           <h4>Contact Us</h4>
           <p>
@@ -145,11 +205,27 @@
             <strong>Phone:</strong>0758500557<br>
             <strong>Email:</strong> info@mashirikianosacco.co.ke<br>
           </p>
+
         </div>
+
       </div>
     </div>
-    <div class="container mt-4"><div class="copyright">&copy; Copyright <strong><span>Mashirikiano SACCO</span></strong>. All Rights Reserved</div></div>
-  </footer>
+
+    <div class="container mt-4">
+      <div class="copyright">
+        &copy; Copyright <strong><span>Mashirikiano SACCO</span></strong>. All Rights Reserved
+      </div>
+      <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Contact form integration customized for Mashirikiano SACCO. -->
+</div>
+    </div>
+
+  </footer><!-- End Footer -->
+  <!-- End Footer -->
+
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
@@ -157,20 +233,30 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>
+
   <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>
+
 </body>
+
 </html>
+
+
+
 
 
 

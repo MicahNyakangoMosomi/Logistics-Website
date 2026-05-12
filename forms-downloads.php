@@ -10,7 +10,7 @@
   <meta content="Download Mashirikiano SACCO membership, loan, savings, and member service forms." name="description">
   <meta content="Mashirikiano SACCO forms, downloads, membership form, loan application, savings withdrawal" name="keywords">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/forms-downloads.html">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/forms-downloads.php">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -44,7 +44,7 @@
       <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
@@ -58,25 +58,25 @@
 
 
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
         <li class="dropdown"><a href="#" class="active"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+        <li><a href="contact.php">Contact</a></li>
+        <li><a href="faq.php">FAQ</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -100,7 +100,7 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.html">Home</a></li>
+            <li><a href="index.php">Home</a></li>
             <li>Forms &amp; Downloads</li>
           </ol>
         </div>
@@ -115,13 +115,13 @@
             <div class="forms-grid">
               <div class="form-download-card">
                 <h4>Loan Application Form</h4>
-                <a href="loans.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="loans.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               
               
               <div class="form-download-card">
                 <h4>Shares Transfer Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
             </div>
           </div>
@@ -135,13 +135,13 @@
               </div>
               <div class="form-download-card">
                 <h4>Member Rejoining Form</h4>
-                <a href="join_us.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="join_us.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               
               
               <div class="form-download-card">
                 <h4>Guarantor Substitution Form</h4>
-                <a href="loan-security-collateral-services.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="loan-security-collateral-services.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               
             </div>
@@ -153,7 +153,7 @@
             <div class="forms-grid">
               <div class="form-download-card">
                 <h4>Complaint Handling Form</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
             </div>
           </div>
@@ -163,23 +163,23 @@
             <div class="forms-grid">
               <div class="form-download-card">
                 <h4>Strategic Plan 2025-2027</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               <div class="form-download-card">
                 <h4>Strategic Plan 2020-2024</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               <div class="form-download-card">
                 <h4>SACCO Societies Act 2008</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               <div class="form-download-card">
                 <h4>SACCO By-Laws</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
               <div class="form-download-card">
                 <h4>SACCO Regulations</h4>
-                <a href="contact.html" class="form-download-btn">DOWNLOAD</a>
+                <a href="contact.php" class="form-download-btn">DOWNLOAD</a>
               </div>
             </div>
           </div>
@@ -187,24 +187,24 @@
           <!-- <div class="forms-group">
             <h3>MASHIRIKIANO SACCO ANNUAL REPORTS</h3>
             <div class="forms-grid">
-              <div class="form-download-card"><h4>2024 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2023 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2022 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2021 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2020 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2019 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2018 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>2017 Report &amp; Accounts</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2024 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2023 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2022 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2021 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2020 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2019 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2018 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>2017 Report &amp; Accounts</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
             </div>
           </div> -->
 
           <!-- <div class="forms-group">
             <h3>MASHIRIKIANO SACCO NEWSLETTERS</h3>
             <div class="forms-grid">
-              <div class="form-download-card"><h4>Newsletter Issue No. 001</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>Newsletter Issue No. 002</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>Newsletter Issue No. 003</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
-              <div class="form-download-card"><h4>Newsletter Issue No. 004</h4><a href="contact.html" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>Newsletter Issue No. 001</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>Newsletter Issue No. 002</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>Newsletter Issue No. 003</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
+              <div class="form-download-card"><h4>Newsletter Issue No. 004</h4><a href="contact.php" class="form-download-btn">DOWNLOAD</a></div>
             </div>
           </div> -->
         </div>
@@ -220,7 +220,7 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="index.php" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
@@ -235,9 +235,9 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="loans.html">Services</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About us</a></li>
+            <li><a href="loans.php">Services</a></li>
 
             <li><a href="#">Terms of service</a></li>
             <li><a href="#">Privacy policy</a></li>
@@ -247,11 +247,11 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="invest_and_save.html">Savings Accounts</a></li>
-            <li><a href="membership_deposits.html">Member Deposits</a></li>
-            <li><a href="loans.html">Loan Products</a></li>
-            <li><a href="contact.html">Financial Advisory</a></li>
-            <li><a href="membership.html">Insurance &amp; Benevolent Fund</a></li>
+            <li><a href="invest_and_save.php">Savings Accounts</a></li>
+            <li><a href="membership_deposits.php">Member Deposits</a></li>
+            <li><a href="loans.php">Loan Products</a></li>
+            <li><a href="contact.php">Financial Advisory</a></li>
+            <li><a href="membership.php">Insurance &amp; Benevolent Fund</a></li>
           </ul>
         </div>
 
@@ -292,7 +292,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>

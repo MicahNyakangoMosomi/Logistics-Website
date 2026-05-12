@@ -106,13 +106,13 @@
   <div class="top-bar d-none d-lg-block">
     <div class="container-fluid container-xl d-flex justify-content-between align-items-center">
       <div>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Help Centre</a>
-        <a href="faq.html">FAQs</a>
+        <a href="about.php">About Us</a>
+        <a href="contact.php">Help Centre</a>
+        <a href="faq.php">FAQs</a>
       </div>
       <div>
         <a href="#"><i class="bi bi-search"></i></a>
-        <a href="member_registration.html">Member Portal</a>
+        <a href="member_registration.php">Member Portal</a>
       </div>
     </div>
   </div>
@@ -120,7 +120,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
         <span class="d-none d-xl-block ms-4" style="font-family: 'Archivo Black', sans-serif; font-size: 12px; color: rgba(255,255,255,0.7); border-left: 2px solid var(--color-orange); padding-left: 15px;">Empowering your financial journey</span>
@@ -135,25 +135,25 @@
 
 
         <ul>
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.php" class="active">Home</a></li>
+          <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
           <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="faq.php">FAQ</a></li>
           
         </ul>
       </nav><!-- .navbar -->
@@ -183,7 +183,7 @@
             <h5 class="text-white text-center hero-title">Mashirikiano SACCO</h5>
             <p class="text-white text-center hero-subtitle">Official Business Number 4048759</p>
             <div class="text-center">
-              <a href="invest_and_save.html" class="btn-outline-custom" style="margin-top: 15px;">TOP UP TODAY</a>
+              <a href="invest_and_save.php" class="btn-outline-custom" style="margin-top: 15px;">TOP UP TODAY</a>
             </div>
           </div>
         </div>
@@ -196,7 +196,7 @@
             <h5 class="text-white text-center hero-title">The Best Managed Sacco</h5>
             <p class="text-white text-center hero-subtitle">CountryWide</p>
             <div class="text-center">
-              <a href="about.html" class="btn-outline-custom" style="margin-top: 15px;">DISCOVER MORE</a>
+              <a href="about.php" class="btn-outline-custom" style="margin-top: 15px;">DISCOVER MORE</a>
             </div>
           </div>
         </div>
@@ -209,7 +209,7 @@
             <h5 class="text-white text-center hero-title">Enjoy premium Returns</h5>
             <p class="text-white text-center hero-subtitle">On your Savings</p>
             <div class="text-center">
-              <a href="invest_and_save.html" class="btn-outline-custom" style="margin-top: 15px;">START SAVING</a>
+              <a href="invest_and_save.php" class="btn-outline-custom" style="margin-top: 15px;">START SAVING</a>
             </div>
           </div>
         </div>
@@ -235,7 +235,7 @@
         <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Quick Loan Processing</li>
         <li class="mb-2"><i class="bi bi-check-circle-fill text-warning me-2"></i> Affordable Interest Rates</li>
       </ul>
-      <a href="member_registration.html" class="btn btn-warning w-100 rounded-1 shadow-sm text-dark mt-2" style="padding: 12px; font-weight: 700; background-color: #FFB800; border: none;">BECOME A MEMBER</a>
+      <a href="member_registration.php" class="btn btn-warning w-100 rounded-1 shadow-sm text-dark mt-2" style="padding: 12px; font-weight: 700; background-color: #FFB800; border: none;">BECOME A MEMBER</a>
     </div>
   </section>
   <!-- End Hero Section -->
@@ -250,10 +250,10 @@
           <input type="text" class="search-bar-custom" placeholder="Search for products, loans, or services...">
         </div>
         <div class="d-flex flex-wrap justify-content-center mt-3">
-          <a href="invest_and_save.html" class="btn-pill">Savings Options <i class="bi bi-arrow-right"></i></a>
-          <a href="loans.html" class="btn-pill">Credit Facilities <i class="bi bi-arrow-right"></i></a>
-          <a href="membership.html" class="btn-pill">Account Opening <i class="bi bi-arrow-right"></i></a>
-          <a href="contact.html" class="btn-pill">Help & Support <i class="bi bi-arrow-right"></i></a>
+          <a href="invest_and_save.php" class="btn-pill">Savings Options <i class="bi bi-arrow-right"></i></a>
+          <a href="loans.php" class="btn-pill">Credit Facilities <i class="bi bi-arrow-right"></i></a>
+          <a href="membership.php" class="btn-pill">Account Opening <i class="bi bi-arrow-right"></i></a>
+          <a href="contact.php" class="btn-pill">Help & Support <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
     </section>
@@ -340,7 +340,7 @@
               <div class="product-card-body">
                 <h4>Membership Deposits</h4>
                 <p>Invest in your future and secure your borrowings with our robust member deposit schemes.</p>
-                <a href="membership_deposits.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="membership_deposits.php" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -351,7 +351,7 @@
               <div class="product-card-body">
                 <h4>Karibu Loan</h4>
                 <p>Establish yourself quickly with our Karibu Loan, specifically designed for new members.</p>
-                <a href="karibu_loan.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="karibu_loan.php" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -362,7 +362,7 @@
                 <i class="bi bi-briefcase text-warning" style="font-size: 3.5rem; margin-bottom: 25px;"></i>
                 <h4>Development Loan</h4>
                 <p>Fund your important investments and property purchases with our cost-effective financing at competitive rates.</p>
-                <a href="development_loan.html" class="link-arrow mt-auto justify-content-center">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="development_loan.php" class="link-arrow mt-auto justify-content-center">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -373,7 +373,7 @@
               <div class="product-card-body">
                 <h4>Emergency Loan</h4>
                 <p>Quick and convenient funds to ease the stress when unexpected needs arise.</p>
-                <a href="emergency_loan.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="emergency_loan.php" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -384,7 +384,7 @@
               <div class="product-card-body">
                 <h4>Salary In Advance</h4>
                 <p>Short-term access to funds with convenient repayment from your next salary.</p>
-                <a href="salary_advance.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="salary_advance.php" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -395,7 +395,7 @@
               <div class="product-card-body">
                 <h4>Junior Account</h4>
                 <p>Nurturing financial responsibility early, securing a bright future for your children.</p>
-                <a href="junior_account.html" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
+                <a href="junior_account.php" class="link-arrow mt-auto">LEARN MORE <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -406,7 +406,7 @@
                <div class="product-card-body d-flex flex-column justify-content-center position-relative z-1">
                 <h4 class="text-white" style="font-size: 28px; font-weight: 700;">Become A Member Today</h4>
                 <p class="text-light mx-md-4 mt-2">Join thousands of members enjoying secure savings, fast loans, and premium dividend returns. Open an account instantly and begin your journey.</p>
-                <a href="member_registration.html" class="btn btn-warning rounded-pill px-5 py-3 mt-4 fw-bold mx-auto text-dark" style="background-color: #FFB800; border: none; width: fit-content; text-transform: uppercase;">Open Account Now</a>
+                <a href="member_registration.php" class="btn btn-warning rounded-pill px-5 py-3 mt-4 fw-bold mx-auto text-dark" style="background-color: #FFB800; border: none; width: fit-content; text-transform: uppercase;">Open Account Now</a>
               </div>
             </div>
           </div>
@@ -464,7 +464,7 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-3 col-md-6 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center mb-3">
+          <a href="index.php" class="logo d-flex align-items-center mb-3">
             <span class="text-white" style="font-family: var(--font-primary); font-size: 24px;">Mashirikiano SACCO</span>
           </a>
           <p class="text-light opacity-75" style="font-size: 14px; line-height: 1.6;">For all your SACCO needs, connect with us. Our team is ready to support your savings, loans, and financial growth journey. Follow us for updates.</p>
@@ -479,11 +479,11 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4 class="text-white" style="font-family: var(--font-secondary);">Quick Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="loans.html">Our Products</a></li>
-            <li><a href="faq.html">Help Centre / FAQ</a></li>
-            <li><a href="member_registration.html">Member Portal</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
+            <li><a href="loans.php">Our Products</a></li>
+            <li><a href="faq.php">Help Centre / FAQ</a></li>
+            <li><a href="member_registration.php">Member Portal</a></li>
           </ul>
         </div>
 
@@ -534,7 +534,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>

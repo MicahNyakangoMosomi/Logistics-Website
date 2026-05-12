@@ -6,11 +6,11 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
 
-  <title>Loan Security &amp; Collateral Services | Mashirikiano SACCO</title>
-  <meta content="Loan security and collateral guidance for Mashirikiano SACCO members, including guarantors, deposits, title deeds, and vehicle logbooks." name="description">
-  <meta content="Mashirikiano SACCO collateral, loan security, guarantors, title deed, logbook, deposits" name="keywords">
+  <title>Borrow From Us | Mashirikiano SACCO</title>
+  <meta content="Mashirikiano SACCO offers member-focused savings, deposits, and affordable loan products to support financial growth and community empowerment in Kenya." name="description">
+  <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika" name="keywords">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://mashirikianosacco.co.ke/loan-security-collateral-services.html">
+  <link rel="canonical" href="https://mashirikianosacco.co.ke/borrow_from_us.php">
 <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -44,7 +44,7 @@
       <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
       </a>
@@ -58,25 +58,25 @@
 
 
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
+        <li><a href="index.php">Home</a></li>
+        <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#" class="active"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
         <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+        <li><a href="contact.php">Contact</a></li>
+        <li><a href="faq.php">FAQ</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -92,8 +92,8 @@
         <div class="container position-relative">
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
-              <h2>Loan Security &amp; Collateral Services</h2>
-              <p class="text-light">Understand the acceptable ways members can secure loans and protect both borrowers and guarantors.</p>
+              <h2>Borrow From Us</h2>
+              <p class="text-light">Access affordable SACCO loans designed to support your personal needs, family goals, and business growth with clear and fair terms.</p>
             </div>
           </div>
         </div>
@@ -101,73 +101,54 @@
       <nav>
         <div class="container">
           <ol>
-            <li><a href="index.html">Home</a></li>
-            <li>Loan Security &amp; Collateral Services</li>
+            <li><a href="index.php">Home</a></li>
+            <li>Borrow From Us</li>
           </ol>
         </div>
       </nav>
     </div><!-- End Breadcrumbs -->
 
+    <!-- ======= Service Details Section ======= -->
     <section id="service-details" class="service-details">
       <div class="container" data-aos="fade-up">
 
-        <div class="row gy-4 align-items-stretch">
+        <div class="row gy-4">
+
           <div class="col-lg-4">
-            <div class="service-hero-card">
-              <div class="icon"><i class="bi bi-shield-lock"></i></div>
-              <h3>Borrowing With Shared Protection</h3>
-              <p>Loan security helps the SACCO lend responsibly while protecting member deposits, guarantors, and the wider community.</p>
-              <ul class="service-check-list mt-3">
-                <li><i class="bi bi-check-circle"></i><span>Member deposits and guarantors remain central to loan security.</span></li>
-                <li><i class="bi bi-check-circle"></i><span>Additional collateral may be required for higher loan amounts.</span></li>
-                <li><i class="bi bi-check-circle"></i><span>All collateral is reviewed under SACCO credit terms.</span></li>
-              </ul>
+            <div class="services-list">
+              <a href="#" class="active">Loan Products</a>
+              <a href="#">Karibu Loan</a>
+              <a href="#">Development Loans</a>
+              <a href="#">Emergency Loans</a>
+              <a href="#">Salary-In-Advance</a>
+              <a href="#">Loan Advisory</a>
             </div>
+
+            <h4>Flexible Loan Solutions</h4>
+            <p>Our lending facilities are structured to help members solve urgent financial needs and fund long-term development plans responsibly.</p>
           </div>
 
           <div class="col-lg-8">
-            <img src="assets/img/financial_image.jfif" alt="Loan security and collateral guidance" class="img-fluid services-img">
-            <h3>How loan security works</h3>
-            <p>For many facilities, security may be provided through member deposits, qualified guarantors, or approved collateral. If a borrower defaults, the SACCO follows its recovery process and may involve guarantors or the pledged security as provided in the loan agreement.</p>
-            <p>Where the requested facility is above the amount covered by available deposits and guarantors, Mashirikiano SACCO may request extra collateral before disbursement. The aim is to keep lending fair, transparent, and sustainable for all members.</p>
+            <img src="assets/img/logo.png" alt="" class="img-fluid services-img">
+            <h3>Borrow With Confidence</h3>
+            <p>
+              Mashirikiano SACCO offers transparent, member-friendly credit products that balance affordability with financial discipline.
+            </p>
+            <ul>
+              <li><i class="bi bi-check-circle"></i> <span>Affordable rates and manageable repayment periods.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Quick application support and clear requirements.</span></li>
+              <li><i class="bi bi-check-circle"></i> <span>Dedicated guidance for responsible borrowing.</span></li>
+            </ul>
+            <p>
+              Whether you are handling an emergency or financing a development plan, our team helps you choose the right loan product.
+            </p>
+            <p>
+              We combine speed, transparency, and member education to ensure every loan supports long-term financial wellbeing.
+            </p>
           </div>
+
         </div>
 
-        <div class="row gy-4 mt-4">
-          <div class="col-md-6">
-            <div class="collateral-step">
-              <h4><i class="bi bi-file-earmark-text me-2 blue"></i>Title Deeds</h4>
-              <p>Land title documents may be considered as collateral where the property can be verified, valued, and legally charged. Related valuation and registration costs are handled by the borrower.</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="collateral-step is-green">
-              <h4><i class="bi bi-piggy-bank me-2 green"></i>Member Deposits</h4>
-              <p>A member may secure borrowing using available deposits or savings. Funds used as security may be restricted until the loan obligation is cleared.</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="collateral-step is-orange">
-              <h4><i class="bi bi-car-front me-2 orange"></i>Vehicle Logbooks</h4>
-              <p>Vehicle ownership documents can support a loan application after verification. Approval depends on the vehicle details and the SACCO's credit assessment.</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="collateral-step">
-              <h4><i class="bi bi-people me-2 blue"></i>Guarantorship</h4>
-              <p>Eligible SACCO members may guarantee another member's loan. Guarantors should understand their responsibility before signing because they may be called upon if repayment fails.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mt-5">
-          <div class="col-lg-10 mx-auto">
-            <div class="p-4 p-lg-5 rounded" style="background: #f4f8fb; border-left: 5px solid var(--color-orange);">
-              <h3>Before you pledge security</h3>
-              <p class="mb-0">Speak to the credit team so the right security option is matched to your loan amount, repayment ability, and available documents. Terms may vary by facility, member history, and current SACCO policy.</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section><!-- End Service Details Section -->
 
@@ -180,7 +161,7 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-5 col-md-12 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center">
+          <a href="index.php" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
           <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
@@ -195,9 +176,9 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Useful Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About us</a></li>
-            <li><a href="loans.html">Services</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About us</a></li>
+            <li><a href="loans.php">Services</a></li>
 
             <li><a href="#">Terms of service</a></li>
             <li><a href="#">Privacy policy</a></li>
@@ -207,11 +188,11 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="invest_and_save.html">Savings Accounts</a></li>
-            <li><a href="membership_deposits.html">Member Deposits</a></li>
-            <li><a href="loans.html">Loan Products</a></li>
-            <li><a href="contact.html">Financial Advisory</a></li>
-            <li><a href="membership.html">Insurance &amp; Benevolent Fund</a></li>
+            <li><a href="invest_and_save.php">Savings Accounts</a></li>
+            <li><a href="membership_deposits.php">Member Deposits</a></li>
+            <li><a href="loans.php">Loan Products</a></li>
+            <li><a href="contact.php">Financial Advisory</a></li>
+            <li><a href="membership.php">Insurance &amp; Benevolent Fund</a></li>
           </ul>
         </div>
 
@@ -252,7 +233,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>

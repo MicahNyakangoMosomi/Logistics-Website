@@ -151,13 +151,13 @@
   <div class="top-bar d-none d-lg-block">
     <div class="container-fluid container-xl d-flex justify-content-between align-items-center">
       <div>
-        <a href="about.html">About Us</a>
-        <a href="contact.html">Help Centre</a>
-        <a href="faq.html">FAQs</a>
+        <a href="about.php">About Us</a>
+        <a href="contact.php">Help Centre</a>
+        <a href="faq.php">FAQs</a>
       </div>
       <div>
         <a href="#"><i class="bi bi-search"></i></a>
-        <a href="member_registration.html">Member Portal</a>
+        <a href="member_registration.php">Member Portal</a>
       </div>
     </div>
   </div>
@@ -165,7 +165,7 @@
   <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
         <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
         <span class="d-none d-xl-block ms-4" style="font-family: 'Archivo Black', sans-serif; font-size: 12px; color: rgba(255,255,255,0.7); border-left: 2px solid var(--color-orange); padding-left: 15px;">Empowering your financial journey</span>
@@ -176,25 +176,25 @@
 
       <nav id="navbar" class="navbar order-lg-1">
         <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="about.php">About</a></li>
         <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="loans.html">Loans</a></li>
-            <li><a href="loan-security-collateral-services.html">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.html">Payments</a></li>
+            <li><a href="loans.php">Loans</a></li>
+            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+            <li><a href="payments.php">Payments</a></li>
           </ul>
         </li>
           <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
           <ul>
-            <li><a href="forms-downloads.html">Forms &amp; Downloads</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="events.html">Events</a></li>
+            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+            <li><a href="careers.php">Careers</a></li>
+            <li><a href="events.php">Events</a></li>
           </ul>
         </li>
-        <li><a href="membership.html">Membership</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
+        <li><a href="membership.php">Membership</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="faq.php">FAQ</a></li>
         </ul>
       </nav>
     </div>
@@ -318,7 +318,7 @@
     <div class="container">
       <div class="row gy-4">
         <div class="col-lg-3 col-md-6 footer-info">
-          <a href="index.html" class="logo d-flex align-items-center mb-3">
+          <a href="index.php" class="logo d-flex align-items-center mb-3">
             <span class="text-white" style="font-family: var(--font-primary); font-size: 24px;">Mashirikiano SACCO</span>
           </a>
           <p class="text-light opacity-75" style="font-size: 14px; line-height: 1.6;">For all your SACCO needs, connect with us. Our team is ready to support your savings, loans, and financial growth journey. Follow us for updates.</p>
@@ -333,11 +333,11 @@
         <div class="col-lg-2 col-6 footer-links">
           <h4 class="text-white" style="font-family: var(--font-secondary);">Quick Links</h4>
           <ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="loans.html">Our Products</a></li>
-            <li><a href="faq.html">Help Centre / FAQ</a></li>
-            <li><a href="member_registration.html">Member Portal</a></li>
+            <li><a href="index.php">Home</a></li>
+            <li><a href="about.php">About Us</a></li>
+            <li><a href="loans.php">Our Products</a></li>
+            <li><a href="faq.php">Help Centre / FAQ</a></li>
+            <li><a href="member_registration.php">Member Portal</a></li>
           </ul>
         </div>
 
@@ -387,7 +387,7 @@
     <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
-    <a href="member_registration.html" class="float-btn float-join">
+    <a href="member_registration.php" class="float-btn float-join">
       Join Us
     </a>
   </div>
