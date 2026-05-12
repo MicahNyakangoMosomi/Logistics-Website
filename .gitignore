@@ -1,0 +1,28 @@
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Runtime logs
+logs/*.log
+
+# Dependencies
+vendor/
+node_modules/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local cache/build output
+.cache/
+dist/
+build/
+tmp/
+temp/

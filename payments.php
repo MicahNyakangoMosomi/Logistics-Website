@@ -158,7 +158,7 @@
       </div>
       <div>
         <a href="#"><i class="bi bi-search"></i></a>
-        <a href="member_registration.php">Member Portal</a>
+        <a href="auth/login.php">Member Portal</a>
       </div>
     </div>
   </div>
@@ -343,7 +343,7 @@
             <li><a href="about.php">About Us</a></li>
             <li><a href="loans.php">Our Products</a></li>
             <li><a href="faq.php">Help Centre / FAQ</a></li>
-            <li><a href="member_registration.php">Member Portal</a></li>
+            <li><a href="auth/login.php">Member Portal</a></li>
           </ul>
         </div>
 
