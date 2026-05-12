@@ -3,50 +3,63 @@
 $rootPath = dirname(__DIR__);
 $autoloadPath = $rootPath . '/vendor/autoload.php';
 
-if (is_file($autoloadPath)) {
-    require_once $autoloadPath;
-
-    if (class_exists(Dotenv\Dotenv::class)) {
-        $dotenv = Dotenv\Dotenv::createImmutable($rootPath);
-        $dotenv->safeLoad();
-    }
+/**
+ * 1. Load Composer autoload
+ */
+if (!file_exists($autoloadPath)) {
+    die("Composer autoload not found. Run composer install.");
 }
 
-if (!function_exists('env_value')) {
-    function env_value(string $key, string $default = ''): string
-    {
-        if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
-            return (string) $_ENV[$key];
-        }
+require_once $autoloadPath;
 
-        if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
-            return (string) $_SERVER[$key];
-        }
-
-        $value = getenv($key);
-
-        return $value !== false && $value !== '' ? (string) $value : $default;
-    }
+/**
+ * 2. Load .env safely but strictly
+ */
+if (!class_exists(Dotenv\Dotenv::class)) {
+    die("Dotenv library not installed.");
 }
 
+$dotenv = Dotenv\Dotenv::createImmutable($rootPath);
+$dotenv->load();
+
+/**
+ * 3. Hard fail if .env is missing critical values
+ */
+function env(string $key, string $default = null)
+{
+    $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+
+    if ($value === false || $value === null || $value === '') {
+        return $default;
+    }
+
+    return $value;
+}
+
+function env_required(string $key)
+{
+    $value = env($key);
+
+    if ($value === null || $value === '') {
+        die("Missing required environment variable: {$key}");
+    }
+
+    return $value;
+}
+
+/**
+ * 4. CONFIG ARRAY
+ */
 return [
     'db' => [
-        'host' => env_value('DB_HOST', 'localhost'),
-        'name' => env_value('DB_NAME', 'mashirikianosacc_mashirikiano'),
-        'user' => env_value('DB_USER', 'mashirikianosacc_mashirikianosacco'),
-        'pass' => env_value('DB_PASS'),
-        'charset' => 'utf8mb4',
+        'host' => env_required('DB_HOST'),
+        'name' => env_required('DB_NAME'),
+        'user' => env_required('DB_USER'),
+        'pass' => env_required('DB_PASS'),
+        'charset' => env('DB_CHARSET', 'utf8mb4'),
     ],
+
     'app' => [
-        'name' => 'Mashirikiano SACCO',
-        'base_url' => env_value('APP_BASE_URL'),
-        'admin_token' => env_value('ADMIN_REPORT_TOKEN'),
-    ],
-    'mpesa' => [
-        'consumer_key' => env_value('MPESA_CONSUMER_KEY'),
-        'consumer_secret' => env_value('MPESA_CONSUMER_SECRET'),
-        'shortcode' => env_value('MPESA_SHORTCODE'),
-        'passkey' => env_value('MPESA_PASSKEY'),
-        'environment' => env_value('MPESA_ENV', 'production'),
+        'name' => env('APP_NAME', 'App'),
     ],
 ];
