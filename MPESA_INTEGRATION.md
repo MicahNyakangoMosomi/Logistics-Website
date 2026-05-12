@@ -46,9 +46,27 @@ The system does not expect M-Pesa to send `MemberID`.
 | `logs/mpesa-c2b-callbacks.log` | Raw callback log file created automatically |
 | `logs/mpesa-c2b-errors.log` | Callback error log file created automatically |
 
+## Composer Setup
+
+This project uses Composer to load `.env` variables through `vlucas/phpdotenv`.
+
+Run this once on your machine or hosting server:
+
+```bash
+composer install
+```
+
+That command creates:
+
+```text
+vendor/autoload.php
+```
+
+`config/config.php` loads that autoloader and then reads values from `.env`.
+
 ## Variables You Need To Customize
 
-The system reads most settings from environment variables first. If an environment variable is missing, it uses the fallback value in `config/config.php`.
+The system reads settings from `.env`, then server environment variables, then fallback values in `config/config.php`.
 
 ### Database Variables
 
@@ -65,10 +83,10 @@ In `config/config.php`, these map to:
 
 ```php
 'db' => [
-    'host' => getenv('DB_HOST') ?: 'localhost',
-    'name' => getenv('DB_NAME') ?: 'mashirikianosacc_mashirikiano',
-    'user' => getenv('DB_USER') ?: 'mashirikianosacc_mashirikianosacco',
-    'pass' => getenv('DB_PASS') ?: '',
+    'host' => env_value('DB_HOST', 'localhost'),
+    'name' => env_value('DB_NAME', 'mashirikianosacc_mashirikiano'),
+    'user' => env_value('DB_USER', 'mashirikianosacc_mashirikianosacco'),
+    'pass' => env_value('DB_PASS'),
 ]
 ```
 
@@ -249,6 +267,7 @@ MemberID = NULL
 ## Production Checklist
 
 - Import `database/schema.sql`.
+- Run `composer install`.
 - Set `DB_PASS`.
 - Set Daraja credentials.
 - Set `MPESA_ENV=production`.
