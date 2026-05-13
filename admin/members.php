@@ -70,7 +70,7 @@ $where = [];
 $params = [];
 
 if ($search !== '') {
-    $where[] = '(m.MemberID LIKE :search OR m.NationalID LIKE :search OR m.PrimaryNumber LIKE :search OR CONCAT(m.FirstName, " ", m.LastName) LIKE :search)';
+    $where[] = '(m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR m.NationalID LIKE :search OR m.PrimaryNumber LIKE :search OR m.Email LIKE :search)';
     $params[':search'] = '%' . $search . '%';
 }
 
