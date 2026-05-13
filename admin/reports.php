@@ -63,9 +63,9 @@ $recent = $pdo->query(
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
       <div class="fw-bold">Mashirikiano SACCO Admin</div>
       <nav class="d-flex gap-2">
-        <a class="btn btn-sm btn-outline-light" href="members.php#register-member">Register Member</a>
+        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
         <a class="btn btn-sm btn-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php#members">Members</a>
+        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>

@@ -1,4 +1,4 @@
 <?php
 
-header('Location: members.php');
+header('Location: register_member.php');
 exit;

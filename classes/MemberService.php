@@ -53,8 +53,10 @@ class MemberService
         ];
     }
 
-    public static function update(string $memberId, array $data): void
+    public static function update(string $memberId, array $data, array $options = []): void
     {
+        $canChangeStatus = (bool)($options['can_change_status'] ?? true);
+        $canChangePassword = (bool)($options['can_change_password'] ?? true);
         $memberId = trim($memberId);
         $firstName = self::cleanName($data['first_name'] ?? '');
         $lastName = self::cleanName($data['last_name'] ?? '');
@@ -68,7 +70,7 @@ class MemberService
             throw new InvalidArgumentException('Member ID, National ID, first name, last name, and phone are required.');
         }
 
-        if (!in_array($status, self::STATUSES, true)) {
+        if ($canChangeStatus && !in_array($status, self::STATUSES, true)) {
             throw new InvalidArgumentException('Invalid member status.');
         }
 
@@ -82,7 +84,6 @@ class MemberService
             'LastName = :last_name',
             'PrimaryNumber = :phone',
             'Email = :email',
-            'Status = :status',
         ];
         $params = [
             ':member_id' => $memberId,
@@ -91,10 +92,14 @@ class MemberService
             ':last_name' => $lastName,
             ':phone' => $phone,
             ':email' => $email ?: null,
-            ':status' => $status,
         ];
 
-        if ($password !== '') {
+        if ($canChangeStatus) {
+            $fields[] = 'Status = :status';
+            $params[':status'] = $status;
+        }
+
+        if ($canChangePassword && $password !== '') {
             $fields[] = 'Password = :password';
             $params[':password'] = password_hash($password, PASSWORD_DEFAULT);
         }

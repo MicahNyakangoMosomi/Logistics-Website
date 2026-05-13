@@ -7,9 +7,10 @@ Auth::requireAdmin();
 
 $message = '';
 $messageType = 'info';
-$createdMember = null;
 $search = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+$adminRole = Auth::adminRole();
+$isAdmin = $adminRole === 'admin';
 
 try {
     $pdo = Database::connection();
@@ -51,12 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     try {
-        if ($action === 'create') {
-            $createdMember = MemberService::create($_POST);
-            $messageType = 'success';
-            $message = 'Member created successfully. MemberID: ' . $createdMember['MemberID'];
-        } elseif ($action === 'update') {
-            MemberService::update((string)($_POST['member_id'] ?? ''), $_POST);
+        if ($action === 'update') {
+            MemberService::update((string)($_POST['member_id'] ?? ''), $_POST, [
+                'can_change_status' => $isAdmin,
+                'can_change_password' => $isAdmin,
+            ]);
             $messageType = 'success';
             $message = 'Member updated successfully.';
         }
@@ -95,6 +95,27 @@ $stmt = $pdo->prepare(
 );
 $stmt->execute($params);
 $members = $stmt->fetchAll();
+$memberContributions = [];
+
+if ($members) {
+    $memberIds = array_column($members, 'MemberID');
+    $placeholders = implode(',', array_fill(0, count($memberIds), '?'));
+    $contributionStmt = $pdo->prepare(
+        "SELECT *
+         FROM contributions
+         WHERE MemberID IN ({$placeholders})
+         ORDER BY COALESCE(TranTime, CreatedAt) DESC"
+    );
+    $contributionStmt->execute($memberIds);
+
+    foreach ($contributionStmt->fetchAll() as $contribution) {
+        $memberId = (string)$contribution['MemberID'];
+        if (!isset($memberContributions[$memberId])) {
+            $memberContributions[$memberId] = [];
+        }
+        $memberContributions[$memberId][] = $contribution;
+    }
+}
 
 $stats = $pdo->query(
     "SELECT
@@ -152,9 +173,9 @@ function e($value): string
         </div>
       </div>
       <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-light" href="members.php#register-member">Register Member</a>
+        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
         <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php#members">Members</a>
+        <a class="btn btn-sm btn-light" href="members.php">Members</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>
@@ -180,48 +201,7 @@ function e($value): string
       </div>
     </div>
 
-    <section class="card panel mb-4" id="register-member">
-      <div class="card-body">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
-          <div>
-            <h1 class="h4 fw-bold mb-1">Internal Access Registration</h1>
-            <div class="text-muted small">Only authenticated staff/admins can create SACCO members.</div>
-          </div>
-        </div>
-        <form method="post" class="row g-3">
-          <input type="hidden" name="action" value="create">
-          <div class="col-md-3">
-            <label class="form-label" for="first_name">FirstName</label>
-            <input class="form-control" id="first_name" name="first_name" required>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label" for="last_name">LastName</label>
-            <input class="form-control" id="last_name" name="last_name" required>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label" for="phone">PrimaryNumber</label>
-            <input class="form-control" id="phone" name="phone" required>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label" for="national_id">NationalID</label>
-            <input class="form-control" id="national_id" name="national_id" required>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="email">Email <span class="text-muted">(optional)</span></label>
-            <input class="form-control" id="email" name="email" type="email">
-          </div>
-          <div class="col-md-4">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" id="password" name="password" type="password" required autocomplete="new-password">
-          </div>
-          <div class="col-md-4 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="submit">Register Member</button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <section class="card panel mb-4" id="members">
+    <section class="card panel mb-4">
       <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
           <h2 class="h5 fw-bold mb-0">Registered Members</h2>
@@ -257,6 +237,9 @@ function e($value): string
                   <td><?= e($member['CreatedAt']) ?></td>
                   <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
                   <td class="text-end">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">
+                      Contributions
+                    </button>
                     <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#editMember<?= e($member['MemberID']) ?>">
                       Edit
                     </button>
@@ -299,10 +282,57 @@ function e($value): string
   </main>
 
   <?php foreach ($members as $member): ?>
+    <div class="modal fade" id="memberContributions<?= e($member['MemberID']) ?>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div>
+              <h3 class="modal-title h5">Contributions for <?= e($member['MemberID']) ?></h3>
+              <div class="small text-muted"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
+              <div>
+                <div class="text-muted small">Total Contributions</div>
+                <div class="h4 fw-bold">KES <?= number_format((float)$member['TotalContributions'], 2) ?></div>
+              </div>
+              <div>
+                <div class="text-muted small">Contribution Records</div>
+                <div class="h4 fw-bold"><?= (int)$member['ContributionCount'] ?></div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead><tr><th>TranID</th><th>Date</th><th>Phone</th><th class="text-end">Amount</th></tr></thead>
+                <tbody>
+                  <?php foreach (($memberContributions[$member['MemberID']] ?? []) as $contribution): ?>
+                    <tr>
+                      <td><?= e($contribution['TranID']) ?></td>
+                      <td><?= e($contribution['TranTime'] ?: $contribution['CreatedAt']) ?></td>
+                      <td><?= e($contribution['MSISDN']) ?></td>
+                      <td class="text-end">KES <?= number_format((float)$contribution['Amount'], 2) ?></td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (empty($memberContributions[$member['MemberID']])): ?>
+                    <tr><td colspan="4" class="text-muted">No contributions found for this member.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="editMember<?= e($member['MemberID']) ?>" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
-          <form method="post">
+          <form method="post" onsubmit="return confirm('Save these member changes to the database?');">
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="member_id" value="<?= e($member['MemberID']) ?>">
             <div class="modal-header">
@@ -342,18 +372,25 @@ function e($value): string
                   <label class="form-label">Email</label>
                   <input class="form-control" name="email" type="email" value="<?= e($member['Email']) ?>">
                 </div>
-                <div class="col-md-6">
-                  <label class="form-label">Status</label>
-                  <select class="form-select" name="status">
-                    <?php foreach (MemberService::STATUSES as $status): ?>
-                      <option value="<?= e($status) ?>" <?= $member['Status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-                <div class="col-12">
-                  <label class="form-label">New Password</label>
-                  <input class="form-control" name="password" type="password" autocomplete="new-password" placeholder="Leave blank to keep the current password">
-                </div>
+                <?php if ($isAdmin): ?>
+                  <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <select class="form-select" name="status">
+                      <?php foreach (MemberService::STATUSES as $status): ?>
+                        <option value="<?= e($status) ?>" <?= $member['Status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">New Password</label>
+                    <input class="form-control" name="password" type="password" autocomplete="new-password" placeholder="Leave blank to keep the current password">
+                  </div>
+                <?php else: ?>
+                  <div class="col-md-6">
+                    <label class="form-label">Status</label>
+                    <input class="form-control" value="<?= e($member['Status']) ?>" disabled>
+                  </div>
+                <?php endif; ?>
               </div>
             </div>
             <div class="modal-footer">
