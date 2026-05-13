@@ -9,15 +9,15 @@ $pdo = Database::connection();
 $summary = $pdo->query(
     'SELECT
         COALESCE(SUM(Amount), 0) AS TotalContributions,
-        COUNT(*) AS TransactionCount,
+        COUNT(*) AS ContributionCount,
         COUNT(DISTINCT MemberID) AS ContributingMembers,
         SUM(CASE WHEN MemberID IS NULL THEN 1 ELSE 0 END) AS UnmatchedTransactions
-     FROM transactions'
+     FROM contributions'
 )->fetch();
 
 $monthly = $pdo->query(
     "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
-     FROM transactions
+     FROM contributions
      GROUP BY DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m')
      ORDER BY Month DESC
      LIMIT 12"
@@ -27,7 +27,7 @@ $topMembers = $pdo->query(
     'SELECT m.MemberID, m.NationalID, m.FirstName, m.LastName, totals.Total
      FROM (
         SELECT MemberID, SUM(Amount) AS Total
-        FROM transactions
+        FROM contributions
         WHERE MemberID IS NOT NULL
         GROUP BY MemberID
      ) totals
@@ -38,7 +38,7 @@ $topMembers = $pdo->query(
 
 $recent = $pdo->query(
     'SELECT t.*, m.MemberID AS LinkedMemberID
-     FROM transactions t
+     FROM contributions t
      LEFT JOIN members m ON m.MemberID = t.MemberID
      ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
      LIMIT 25'
@@ -66,6 +66,7 @@ $recent = $pdo->query(
       <nav class="d-flex gap-2">
         <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
         <a class="btn btn-sm btn-light" href="reports.php">Reports</a>
+        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>
   </header>
@@ -76,7 +77,7 @@ $recent = $pdo->query(
         <div class="card panel"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold">KES <?= number_format((float) $summary['TotalContributions'], 2) ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Transactions</div><div class="h3 fw-bold"><?= (int) $summary['TransactionCount'] ?></div></div></div>
+        <div class="card panel"><div class="card-body"><div class="text-muted small">Contribution Records</div><div class="h3 fw-bold"><?= (int) $summary['ContributionCount'] ?></div></div></div>
       </div>
       <div class="col-md-3">
         <div class="card panel"><div class="card-body"><div class="text-muted small">Contributing Members</div><div class="h3 fw-bold"><?= (int) $summary['ContributingMembers'] ?></div></div></div>
@@ -93,7 +94,7 @@ $recent = $pdo->query(
             <h1 class="h5 fw-bold mb-3">Monthly Contributions</h1>
             <div class="table-responsive">
               <table class="table">
-                <thead><tr><th>Month</th><th>Transactions</th><th class="text-end">Total</th></tr></thead>
+                <thead><tr><th>Month</th><th>Records</th><th class="text-end">Total</th></tr></thead>
                 <tbody>
                   <?php foreach ($monthly as $row): ?>
                     <tr><td><?= htmlspecialchars($row['Month'], ENT_QUOTES, 'UTF-8') ?></td><td><?= (int) $row['Count'] ?></td><td class="text-end">KES <?= number_format((float) $row['Total'], 2) ?></td></tr>
@@ -125,7 +126,7 @@ $recent = $pdo->query(
 
     <section class="card panel">
       <div class="card-body">
-        <h2 class="h5 fw-bold mb-3">Recent M-Pesa Transactions</h2>
+        <h2 class="h5 fw-bold mb-3">Recent M-Pesa Contributions</h2>
         <div class="table-responsive">
           <table class="table align-middle">
             <thead><tr><th>TranID</th><th>National ID</th><th>Name</th><th>Phone</th><th>MemberID</th><th>Date</th><th class="text-end">Amount</th></tr></thead>
@@ -136,7 +137,7 @@ $recent = $pdo->query(
                   <td><?= htmlspecialchars($row['NationalID'], ENT_QUOTES, 'UTF-8') ?></td>
                   <td><?= htmlspecialchars(trim($row['FirstName'] . ' ' . $row['LastName']), ENT_QUOTES, 'UTF-8') ?></td>
                   <td><?= htmlspecialchars($row['MSISDN'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= $row['MemberID'] ? (int) $row['MemberID'] : '<span class="badge text-bg-warning">NULL</span>' ?></td>
+                  <td><?= $row['MemberID'] ? htmlspecialchars($row['MemberID'], ENT_QUOTES, 'UTF-8') : '<span class="badge text-bg-warning">NULL</span>' ?></td>
                   <td><?= htmlspecialchars($row['TranTime'] ?: $row['CreatedAt'], ENT_QUOTES, 'UTF-8') ?></td>
                   <td class="text-end">KES <?= number_format((float) $row['Amount'], 2) ?></td>
                 </tr>

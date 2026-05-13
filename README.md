@@ -35,7 +35,7 @@ A modern, responsive website for Mashirikiano SACCO built with HTML, CSS, and Ja
 
 ## SACCO Member and M-Pesa System
 
-New PHP modules support member authentication, M-Pesa C2B callback recording, contribution analytics, and admin reporting.
+New PHP modules support member authentication, internal staff/admin registration, M-Pesa C2B callback recording, contribution analytics, and admin reporting.
 
 ### Setup
 
@@ -54,12 +54,15 @@ New PHP modules support member authentication, M-Pesa C2B callback recording, co
 - Member login: `/auth/login.php`
 - Member dashboard: `/member/dashboard.php`
 - C2B callback: `/api/callback.php`
-- Admin members: `/admin/members.php`
+- Admin login: `/auth/admin_login.php`
+- Admin dashboard: `/admin/members.php`
 - Admin reports: `/admin/reports.php`
 
 ### Callback Logic
 
-The C2B callback treats `BillRefNumber` as `NationalID`, looks up `members.NationalID`, and saves the transaction with the matched `MemberID`. If no member exists, the transaction is still saved with `MemberID = NULL` for later reconciliation.
+The C2B callback treats `BillRefNumber` as `NationalID`, looks up `members.NationalID`, and saves the contribution with the matched generated `MemberID`. If no member exists, the contribution is saved with `MemberID = NULL` for later reconciliation.
+
+See `SACCO_MANAGEMENT_SYSTEM.md` for the full SACCO workflow, database structure, and admin setup notes.
 
 ## Technologies Used
 

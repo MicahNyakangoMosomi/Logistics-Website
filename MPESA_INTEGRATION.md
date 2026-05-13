@@ -42,7 +42,7 @@ The system does not expect M-Pesa to send `MemberID`.
 | `classes/Mpesa.php` | C2B callback logic and Daraja helper methods |
 | `api/callback.php` | Safaricom C2B confirmation callback endpoint |
 | `api/register_urls.php` | Helper endpoint for registering Daraja C2B URLs |
-| `database/schema.sql` | Members and transactions table structure |
+| `database/schema.sql` | Members and contributions table structure |
 | `logs/mpesa-c2b-callbacks.log` | Raw callback log file created automatically |
 | `logs/mpesa-c2b-errors.log` | Callback error log file created automatically |
 
@@ -180,7 +180,7 @@ This creates:
 
 ```text
 members
-transactions
+contributions
 member_contribution_totals
 ```
 
@@ -202,13 +202,13 @@ SELECT * FROM members WHERE NationalID = :national_id LIMIT 1
 If found:
 
 ```text
-transactions.MemberID = members.MemberID
+contributions.MemberID = members.MemberID
 ```
 
 If not found:
 
 ```text
-transactions.MemberID = NULL
+contributions.MemberID = NULL
 ```
 
 ## Member Account Requirements
@@ -230,7 +230,7 @@ Members log in using:
 NationalID + Password
 ```
 
-Passwords are currently stored as plain text because that was requested for this stage. Before going live at scale, change this to `password_hash()` and `password_verify()`.
+New and updated member passwords are stored with `password_hash()` and verified with `password_verify()`. Legacy plain text passwords are accepted only as a transition fallback.
 
 ## Testing A Callback
 

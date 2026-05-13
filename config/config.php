@@ -68,6 +68,8 @@ return [
     'app' => [
         'name' => env('APP_NAME', 'My App'),
         'env'  => env('APP_ENV', 'production'),
+        'base_url' => env('APP_BASE_URL', ''),
+        'admin_token' => env('ADMIN_REPORT_TOKEN', env('ADMIN_TOKEN', '')),
     ],
 
     /**

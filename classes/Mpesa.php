@@ -110,8 +110,8 @@ class Mpesa
 
         $pdo = Database::connection();
 
-        // Prevent duplicate transaction insertion
-        $check = $pdo->prepare("SELECT TranID FROM transactions WHERE TranID = :id LIMIT 1");
+        // Prevent duplicate contribution insertion
+        $check = $pdo->prepare("SELECT TranID FROM contributions WHERE TranID = :id LIMIT 1");
         $check->execute([':id' => $data['TranID']]);
 
         if ($check->fetch()) {
@@ -124,11 +124,11 @@ class Mpesa
 
         // Try match member by National ID
         $member = self::findMemberByNationalId($data['NationalID']);
-        $memberId = $member ? (int)$member['MemberID'] : null;
+        $memberId = $member ? (string)$member['MemberID'] : null;
 
-        // Insert transaction
+        // Insert contribution
         $stmt = $pdo->prepare("
-            INSERT INTO transactions
+            INSERT INTO contributions
             (TranID, MemberID, NationalID, FirstName, LastName, MSISDN, Amount, TranTime)
             VALUES
             (:tran_id, :member_id, :national_id, :first_name, :last_name, :msisdn, :amount, :tran_time)

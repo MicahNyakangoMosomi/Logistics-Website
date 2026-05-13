@@ -5,17 +5,17 @@ require_once __DIR__ . '/../classes/Auth.php';
 $member = Auth::requireMember();
 $pdo = Database::connection();
 
-$totalStmt = $pdo->prepare('SELECT COALESCE(SUM(Amount), 0) AS Total FROM transactions WHERE MemberID = :member_id');
+$totalStmt = $pdo->prepare('SELECT COALESCE(SUM(Amount), 0) AS Total FROM contributions WHERE MemberID = :member_id');
 $totalStmt->execute([':member_id' => $member['MemberID']]);
 $total = (float) $totalStmt->fetchColumn();
 
-$recentStmt = $pdo->prepare('SELECT * FROM transactions WHERE MemberID = :member_id ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT 8');
+$recentStmt = $pdo->prepare('SELECT * FROM contributions WHERE MemberID = :member_id ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT 8');
 $recentStmt->execute([':member_id' => $member['MemberID']]);
 $recentTransactions = $recentStmt->fetchAll();
 
 $monthlyStmt = $pdo->prepare(
     "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
-     FROM transactions
+     FROM contributions
      WHERE MemberID = :member_id
      GROUP BY DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m')
      ORDER BY Month DESC
@@ -129,7 +129,7 @@ foreach ($monthly as $row) {
 
     <section class="card metric mt-4">
       <div class="card-body">
-        <h2 class="h5 fw-bold mb-3">Recent Transactions</h2>
+        <h2 class="h5 fw-bold mb-3">Recent Contributions</h2>
         <div class="table-responsive">
           <table class="table align-middle">
             <thead>
@@ -150,7 +150,7 @@ foreach ($monthly as $row) {
                 </tr>
               <?php endforeach; ?>
               <?php if (!$recentTransactions): ?>
-                <tr><td colspan="4" class="text-muted">No transactions found.</td></tr>
+                <tr><td colspan="4" class="text-muted">No contributions found.</td></tr>
               <?php endif; ?>
             </tbody>
           </table>

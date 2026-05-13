@@ -37,20 +37,19 @@ class Auth
         }
 
         $stmt = Database::connection()->prepare(
-            "SELECT * FROM members WHERE NationalID = :national_id AND Password = :password AND Status = 'Active' LIMIT 1"
+            "SELECT * FROM members WHERE NationalID = :national_id AND Status = 'Active' LIMIT 1"
         );
         $stmt->execute([
             ':national_id' => $nationalId,
-            ':password' => $password,
         ]);
 
         $member = $stmt->fetch();
-        if (!$member) {
+        if (!$member || !self::passwordMatches($password, $member['Password'])) {
             return false;
         }
 
         session_regenerate_id(true);
-        $_SESSION['member_id'] = (int) $member['MemberID'];
+        $_SESSION['member_id'] = (string) $member['MemberID'];
         $_SESSION['national_id'] = $member['NationalID'];
         $_SESSION['member_name'] = trim($member['FirstName'] . ' ' . $member['LastName']);
 
@@ -66,7 +65,7 @@ class Auth
         }
 
         $stmt = Database::connection()->prepare('SELECT * FROM members WHERE MemberID = :id LIMIT 1');
-        $stmt->execute([':id' => (int) $_SESSION['member_id']]);
+        $stmt->execute([':id' => (string) $_SESSION['member_id']]);
         $member = $stmt->fetch();
 
         return $member ?: null;
@@ -112,13 +111,17 @@ class Auth
     public static function adminAllowed(): bool
     {
         $config = require __DIR__ . '/../config/config.php';
-        $token = $config['app']['admin_token'];
+        $token = (string)($config['app']['admin_token'] ?? '');
 
-        if ($token === '') {
+        self::startSession();
+        if (!empty($_SESSION['admin_user_id']) && in_array($_SESSION['admin_role'] ?? '', ['admin', 'staff'], true)) {
             return true;
         }
 
-        self::startSession();
+        if ($token === '') {
+            return false;
+        }
+
         if (!empty($_SESSION['admin_allowed'])) {
             return true;
         }
@@ -126,6 +129,7 @@ class Auth
         $provided = $_GET['token'] ?? $_POST['token'] ?? '';
         if (hash_equals($token, (string) $provided)) {
             $_SESSION['admin_allowed'] = true;
+            $_SESSION['admin_role'] = 'admin';
             return true;
         }
 
@@ -135,9 +139,53 @@ class Auth
     public static function requireAdmin(): void
     {
         if (!self::adminAllowed()) {
-            http_response_code(403);
-            echo 'Admin access denied.';
+            header('Location: ../auth/admin_login.php');
             exit;
         }
+    }
+
+    public static function loginAdmin(string $email, string $password): bool
+    {
+        self::startSession();
+
+        $stmt = Database::connection()->prepare(
+            "SELECT * FROM admin_users WHERE Email = :email AND Status = 'Active' LIMIT 1"
+        );
+        $stmt->execute([':email' => trim($email)]);
+        $admin = $stmt->fetch();
+
+        if (!$admin || !password_verify($password, $admin['PasswordHash'])) {
+            return false;
+        }
+
+        session_regenerate_id(true);
+        $_SESSION['admin_user_id'] = (int)$admin['AdminUserID'];
+        $_SESSION['admin_name'] = $admin['FullName'];
+        $_SESSION['admin_role'] = $admin['Role'];
+
+        return true;
+    }
+
+    public static function adminRole(): string
+    {
+        self::startSession();
+
+        return (string)($_SESSION['admin_role'] ?? '');
+    }
+
+    public static function logoutAdmin(): void
+    {
+        self::startSession();
+        unset($_SESSION['admin_user_id'], $_SESSION['admin_name'], $_SESSION['admin_role'], $_SESSION['admin_allowed']);
+    }
+
+    private static function passwordMatches(string $plain, string $stored): bool
+    {
+        $info = password_get_info($stored);
+        if (($info['algo'] ?? 0) !== 0) {
+            return password_verify($plain, $stored);
+        }
+
+        return hash_equals($stored, $plain);
     }
 }
