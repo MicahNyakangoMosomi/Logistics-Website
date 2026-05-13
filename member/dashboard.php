@@ -138,7 +138,7 @@ function e($value): string
           </div>
         </div>
       </section>
-      <section class="col-lg-8">
+      <!-- <section class="col-lg-8">
         <div class="card metric h-100">
           <div class="card-body">
             <h2 class="h5 fw-bold mb-3">Monthly Contribution Summary</h2>
@@ -157,7 +157,7 @@ function e($value): string
             <?php endforeach; ?>
           </div>
         </div>
-      </section>
+      </section> -->
     </div>
 
     <section class="card metric mt-4">
