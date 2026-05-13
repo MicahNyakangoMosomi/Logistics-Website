@@ -5,12 +5,47 @@ require_once __DIR__ . '/../classes/MemberService.php';
 
 Auth::requireAdmin();
 
-$pdo = Database::connection();
 $message = '';
 $messageType = 'info';
 $createdMember = null;
 $search = trim($_GET['search'] ?? '');
 $statusFilter = trim($_GET['status'] ?? '');
+
+try {
+    $pdo = Database::connection();
+    $pdo->query('SELECT 1 FROM members LIMIT 1');
+    $pdo->query('SELECT 1 FROM contributions LIMIT 1');
+} catch (Throwable $error) {
+    error_log('Admin dashboard setup error: ' . $error->getMessage());
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>Admin Setup Required | Mashirikiano SACCO</title>
+      <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body style="background:#f3f6fa;">
+      <main class="container py-5">
+        <section class="card border-0 shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h4 fw-bold">Admin setup is not complete</h1>
+            <p class="text-muted">The admin login worked, but the dashboard cannot load because the database schema is missing or not fully migrated.</p>
+            <div class="alert alert-warning">
+              <?= htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8') ?>
+            </div>
+            <p>Run the migration in phpMyAdmin, then reload this page:</p>
+            <pre class="bg-light p-3 rounded">database/sacco_management_migration.sql</pre>
+            <p class="mb-0">If the migration keeps failing, open <code>ADMIN_LOGIN_SETUP.md</code> and run the required table SQL manually.</p>
+          </div>
+        </section>
+      </main>
+    </body>
+    </html>
+    <?php
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';

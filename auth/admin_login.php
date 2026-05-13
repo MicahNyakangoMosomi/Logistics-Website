@@ -4,7 +4,7 @@ require_once __DIR__ . '/../classes/Auth.php';
 
 Auth::startSession();
 
-if (Auth::adminAllowed()) {
+if (!empty($_SESSION['admin_user_id']) && in_array($_SESSION['admin_role'] ?? '', ['admin', 'staff'], true)) {
     header('Location: ../admin/members.php');
     exit;
 }

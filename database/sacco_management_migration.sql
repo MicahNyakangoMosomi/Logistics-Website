@@ -49,19 +49,22 @@ CREATE TABLE IF NOT EXISTS `contributions` (
   KEY `idx_contributions_time` (`TranTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT IGNORE INTO `contributions`
-  (`TranID`, `MemberID`, `NationalID`, `FirstName`, `LastName`, `MSISDN`, `Amount`, `TranTime`, `CreatedAt`)
-SELECT
-  `TranID`,
-  CAST(`MemberID` AS CHAR),
-  `NationalID`,
-  `FirstName`,
-  `LastName`,
-  `MSISDN`,
-  `Amount`,
-  `TranTime`,
-  `CreatedAt`
-FROM `transactions`;
+SET @transactions_table_exists := (
+  SELECT COUNT(*)
+  FROM INFORMATION_SCHEMA.TABLES
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'transactions'
+);
+
+SET @copy_transactions_sql := IF(
+  @transactions_table_exists > 0,
+  'INSERT IGNORE INTO `contributions` (`TranID`, `MemberID`, `NationalID`, `FirstName`, `LastName`, `MSISDN`, `Amount`, `TranTime`, `CreatedAt`) SELECT `TranID`, CAST(`MemberID` AS CHAR), `NationalID`, `FirstName`, `LastName`, `MSISDN`, `Amount`, `TranTime`, `CreatedAt` FROM `transactions`',
+  'SELECT "No transactions table found; skipping old transaction copy" AS migration_notice'
+);
+
+PREPARE copy_transactions_stmt FROM @copy_transactions_sql;
+EXECUTE copy_transactions_stmt;
+DEALLOCATE PREPARE copy_transactions_stmt;
 
 SET @fk_name := (
   SELECT CONSTRAINT_NAME
@@ -87,14 +90,34 @@ ALTER TABLE `members`
   MODIFY `MemberID` VARCHAR(40) NOT NULL,
   MODIFY `Status` ENUM('Active','Suspended','Pending') NOT NULL DEFAULT 'Active';
 
-ALTER TABLE `transactions`
-  MODIFY `MemberID` VARCHAR(40) NULL;
+SET @alter_transactions_member_sql := IF(
+  @transactions_table_exists > 0,
+  'ALTER TABLE `transactions` MODIFY `MemberID` VARCHAR(40) NULL',
+  'SELECT "No transactions table found; skipping transactions.MemberID conversion" AS migration_notice'
+);
 
-ALTER TABLE `contributions`
-  ADD CONSTRAINT `fk_contributions_member`
-    FOREIGN KEY (`MemberID`) REFERENCES `members` (`MemberID`)
-    ON UPDATE CASCADE
-    ON DELETE SET NULL;
+PREPARE alter_transactions_member_stmt FROM @alter_transactions_member_sql;
+EXECUTE alter_transactions_member_stmt;
+DEALLOCATE PREPARE alter_transactions_member_stmt;
+
+SET @contributions_fk_exists := (
+  SELECT COUNT(*)
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'contributions'
+    AND COLUMN_NAME = 'MemberID'
+    AND REFERENCED_TABLE_NAME = 'members'
+);
+
+SET @add_contributions_fk_sql := IF(
+  @contributions_fk_exists > 0,
+  'SELECT "contributions.MemberID foreign key already exists" AS migration_notice',
+  'ALTER TABLE `contributions` ADD CONSTRAINT `fk_contributions_member` FOREIGN KEY (`MemberID`) REFERENCES `members` (`MemberID`) ON UPDATE CASCADE ON DELETE SET NULL'
+);
+
+PREPARE add_contributions_fk_stmt FROM @add_contributions_fk_sql;
+EXECUTE add_contributions_fk_stmt;
+DEALLOCATE PREPARE add_contributions_fk_stmt;
 
 CREATE OR REPLACE VIEW `member_contribution_totals` AS
 SELECT

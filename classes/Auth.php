@@ -110,13 +110,13 @@ class Auth
 
     public static function adminAllowed(): bool
     {
-        $config = require __DIR__ . '/../config/config.php';
-        $token = (string)($config['app']['admin_token'] ?? '');
-
         self::startSession();
         if (!empty($_SESSION['admin_user_id']) && in_array($_SESSION['admin_role'] ?? '', ['admin', 'staff'], true)) {
             return true;
         }
+
+        $config = require __DIR__ . '/../config/config.php';
+        $token = (string)($config['app']['admin_token'] ?? '');
 
         if ($token === '') {
             return false;
