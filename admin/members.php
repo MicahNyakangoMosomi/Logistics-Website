@@ -48,23 +48,6 @@ try {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-
-    try {
-        if ($action === 'update') {
-            MemberService::update((string)($_POST['member_id'] ?? ''), $_POST, [
-                'can_change_status' => $isAdmin,
-                'can_change_password' => $isAdmin,
-            ]);
-            $messageType = 'success';
-            $message = 'Member updated successfully.';
-        }
-    } catch (Throwable $error) {
-        $messageType = 'warning';
-        $message = $error->getMessage();
-    }
-}
 
 $where = [];
 $params = [];
@@ -240,9 +223,9 @@ function e($value): string
                     <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">
                       Contributions
                     </button>
-                    <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#editMember<?= e($member['MemberID']) ?>">
+                    <a class="btn btn-sm btn-outline-primary" href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">
                       Edit
-                    </button>
+                    </a>
                   </td>
                 </tr>
               <?php endforeach; ?>
@@ -329,78 +312,7 @@ function e($value): string
       </div>
     </div>
 
-    <div class="modal fade" id="editMember<?= e($member['MemberID']) ?>" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-          <form method="post" onsubmit="return confirm('Save these member changes to the database?');">
-            <input type="hidden" name="action" value="update">
-            <input type="hidden" name="member_id" value="<?= e($member['MemberID']) ?>">
-            <div class="modal-header">
-              <div>
-                <h3 class="modal-title h5">Edit <?= e($member['MemberID']) ?></h3>
-                <div class="small text-muted">MemberID and CreatedAt are protected.</div>
-              </div>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">MemberID</label>
-                  <input class="form-control" value="<?= e($member['MemberID']) ?>" disabled>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">CreatedAt</label>
-                  <input class="form-control" value="<?= e($member['CreatedAt']) ?>" disabled>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">FirstName</label>
-                  <input class="form-control" name="first_name" value="<?= e($member['FirstName']) ?>" required>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">LastName</label>
-                  <input class="form-control" name="last_name" value="<?= e($member['LastName']) ?>" required>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">PrimaryNumber</label>
-                  <input class="form-control" name="phone" value="<?= e($member['PrimaryNumber']) ?>" required>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">NationalID</label>
-                  <input class="form-control" name="national_id" value="<?= e($member['NationalID']) ?>" required>
-                </div>
-                <div class="col-md-6">
-                  <label class="form-label">Email</label>
-                  <input class="form-control" name="email" type="email" value="<?= e($member['Email']) ?>">
-                </div>
-                <?php if ($isAdmin): ?>
-                  <div class="col-md-6">
-                    <label class="form-label">Status</label>
-                    <select class="form-select" name="status">
-                      <?php foreach (MemberService::STATUSES as $status): ?>
-                        <option value="<?= e($status) ?>" <?= $member['Status'] === $status ? 'selected' : '' ?>><?= e($status) ?></option>
-                      <?php endforeach; ?>
-                    </select>
-                  </div>
-                  <div class="col-12">
-                    <label class="form-label">New Password</label>
-                    <input class="form-control" name="password" type="password" autocomplete="new-password" placeholder="Leave blank to keep the current password">
-                  </div>
-                <?php else: ?>
-                  <div class="col-md-6">
-                    <label class="form-label">Status</label>
-                    <input class="form-control" value="<?= e($member['Status']) ?>" disabled>
-                  </div>
-                <?php endif; ?>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+
   <?php endforeach; ?>
 
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
