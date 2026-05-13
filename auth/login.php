@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Member Login | Mashirikiano SACCO</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/main.css" rel="stylesheet">
   <style>
     body { background: #f4f7fb; min-height: 100vh; }

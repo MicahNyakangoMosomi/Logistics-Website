@@ -129,13 +129,11 @@ function e($value): string
   <title>Admin Dashboard | Mashirikiano SACCO</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <style>
     body { background: #f3f6fa; color: #1c2938; }
     .admin-header { background: #0b3b66; color: #fff; }
     .admin-shell { max-width: 1440px; }
     .panel, .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 28px rgba(13, 38, 67, .08); }
-    .metric-icon { width: 42px; height: 42px; border-radius: 8px; display: grid; place-items: center; background: #e9f2fb; color: #0b3b66; }
     .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
     .table td, .table th { vertical-align: middle; }
     .member-id { font-weight: 700; color: #0b3b66; }
@@ -154,8 +152,9 @@ function e($value): string
         </div>
       </div>
       <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-light" href="members.php">Members</a>
+        <a class="btn btn-sm btn-light" href="members.php#register-member">Register Member</a>
         <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
+        <a class="btn btn-sm btn-outline-light" href="members.php#members">Members</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>
@@ -168,20 +167,20 @@ function e($value): string
 
     <div class="row g-3 mb-4">
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['TotalMembers'] ?></div></div><div class="metric-icon"><i class="bi bi-people"></i></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['TotalMembers'] ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body d-flex justify-content-between gap-3"><div><div class="text-muted small">Active Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['ActiveMembers'] ?></div></div><div class="metric-icon"><i class="bi bi-person-check"></i></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Active Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['ActiveMembers'] ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body d-flex justify-content-between gap-3"><div><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$contributionStats['TotalContributions'], 2) ?></div></div><div class="metric-icon"><i class="bi bi-cash-stack"></i></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$contributionStats['TotalContributions'], 2) ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body d-flex justify-content-between gap-3"><div><div class="text-muted small">Unmatched Contributions</div><div class="h3 fw-bold mb-0"><?= count($pendingContributions) ?></div></div><div class="metric-icon"><i class="bi bi-exclamation-circle"></i></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Unmatched Contributions</div><div class="h3 fw-bold mb-0"><?= count($pendingContributions) ?></div></div></div>
       </div>
     </div>
 
-    <section class="card panel mb-4">
+    <section class="card panel mb-4" id="register-member">
       <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
           <div>
@@ -216,13 +215,13 @@ function e($value): string
             <input class="form-control" id="password" name="password" type="password" required autocomplete="new-password">
           </div>
           <div class="col-md-4 d-flex align-items-end">
-            <button class="btn btn-primary w-100" type="submit"><i class="bi bi-person-plus me-1"></i> Register Member</button>
+            <button class="btn btn-primary w-100" type="submit">Register Member</button>
           </div>
         </form>
       </div>
     </section>
 
-    <section class="card panel mb-4">
+    <section class="card panel mb-4" id="members">
       <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
           <h2 class="h5 fw-bold mb-0">Registered Members</h2>
@@ -239,7 +238,7 @@ function e($value): string
               </select>
             </div>
             <div class="col-lg-2">
-              <button class="btn btn-outline-primary w-100" type="submit"><i class="bi bi-search me-1"></i> Search</button>
+              <button class="btn btn-outline-primary w-100" type="submit">Search</button>
             </div>
           </form>
         </div>
@@ -259,7 +258,7 @@ function e($value): string
                   <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
                   <td class="text-end">
                     <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#editMember<?= e($member['MemberID']) ?>">
-                      <i class="bi bi-pencil-square"></i>
+                      Edit
                     </button>
                   </td>
                 </tr>

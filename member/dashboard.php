@@ -37,7 +37,6 @@ foreach ($monthly as $row) {
   <title>Dashboard | Mashirikiano SACCO</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/main.css" rel="stylesheet">
   <style>
     body { background: #f4f7fb; }
@@ -57,7 +56,7 @@ foreach ($monthly as $row) {
           <div class="small opacity-75">Member Dashboard</div>
         </div>
       </div>
-      <a class="btn btn-outline-light" href="../auth/logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
+      <a class="btn btn-outline-light" href="../auth/logout.php">Logout</a>
     </div>
   </header>
 
