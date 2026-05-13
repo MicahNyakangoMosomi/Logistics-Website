@@ -15,12 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (Auth::loginAdmin($email, $password)) {
-        header('Location: ../admin/members.php');
-        exit;
-    }
+    try {
+        if (Auth::loginAdmin($email, $password)) {
+            header('Location: ../admin/members.php');
+            exit;
+        }
 
-    $error = 'Invalid admin credentials or inactive account.';
+        $error = 'Invalid admin credentials or inactive account.';
+    } catch (Throwable $exception) {
+        error_log('Admin login error: ' . $exception->getMessage());
+        $error = 'Admin login is not fully configured. Confirm that the admin_users table exists and has a Password column.';
+    }
 }
 ?>
 <!DOCTYPE html>

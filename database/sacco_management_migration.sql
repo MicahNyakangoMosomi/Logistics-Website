@@ -13,6 +13,24 @@ CREATE TABLE IF NOT EXISTS `admin_users` (
   KEY `idx_admin_users_role` (`Role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+SET @admin_password_column_exists := (
+  SELECT COUNT(*)
+  FROM INFORMATION_SCHEMA.COLUMNS
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'admin_users'
+    AND COLUMN_NAME = 'Password'
+);
+
+SET @add_admin_password_sql := IF(
+  @admin_password_column_exists > 0,
+  'SELECT "admin_users.Password already exists" AS migration_notice',
+  'ALTER TABLE `admin_users` ADD COLUMN `Password` VARCHAR(255) NOT NULL DEFAULT "" AFTER `Email`'
+);
+
+PREPARE add_admin_password_stmt FROM @add_admin_password_sql;
+EXECUTE add_admin_password_stmt;
+DEALLOCATE PREPARE add_admin_password_stmt;
+
 CREATE TABLE IF NOT EXISTS `contributions` (
   `ContributionID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `TranID` VARCHAR(60) NOT NULL,
