@@ -45,7 +45,25 @@ SELECT
   `CreatedAt`
 FROM `transactions`;
 
-ALTER TABLE `transactions` DROP FOREIGN KEY `fk_transactions_member`;
+SET @fk_name := (
+  SELECT CONSTRAINT_NAME
+  FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+  WHERE TABLE_SCHEMA = DATABASE()
+    AND TABLE_NAME = 'transactions'
+    AND COLUMN_NAME = 'MemberID'
+    AND REFERENCED_TABLE_NAME = 'members'
+  LIMIT 1
+);
+
+SET @drop_fk_sql := IF(
+  @fk_name IS NULL,
+  'SELECT "No transactions.MemberID foreign key found" AS migration_notice',
+  CONCAT('ALTER TABLE `transactions` DROP FOREIGN KEY `', @fk_name, '`')
+);
+
+PREPARE drop_fk_stmt FROM @drop_fk_sql;
+EXECUTE drop_fk_stmt;
+DEALLOCATE PREPARE drop_fk_stmt;
 
 ALTER TABLE `members`
   MODIFY `MemberID` VARCHAR(40) NOT NULL,
