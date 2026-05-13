@@ -82,8 +82,8 @@ foreach ($monthly as $row) {
       <div class="col-md-4">
         <div class="card metric h-100">
           <div class="card-body">
-            <div class="text-muted small">National ID</div>
-            <div class="h3 fw-bold mb-0"><?= htmlspecialchars($member['NationalID'], ENT_QUOTES, 'UTF-8') ?></div>
+            <div class="text-muted small">Membership ID</div>
+            <div class="h3 fw-bold mb-0"><?= htmlspecialchars($member['MemberID'], ENT_QUOTES, 'UTF-8') ?></div>
           </div>
         </div>
       </div>
@@ -97,6 +97,10 @@ foreach ($monthly as $row) {
             <dl class="mb-0">
               <dt>Name</dt>
               <dd><?= htmlspecialchars($member['FirstName'] . ' ' . $member['LastName'], ENT_QUOTES, 'UTF-8') ?></dd>
+              <dt>Membership ID</dt>
+              <dd><?= htmlspecialchars($member['MemberID'], ENT_QUOTES, 'UTF-8') ?></dd>
+              <dt>National ID</dt>
+              <dd><?= htmlspecialchars($member['NationalID'], ENT_QUOTES, 'UTF-8') ?></dd>
               <dt>Phone</dt>
               <dd><?= htmlspecialchars($member['PrimaryNumber'], ENT_QUOTES, 'UTF-8') ?></dd>
               <dt>Email</dt>
