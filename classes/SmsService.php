@@ -72,18 +72,24 @@ class SmsService
     }
 
     /**
-     * Normalize phone number to 254 format required by MobileSasa
+     * Normalize phone number to +254 format required by MobileSasa
      */
     private static function normalizePhone(string $phone): string
     {
         $phone = preg_replace('/\s+/', '', $phone);
         
         if (str_starts_with($phone, '0')) {
-            return '254' . substr($phone, 1);
+            return '+254' . substr($phone, 1);
         }
         
-        if (str_starts_with($phone, '+')) {
-            return substr($phone, 1);
+        if (str_starts_with($phone, '254')) {
+            return '+' . $phone;
+        }
+        
+        if (!str_starts_with($phone, '+')) {
+            if (strlen($phone) === 9) {
+                return '+254' . $phone;
+            }
         }
         
         return $phone;

@@ -25,26 +25,30 @@ $dotenv->load();
 /**
  * 3. Hard fail if .env is missing critical values
  */
-function env(string $key, string $default = null)
-{
-    $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
+if (!function_exists('env')) {
+    function env(string $key, string $default = null)
+    {
+        $value = $_ENV[$key] ?? $_SERVER[$key] ?? getenv($key);
 
-    if ($value === false || $value === null || $value === '') {
-        return $default;
+        if ($value === false || $value === null || $value === '') {
+            return $default;
+        }
+
+        return $value;
     }
-
-    return $value;
 }
 
-function env_required(string $key)
-{
-    $value = env($key);
+if (!function_exists('env_required')) {
+    function env_required(string $key)
+    {
+        $value = env($key);
 
-    if ($value === null || $value === '') {
-        die("Missing required environment variable: {$key}");
+        if ($value === null || $value === '') {
+            die("Missing required environment variable: {$key}");
+        }
+
+        return $value;
     }
-
-    return $value;
 }
 
 /**
