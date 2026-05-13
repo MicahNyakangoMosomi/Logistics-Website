@@ -63,6 +63,26 @@ try {
      */
     $result = Mpesa::recordC2BCallback($payload);
 
+    if (isset($result['status']) && $result['status'] === 'recorded' && isset($result['data'])) {
+        $data = $result['data'];
+        $amount = number_format($data['Amount'], 2);
+        $fullName = trim($data['FirstName'] . ' ' . $data['LastName']);
+        $nationalId = $data['NationalID'];
+        $tranId = $data['TranID'];
+        $tranTime = $data['TranTime'] ?? date('Y-m-d H:i:s');
+        $phone = $data['MSISDN'];
+
+        $pdo = Database::connection();
+        $stmt = $pdo->prepare('SELECT SUM(Amount) FROM contributions WHERE NationalID = :national_id');
+        $stmt->execute([':national_id' => $nationalId]);
+        $totalContribution = number_format((float)$stmt->fetchColumn(), 2);
+
+        $smsMessage = "Confirmed. Payment of {$amount} to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime} for queries contact 0758500557. Total Contribution is {$totalContribution}. Keep saving to Qualify for loan of up to 3 times yours savings";
+        
+        require_once __DIR__ . '/../classes/SmsService.php';
+        SmsService::sendSms($phone, $smsMessage);
+    }
+
     /**
      * 7. Return success response to Safaricom
      * IMPORTANT: Always HTTP 200

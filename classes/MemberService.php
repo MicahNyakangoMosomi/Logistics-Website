@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/SmsService.php';
 
 class MemberService
 {
@@ -41,6 +42,11 @@ class MemberService
         ]);
 
         self::linkUnmatchedContributions($memberId, $nationalId);
+
+        // Send Welcome SMS
+        $fullName = trim($firstName . ' ' . $lastName);
+        $smsMessage = "Dear {$fullName},Thank you for joining Mashirikiano Sacco. You have been successfully registered.Your Membership ID is {$memberId}. Keep saving to qualify for loans of up to 3 times your savings.";
+        SmsService::sendSms($phone, $smsMessage);
 
         return [
             'MemberID' => $memberId,

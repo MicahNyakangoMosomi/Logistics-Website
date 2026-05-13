@@ -151,7 +151,8 @@ class Mpesa
                 ? 'Transaction linked to member'
                 : 'Transaction stored without match',
             'tran_id' => $data['TranID'],
-            'member_id' => $memberId
+            'member_id' => $memberId,
+            'data' => $data
         ];
     }
 
