@@ -8,20 +8,6 @@ $pdo = Database::connection();
 $message = '';
 $messageType = 'info';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'update_profile') {
-    try {
-        MemberService::update((string)$member['MemberID'], $_POST, [
-            'can_change_status' => false,
-            'can_change_password' => false,
-        ]);
-        $messageType = 'success';
-        $message = 'Profile updated successfully.';
-        $member = Auth::member() ?: $member;
-    } catch (Throwable $error) {
-        $messageType = 'warning';
-        $message = $error->getMessage();
-    }
-}
 
 $totalStmt = $pdo->prepare('SELECT COALESCE(SUM(Amount), 0) AS Total FROM contributions WHERE MemberID = :member_id');
 $totalStmt->execute([':member_id' => $member['MemberID']]);
@@ -121,7 +107,6 @@ function e($value): string
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
               <h2 class="h5 fw-bold mb-0">Profile</h2>
-              <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#editProfile">Edit Profile</button>
             </div>
             <dl class="mb-0">
               <dt>Name</dt>
@@ -192,58 +177,7 @@ function e($value): string
     </section>
   </main>
 
-  <div class="modal fade" id="editProfile" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <form method="post" onsubmit="return confirm('Save these profile changes to the database?');">
-          <input type="hidden" name="action" value="update_profile">
-          <div class="modal-header">
-            <div>
-              <h3 class="modal-title h5">Edit Profile</h3>
-              <div class="small text-muted">Membership ID, status, and password are protected.</div>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">Membership ID</label>
-                <input class="form-control" value="<?= e($member['MemberID']) ?>" disabled>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Status</label>
-                <input class="form-control" value="<?= e($member['Status']) ?>" disabled>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="first_name">FirstName</label>
-                <input class="form-control" id="first_name" name="first_name" value="<?= e($member['FirstName']) ?>" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="last_name">LastName</label>
-                <input class="form-control" id="last_name" name="last_name" value="<?= e($member['LastName']) ?>" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="national_id">NationalID</label>
-                <input class="form-control" id="national_id" name="national_id" value="<?= e($member['NationalID']) ?>" required>
-              </div>
-              <div class="col-md-6">
-                <label class="form-label" for="phone">PrimaryNumber</label>
-                <input class="form-control" id="phone" name="phone" value="<?= e($member['PrimaryNumber']) ?>" required>
-              </div>
-              <div class="col-12">
-                <label class="form-label" for="email">Email</label>
-                <input class="form-control" id="email" name="email" type="email" value="<?= e($member['Email']) ?>">
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Profile</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+
 
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
