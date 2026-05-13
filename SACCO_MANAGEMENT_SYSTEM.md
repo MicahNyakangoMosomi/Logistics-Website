@@ -116,7 +116,7 @@ Stores internal staff/admin accounts.
 Important fields:
 
 - `Email`
-- `PasswordHash`
+- `Password`
 - `Role`: `admin` or `staff`
 - `Status`: `Active` or `Suspended`
 
@@ -144,17 +144,11 @@ For an existing installation, review and run:
 SOURCE database/sacco_management_migration.sql;
 ```
 
-After the schema is ready, create at least one `admin_users` record. Generate a password hash with PHP:
-
-```bash
-php -r "echo password_hash('YourStrongPassword', PASSWORD_DEFAULT), PHP_EOL;"
-```
-
-Then insert the admin user:
+After the schema is ready, create at least one `admin_users` record:
 
 ```sql
-INSERT INTO admin_users (FullName, Email, PasswordHash, Role)
-VALUES ('System Admin', 'admin@example.com', 'PASTE_HASH_HERE', 'admin');
+INSERT INTO admin_users (FullName, Email, Password, Role)
+VALUES ('System Admin', 'admin@example.com', 'YourStrongPassword', 'admin');
 ```
 
 ## Security Practices Implemented
@@ -164,6 +158,7 @@ VALUES ('System Admin', 'admin@example.com', 'PASTE_HASH_HERE', 'admin');
 - Member passwords are hashed with PHP `password_hash()`.
 - Login verifies hashed passwords with `password_verify()`.
 - Legacy plain text member passwords can still log in during transition, but newly created/updated passwords are hashed.
+- Admin/staff passwords are stored as raw database values as requested.
 - Duplicate National ID registrations are blocked.
 - `MemberID` and `CreatedAt` are immutable from the admin edit UI.
 - Database uniqueness protects `MemberID`, `NationalID`, admin emails, and contribution transaction IDs.

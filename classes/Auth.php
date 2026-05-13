@@ -154,7 +154,7 @@ class Auth
         $stmt->execute([':email' => trim($email)]);
         $admin = $stmt->fetch();
 
-        if (!$admin || !password_verify($password, $admin['PasswordHash'])) {
+        if (!$admin || !hash_equals((string)$admin['Password'], $password)) {
             return false;
         }
 
