@@ -208,9 +208,9 @@
               
               <div class="member-content">
                 <h4>Micah Mosomi</h4>
-                <span>ICT Manager</span>
+                <span>Implementation Manager</span>
                 <p>
-                  Leads the IT realm and manages the SACCO's technological needs to keep digital systems, member service platforms, and daily ICT operations reliable.
+                  Specialized in implementing and deploying new systems, processes, and technologies from planning and rollout to staff training, system integration, and performance monitoring to ensure smooth adoption and long-term success.
                 </p>
               </div>
             </div>
