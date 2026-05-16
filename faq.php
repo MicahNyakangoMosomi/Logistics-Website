@@ -65,7 +65,7 @@
         </li>
         <li><a href="membership.php">Membership</a></li>
         <li><a href="contact.php">Contact</a></li>
-        <li><a href="faq.php" class="active">FAQ</a></li>
+        <li><a href="faq.php" class="active">FAQ</a></li><li><a class="get-a-quote" href="auth/login.php">Member Login</a></li>
         
       </ul>
     </nav><!-- .navbar -->
@@ -269,7 +269,7 @@
             <li><a href="about.php">About us</a></li>
             <li><a href="loans.php">Services</a></li>
 
-            <li><a href="faq.php">FAQ</a></li>
+            <li><a href="faq.php">FAQ</a></li><li><a class="get-a-quote" href="auth/login.php">Member Login</a></li>
             <li><a href="#">Privacy policy</a></li>
           </ul>
         </div>

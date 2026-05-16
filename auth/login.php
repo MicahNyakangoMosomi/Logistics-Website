@@ -12,15 +12,22 @@ if (Auth::member()) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nationalId = $_POST['national_id'] ?? '';
+    $memberId = $_POST['member_id'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    if (Auth::login($nationalId, $password)) {
-        header('Location: ../member/dashboard.php');
-        exit;
+    try {
+        if (Auth::login($memberId, $password)) {
+            header('Location: ../member/dashboard.php');
+            exit;
+        }
+        $error = 'Invalid Membership ID or password.';
+    } catch (Exception $e) {
+        if ($e->getMessage() === 'INACTIVE_ACCOUNT') {
+            $error = 'please contact the administration to activate your account';
+        } else {
+            $error = 'An error occurred during login.';
+        }
     }
-
-    $error = 'Invalid National ID, password, or inactive account.';
 }
 ?>
 <!DOCTYPE html>
@@ -58,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <?php endif; ?>
           <form method="post" novalidate>
             <div class="mb-3">
-              <label for="national_id" class="form-label">National ID</label>
-              <input type="text" class="form-control form-control-lg" id="national_id" name="national_id" required autocomplete="username">
+              <label for="member_id" class="form-label">Membership ID</label>
+              <input type="text" class="form-control form-control-lg" id="member_id" name="member_id" required autocomplete="username">
             </div>
             <div class="mb-4">
               <label for="password" class="form-label">Password</label>

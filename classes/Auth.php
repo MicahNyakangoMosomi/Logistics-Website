@@ -25,27 +25,31 @@ class Auth
         session_start();
     }
 
-    public static function login(string $nationalId, string $password): bool
+    public static function login(string $memberId, string $password): bool
     {
         self::startSession();
 
-        $nationalId = trim($nationalId);
+        $memberId = trim($memberId);
         $password = trim($password);
 
-        if ($nationalId === '' || $password === '') {
+        if ($memberId === '' || $password === '') {
             return false;
         }
 
         $stmt = Database::connection()->prepare(
-            "SELECT * FROM members WHERE NationalID = :national_id AND Status = 'Active' LIMIT 1"
+            "SELECT * FROM members WHERE MemberID = :member_id LIMIT 1"
         );
         $stmt->execute([
-            ':national_id' => $nationalId,
+            ':member_id' => $memberId,
         ]);
 
         $member = $stmt->fetch();
         if (!$member || !self::passwordMatches($password, $member['Password'])) {
             return false;
+        }
+
+        if ($member['Status'] !== 'Active') {
+            throw new Exception('INACTIVE_ACCOUNT');
         }
 
         session_regenerate_id(true);

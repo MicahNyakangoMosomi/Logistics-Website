@@ -82,7 +82,7 @@
           <li><a href="membership.php">Membership</a></li>
           <li><a href="contact.php">Contact</a></li>
           <li><a href="faq.php">FAQ</a></li>
-
+          <li><a class="get-a-quote" href="auth/login.php">Member Login</a></li>
         </ul>
       </nav><!-- .navbar -->
 

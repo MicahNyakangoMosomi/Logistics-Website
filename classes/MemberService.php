@@ -45,7 +45,7 @@ class MemberService
 
         // Send Welcome SMS
         $fullName = trim($firstName . ' ' . $lastName);
-        $smsMessage = "Dear {$fullName},Thank you for joining Mashirikiano Sacco. You have been successfully registered.Your Membership ID is {$memberId}. Keep saving to qualify for loans of up to 3 times your savings.";
+        $smsMessage = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login. Keep saving to qualify for loans of up to 3 times your savings.";
         SmsService::sendSms($phone, $smsMessage);
 
         return [
