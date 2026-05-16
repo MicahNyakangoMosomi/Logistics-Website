@@ -157,6 +157,7 @@ function e($value): string
       </div>
       <nav class="d-flex flex-wrap gap-2">
         <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
+        <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
         <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
         <a class="btn btn-sm btn-light" href="members.php">Members</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>

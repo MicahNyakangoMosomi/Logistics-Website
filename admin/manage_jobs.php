@@ -63,17 +63,29 @@ $jobs = $pdo->query("SELECT * FROM jobs ORDER BY job_deadline ASC")->fetchAll();
     <style>
         body { background: #f8f9fa; }
         .admin-card { background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px; }
-        .header-bar { background: var(--color-secondary); color: white; padding: 20px 0; margin-bottom: 40px; }
+        .admin-header { background: #0b3b66; color: #fff; }
     </style>
 </head>
 <body>
 
-<div class="header-bar">
-    <div class="container d-flex justify-content-between align-items-center">
-        <h2 class="mb-0">Job Management</h2>
-        <a href="reports.php" class="btn btn-outline-light btn-sm">Back to Dashboard</a>
+<header class="admin-header py-3 mb-4">
+    <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center gap-3" style="max-width: 1440px;">
+      <div class="d-flex align-items-center gap-3">
+        <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="48">
+        <div>
+          <div class="fw-bold text-white">Mashirikiano SACCO Admin</div>
+          <div class="small text-white opacity-75">Job posting management</div>
+        </div>
+      </div>
+      <nav class="d-flex flex-wrap gap-2">
+        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
+        <a class="btn btn-sm btn-light" href="manage_jobs.php">Manage Jobs</a>
+        <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
+        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
+        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
+      </nav>
     </div>
-</div>
+</header>
 
 <div class="container">
     <?php if ($message): ?>
