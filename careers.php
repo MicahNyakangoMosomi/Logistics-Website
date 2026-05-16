@@ -31,9 +31,194 @@ $jobs = $pdo->query("SELECT * FROM jobs WHERE job_deadline >= CURRENT_DATE ORDER
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
 
+
   <!-- Template Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 </head>
+
+<style>
+  /* Careers Page Redesign (Stima-inspired) */
+.career-hero-stima {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  min-height: 400px;
+  background: url('/assets/img/career_hero.png') center center no-repeat;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.career-hero-stima::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 51, 102, 0.7);
+}
+
+.career-hero-stima .container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #fff;
+}
+
+.career-hero-stima h1 {
+  font-size: clamp(32px, 5vw, 64px);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.career-hero-stima p {
+  font-size: 1.25rem;
+  max-width: 800px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.career-stats-section {
+  padding: 60px 0;
+  background: #f8f9fa;
+}
+
+.career-stats-section .stat-item {
+  text-align: center;
+}
+
+.career-stats-section .stat-item i {
+  font-size: 48px;
+  color: var(--color-primary);
+  margin-bottom: 15px;
+}
+
+.career-stats-section .stat-item .count {
+  display: block;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--color-secondary);
+}
+
+.career-stats-section .stat-item p {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.career-departments {
+  padding: 80px 0;
+  background: #003366;
+  color: #fff;
+}
+span{
+  color:#fff
+}
+
+.career-departments h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-weight: 800;
+}
+
+.dept-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+}
+
+.dept-item {
+  text-align: center;
+}
+
+.dept-item i {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.dept-item span {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.job-listing-container {
+  width: 100%;
+}
+
+.job-block {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.job-block-light {
+  background: #fff;
+  color: #1c2938;
+}
+
+.job-block-dark {
+  background: #003366;
+  color: #fff;
+}
+
+.job-block .apply-graphic {
+  max-width: 150px;
+  margin: 0 auto 30px;
+}
+
+.job-block h2 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.job-block p {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  font-size: 1.1rem;
+}
+
+.job-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-stima-red {
+  background: #FF0000;
+  color: #fff;
+  padding: 15px 40px;
+  font-weight: 800;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.btn-stima-red:hover {
+  background: #CC0000;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.job-deadline-text {
+  margin-top: 30px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+
+</style>
 
 <body>
 
@@ -83,67 +268,6 @@ $jobs = $pdo->query("SELECT * FROM jobs WHERE job_deadline >= CURRENT_DATE ORDER
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="career-stats-section">
-      <div class="container">
-        <div class="row g-4 justify-content-center">
-          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
-            <div class="stat-item">
-              <i class="bi bi-people"></i>
-              <span class="count">50+</span>
-              <p>Employees</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
-            <div class="stat-item">
-              <i class="bi bi-building"></i>
-              <span class="count">2+</span>
-              <p>Branches</p>
-            </div>
-          </div>
-          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
-            <div class="stat-item">
-              <i class="bi bi-person-check"></i>
-              <span class="count">10k+</span>
-              <p>Active Members</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Culture Section -->
-    <section class="py-5">
-      <div class="container" data-aos="fade-up">
-        <div class="row justify-content-center text-center">
-          <div class="col-lg-8">
-            <h2 class="fw-bold mb-4">Working at Mashirikiano SACCO</h2>
-            <p class="text-muted lead">At Mashirikiano SACCO, we believe our people are our greatest asset. We foster a culture of innovation, integrity, and professional growth. Whether you are an intern looking for your first step or an experienced professional, we provide the environment and tools you need to excel.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Departments Section -->
-    <section class="career-departments" data-aos="fade-up">
-      <div class="container">
-        <h2>OUR DEPARTMENTS</h2>
-        <div class="dept-grid">
-          <div class="dept-item"><i class="bi bi-laptop"></i><span>ICT & Systems</span></div>
-          <div class="dept-item"><i class="bi bi-cash-stack"></i><span>Finance & Accounts</span></div>
-          <div class="dept-item"><i class="bi bi-person-badge"></i><span>Human Resources</span></div>
-          <div class="dept-item"><i class="bi bi-megaphone"></i><span>Marketing & PR</span></div>
-          <div class="dept-item"><i class="bi bi-shield-check"></i><span>Internal Audit</span></div>
-          <div class="dept-item"><i class="bi bi-cart-check"></i><span>Procurement</span></div>
-          <div class="dept-item"><i class="bi bi-graph-up-arrow"></i><span>Credit Management</span></div>
-          <div class="dept-item"><i class="bi bi-people-fill"></i><span>Member Services</span></div>
-          <div class="dept-item"><i class="bi bi-briefcase"></i><span>Legal & Compliance</span></div>
-          <div class="dept-item"><i class="bi bi-gear"></i><span>Operations</span></div>
-          <div class="dept-item"><i class="bi bi-journal-check"></i><span>Risk Management</span></div>
-          <div class="dept-item"><i class="bi bi-headset"></i><span>Customer Support</span></div>
-        </div>
-      </div>
-    </section>
 
     <!-- Job Listings -->
     <section class="job-listing-container">
@@ -168,6 +292,10 @@ $jobs = $pdo->query("SELECT * FROM jobs WHERE job_deadline >= CURRENT_DATE ORDER
               <div class="job-actions">
                 <a href="#" class="btn-stima-red" data-bs-toggle="modal" data-bs-target="#jobModal<?= $job['job_id'] ?>">JOB REQUIREMENTS</a>
                 <a href="mailto:hr@mashirikianosacco.co.ke?subject=<?= urlencode($job['job_title'] . ' Application') ?>" class="btn-stima-red">APPLY HERE</a>
+              </div>
+
+              <div>
+                <p style=" color: #FF0000; font-weight:500;">Send CV and cover Letter to hr@mashirikianosacco.co.ke</p>
               </div>
               
               <div class="job-deadline-text">
@@ -206,6 +334,72 @@ $jobs = $pdo->query("SELECT * FROM jobs WHERE job_deadline >= CURRENT_DATE ORDER
         <?php endforeach; ?>
       <?php endif; ?>
     </section>
+
+    <!-- Stats Section -->
+    <section class="career-stats-section">
+      <div class="container">
+        <div class="row g-4 justify-content-center">
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="stat-item">
+              <i class="bi bi-people"></i>
+              <span class="count">30+</span>
+              <p>Employees</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="stat-item">
+              <i class="bi bi-building"></i>
+              <span class="count">2+</span>
+              <p>Branches</p>
+            </div>
+          </div>
+          <div class="col-6 col-md-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="stat-item">
+              <i class="bi bi-person-check"></i>
+              <span class="count">1k+</span>
+              <p>Active Members</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Culture Section -->
+    <section class="py-5">
+      <div class="container" data-aos="fade-up">
+        <div class="row justify-content-center text-center">
+          <div class="col-lg-8">
+            <h2 class="fw-bold mb-4">Working at Mashirikiano SACCO</h2>
+            <p class="text-muted lead">At Mashirikiano SACCO, we believe our people are our greatest asset. We foster a culture of innovation, integrity, and professional growth. Whether you are an intern looking for your first step or an experienced professional, we provide the environment and tools you need to excel.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <!-- Departments Section -->
+    <section class="career-departments" data-aos="fade-up">
+      <div class="container">
+        <h2>OUR DEPARTMENTS</h2>
+        <div class="dept-grid">
+          <div class="dept-item"><i class="bi bi-laptop"></i><span>ICT & Systems</span></div>
+          <div class="dept-item"><i class="bi bi-cash-stack"></i><span>Finance & Accounts</span></div>
+          <div class="dept-item"><i class="bi bi-person-badge"></i><span>Human Resources</span></div>
+          <div class="dept-item"><i class="bi bi-megaphone"></i><span>Marketing & PR</span></div>
+          <div class="dept-item"><i class="bi bi-shield-check"></i><span>Internal Audit</span></div>
+          <div class="dept-item"><i class="bi bi-cart-check"></i><span>Procurement</span></div>
+          <div class="dept-item"><i class="bi bi-graph-up-arrow"></i><span>Credit Management</span></div>
+          <div class="dept-item"><i class="bi bi-people-fill"></i><span>Member Services</span></div>
+          <div class="dept-item"><i class="bi bi-briefcase"></i><span>Legal & Compliance</span></div>
+          <div class="dept-item"><i class="bi bi-gear"></i><span>Operations</span></div>
+          <div class="dept-item"><i class="bi bi-journal-check"></i><span>Risk Management</span></div>
+          <div class="dept-item"><i class="bi bi-headset"></i><span>Customer Support</span></div>
+        </div>
+      </div>
+    </section>
+
+    
 
   </main>
 

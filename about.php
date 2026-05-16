@@ -35,6 +35,8 @@
   <link href="assets/css/main.css" rel="stylesheet">
   <style>
 
+
+
   </style>
 
 
@@ -169,7 +171,7 @@
         <div class="row gy-4 d-flex justify-content-center">
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="57" data-purecounter-duration="1"
+              <span data-purecounter-start="0" data-purecounter-end="1021" data-purecounter-duration="1"
                 class="purecounter"></span>
               <p>Members</p>
             </div>
@@ -177,7 +179,7 @@
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1"
+              <span data-purecounter-start="0" data-purecounter-end="30" data-purecounter-duration="1"
                 class="purecounter"></span>
               <p>Team</p>
             </div>
@@ -226,7 +228,10 @@
                 <span>IT Operations Manager</span>
 
                 <p>
-                  Specialized in implementing and deploying new systems, processes, and technologies, overseeing the entire lifecycle from planning and rollout to staff training, system integration, and performance monitoring. Responsible for maintaining the overall health and efficiency of the organization’s IT systems to ensure smooth adoption, operational stability, and long-term success.
+                  Specialized in implementing and deploying new systems, processes, and technologies, overseeing the
+                  entire lifecycle from planning and rollout to staff training, system integration, and performance
+                  monitoring. Responsible for maintaining the overall health and efficiency of the organization’s IT
+                  systems to ensure smooth adoption, operational stability, and long-term success.
                 </p>
               </div>
             </div>
