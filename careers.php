@@ -1,3 +1,8 @@
+<?php
+require_once __DIR__ . '/classes/Database.php';
+$pdo = Database::connection();
+$jobs = $pdo->query("SELECT * FROM jobs WHERE job_deadline >= CURRENT_DATE ORDER BY created_at DESC")->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -131,101 +136,49 @@
               <button type="button" data-career-filter="job">Job Opening</button>
             </div>
             <div class="career-list mt-4">
-              <article class="career-card" data-career-category="internship">
-                <span class="career-badge">Internship</span>
-                <h3>IT Assistant Intern</h3>
-                <p>Support the ICT desk with user support, equipment checks, software setup, data entry support, and basic troubleshooting for staff and member service systems.</p>
-                <h4>Requirements</h4>
-                <ul>
-                  <li>Diploma or degree student/recent graduate in ICT, Computer Science, IT, or a related field.</li>
-                  <li>Basic knowledge of computer hardware, networking, Microsoft Office, and user support.</li>
-                  <li>Good communication, confidentiality, and willingness to learn in a SACCO environment.</li>
-                </ul>
-                <h4>What You Will Do</h4>
-                <ul>
-                  <li>Assist with daily ICT support requests and basic system checks.</li>
-                  <li>Help maintain device records, software updates, and simple documentation.</li>
-                  <li>Support staff with email, printer, connectivity, and workstation issues.</li>
-                </ul>
-                <div class="loan-meta">
-                  <span><i class="bi bi-calendar"></i> Deadline: 30 June 2026</span>
-                  <span><i class="bi bi-envelope"></i> hr@mashirikianosacco.co.ke</span>
-                </div>
-                <p class="mb-3">Send your CV and cover letter to <strong>hr@mashirikianosacco.co.ke</strong> with the subject <strong>IT Assistant Internship Application</strong>.</p>
-                <a href="mailto:hr@mashirikianosacco.co.ke?subject=IT%20Assistant%20Internship%20Application" class="link-arrow">Apply by email <i class="bi bi-arrow-right"></i></a>
-              </article>
-              <article class="career-card" data-career-category="attachment">
-                <span class="career-badge green">Attachment</span>
-                <h3>IT Assistant Attachment</h3>
-                <p>A practical attachment opportunity for students seeking supervised exposure to ICT operations, helpdesk support, records, and digital service workflows.</p>
-                <h4>Requirements</h4>
-                <ul>
-                  <li>Current student in ICT, Computer Science, Business IT, or a related course.</li>
-                  <li>Attachment letter from your institution.</li>
-                  <li>Basic computer maintenance, documentation, and customer service skills.</li>
-                </ul>
-                <h4>What You Will Do</h4>
-                <ul>
-                  <li>Assist the ICT team with support tickets and equipment setup.</li>
-                  <li>Help organize ICT records, asset lists, and user support notes.</li>
-                  <li>Observe and support secure handling of member service technology.</li>
-                </ul>
-                <div class="loan-meta">
-                  <span><i class="bi bi-calendar"></i> Deadline: 30 June 2026</span>
-                  <span><i class="bi bi-envelope"></i> hr@mashirikianosacco.co.ke</span>
-                </div>
-                <p class="mb-3">Send your CV, cover letter, and institution attachment letter to <strong>hr@mashirikianosacco.co.ke</strong> with the subject <strong>IT Assistant Attachment Application</strong>.</p>
-                <a href="mailto:hr@mashirikianosacco.co.ke?subject=IT%20Assistant%20Attachment%20Application" class="link-arrow">Apply by email <i class="bi bi-arrow-right"></i></a>
-              </article>
-              <article class="career-card" data-career-category="job">
-                <span class="career-badge orange">Job Opening</span>
-                <h3>IT Assistant</h3>
-                <p>The IT Assistant will provide day-to-day technical support, help maintain ICT equipment, assist users, and support reliable digital service delivery across the SACCO.</p>
-                <h4>Requirements</h4>
-                <ul>
-                  <li>Diploma or degree in ICT, Computer Science, Information Technology, or a related field.</li>
-                  <li>At least 1 year of experience in ICT support, helpdesk, systems support, or a similar role.</li>
-                  <li>Working knowledge of hardware, networks, software installation, cybersecurity basics, and Microsoft Office tools.</li>
-                  <li>Strong communication skills, integrity, attention to detail, and ability to support non-technical users.</li>
-                </ul>
-                <h4>What You Will Do</h4>
-                <ul>
-                  <li>Provide first-line ICT support to staff and assist with member service systems.</li>
-                  <li>Maintain computers, printers, network devices, backups, and ICT asset records.</li>
-                  <li>Support system updates, user account setup, data protection practices, and technology documentation.</li>
-                  <li>Escalate complex technical issues and follow up until they are resolved.</li>
-                </ul>
-                <div class="loan-meta">
-                  <span><i class="bi bi-calendar"></i> Deadline: 30 June 2026</span>
-                  <span><i class="bi bi-envelope"></i> hr@mashirikianosacco.co.ke</span>
-                </div>
-                <p class="mb-3">Send your CV and cover letter to <strong>hr@mashirikianosacco.co.ke</strong> with the subject <strong>IT Assistant Job Application</strong>.</p>
-                <a href="mailto:hr@mashirikianosacco.co.ke?subject=IT%20Assistant%20Job%20Application" class="link-arrow">Apply by email <i class="bi bi-arrow-right"></i></a>
-              </article>
+              <?php foreach ($jobs as $job): ?>
+                <article class="career-card" data-career-category="<?= htmlspecialchars($job['job_category']) ?>">
+                  <?php 
+                    $badgeClass = '';
+                    $badgeLabel = '';
+                    switch($job['job_category']) {
+                      case 'internship': $badgeLabel = 'Internship'; break;
+                      case 'attachment': $badgeClass = 'green'; $badgeLabel = 'Attachment'; break;
+                      case 'job': $badgeClass = 'orange'; $badgeLabel = 'Job Opening'; break;
+                    }
+                  ?>
+                  <span class="career-badge <?= $badgeClass ?>"><?= $badgeLabel ?></span>
+                  <h3><?= htmlspecialchars($job['job_title']) ?></h3>
+                  <p><?= nl2br(htmlspecialchars($job['job_description'])) ?></p>
+                  
+                  <h4>Requirements</h4>
+                  <ul>
+                    <?php 
+                    $requirements = explode("\n", $job['job_requirements']);
+                    foreach ($requirements as $req) {
+                      if (trim($req)) {
+                        echo "<li>" . htmlspecialchars(trim($req)) . "</li>";
+                      }
+                    }
+                    ?>
+                  </ul>
 
-              <!-- No-posting placeholders for future use:
-              <article class="career-card" data-career-category="internship">
-                <span class="career-badge">Internship</span>
-                <h3>No Current Internship Posting</h3>
-                <p>Internship opportunities will be listed here when available, with the role description, requirements, location, and closing date.</p>
-                <div class="loan-meta"><span><i class="bi bi-info-circle"></i> Updated when available</span></div>
-                <a href="contact.php" class="link-arrow">Send enquiry <i class="bi bi-arrow-right"></i></a>
-              </article>
-              <article class="career-card" data-career-category="attachment">
-                <span class="career-badge green">Attachment</span>
-                <h3>No Current Attachment Posting</h3>
-                <p>Student attachment opportunities will appear here once the SACCO opens placement slots for the relevant intake period.</p>
-                <div class="loan-meta"><span><i class="bi bi-mortarboard"></i> Student placement updates</span></div>
-                <a href="contact.php" class="link-arrow">Send enquiry <i class="bi bi-arrow-right"></i></a>
-              </article>
-              <article class="career-card" data-career-category="job">
-                <span class="career-badge orange">Job Opening</span>
-                <h3>No Current Staff Vacancy</h3>
-                <p>There are no full-time job openings posted right now. New vacancies will be published here as soon as they are available.</p>
-                <div class="loan-meta"><span><i class="bi bi-info-circle"></i> Updated regularly</span></div>
-                <a href="contact.php" class="link-arrow">Send enquiry <i class="bi bi-arrow-right"></i></a>
-              </article>
-              -->
+                  <div class="loan-meta">
+                    <span><i class="bi bi-calendar"></i> Deadline: <?= date('d F Y', strtotime($job['job_deadline'])) ?></span>
+                    <span><i class="bi bi-envelope"></i> hr@mashirikianosacco.co.ke</span>
+                  </div>
+                  <p class="mb-3">Send your CV and cover letter to <strong>hr@mashirikianosacco.co.ke</strong> with the subject <strong><?= htmlspecialchars($job['job_title']) ?> Application</strong>.</p>
+                  <a href="mailto:hr@mashirikianosacco.co.ke?subject=<?= urlencode($job['job_title'] . ' Application') ?>" class="link-arrow">Apply by email <i class="bi bi-arrow-right"></i></a>
+                </article>
+              <?php endforeach; ?>
+
+              <?php if (empty($jobs)): ?>
+                <div class="text-center py-5">
+                  <i class="bi bi-info-circle text-muted" style="font-size: 3rem;"></i>
+                  <h4 class="mt-3">No Current Openings</h4>
+                  <p>There are no active job openings at the moment. Please check back later.</p>
+                </div>
+              <?php endif; ?>
             </div>
           </div>
         </div>
