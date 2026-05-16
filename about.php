@@ -7,16 +7,21 @@
   <link rel="icon" type="image/x-icon" href="assets/img/logo.png">
 
   <title>About Mashirikiano SACCO</title>
-  <meta content="Learn about Mashirikiano SACCO vision, mission, values, and member-focused financial services in Kenya." name="description">
-  <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika" name="keywords">
+  <meta
+    content="Learn about Mashirikiano SACCO vision, mission, values, and member-focused financial services in Kenya."
+    name="description">
+  <meta content="Mashirikiano SACCO, SACCO Kenya, savings, loans, member deposits, financial cooperative, Thika"
+    name="keywords">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://mashirikianosacco.co.ke/about.php">
-<link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+    rel="stylesheet">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -29,21 +34,22 @@
   <!-- Template Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
   <style>
-    
+
   </style>
 
- 
+
 </head>
 
 <body>
 
   <!-- ======= Header ======= -->
-      <header id="header" class="header d-flex align-items-center fixed-top">
+  <header id="header" class="header d-flex align-items-center fixed-top">
     <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
 
       <a href="index.php" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="Mashirikiano SACCO logo">
-        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">Mashirikiano</h5>
+        <h5 class="ms-2 mb-0" style="font-size: 18px; font-weight: 700; white-space: nowrap; margin-top: 5px;">
+          Mashirikiano</h5>
       </a>
 
 
@@ -54,29 +60,31 @@
       <nav id="navbar" class="navbar order-lg-1">
 
 
-      <ul>
-        <li><a href="index.php">Home</a></li>
-        <li><a href="about.php" class="active">About</a></li>
-        <li class="dropdown"><a href="#"><span>Services</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-          <ul>
-            <li><a href="loans.php">Loans</a></li>
-            <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
-            <li><a href="payments.php">Payments</a></li>
-          </ul>
-        </li>
-        <li class="dropdown"><a href="#"><span>Resources</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-          <ul>
-            <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
-            <li><a href="careers.php">Careers</a></li>
-            <li><a href="events.php">Events</a></li>
-          </ul>
-        </li>
-        <li><a href="membership.php">Membership</a></li>
-        <li><a href="contact.php">Contact</a></li>
-        <li><a href="faq.php">FAQ</a></li>
-        
-      </ul>
-    </nav><!-- .navbar -->
+        <ul>
+          <li><a href="index.php">Home</a></li>
+          <li><a href="about.php" class="active">About</a></li>
+          <li class="dropdown"><a href="#"><span>Services</span> <i
+                class="bi bi-chevron-down dropdown-indicator"></i></a>
+            <ul>
+              <li><a href="loans.php">Loans</a></li>
+              <li><a href="loan-security-collateral-services.php">Loan Security &amp; Collateral Services</a></li>
+              <li><a href="payments.php">Payments</a></li>
+            </ul>
+          </li>
+          <li class="dropdown"><a href="#"><span>Resources</span> <i
+                class="bi bi-chevron-down dropdown-indicator"></i></a>
+            <ul>
+              <li><a href="forms-downloads.php">Forms &amp; Downloads</a></li>
+              <li><a href="careers.php">Careers</a></li>
+              <li><a href="events.php">Events</a></li>
+            </ul>
+          </li>
+          <li><a href="membership.php">Membership</a></li>
+          <li><a href="contact.php">Contact</a></li>
+          <li><a href="faq.php">FAQ</a></li>
+
+        </ul>
+      </nav><!-- .navbar -->
 
     </div>
   </header><!-- End Header -->
@@ -90,7 +98,8 @@
           <div class="row d-flex justify-content-center">
             <div class="col-lg-6 text-center">
               <h2>About</h2>
-              <p class="text-light">Mashirikiano SACCO is a member-owned financial cooperative focused on empowering individuals and families through responsible savings, affordable credit, and financial education.</p>
+              <p class="text-light">Mashirikiano SACCO is a member-owned financial cooperative focused on empowering
+                individuals and families through responsible savings, affordable credit, and financial education.</p>
             </div>
           </div>
         </div>
@@ -117,21 +126,24 @@
           <div class="col-lg-6 content order-last  order-lg-first">
             <h3>About Mashirikiano Sacco</h3>
             <p>
-              Mashirikiano SACCO brings members together to build financial strength through disciplined savings and access to fair, affordable loan products. Our goal is to support long-term prosperity for every member.
+              Mashirikiano SACCO brings members together to build financial strength through disciplined savings and
+              access to fair, affordable loan products. Our goal is to support long-term prosperity for every member.
             </p>
             <ul>
               <li data-aos="fade-up" data-aos-delay="100">
                 <i class="bi bi-diagram-3"></i>
                 <div>
                   <h5>OUR VISION</h5>
-                  <p>To be the most trusted SACCO in Kenya and the East African region, known for innovation, integrity, and exceptional member service.</p>
+                  <p>To be the most trusted SACCO in Kenya and the East African region, known for innovation, integrity,
+                    and exceptional member service.</p>
                 </div>
               </li>
               <li data-aos="fade-up" data-aos-delay="200">
                 <i class="bi bi-fullscreen-exit"></i>
                 <div>
                   <h5>OUR MISSION</h5>
-                  <p>To empower members through inclusive financial services, strong governance, and practical support that improves livelihoods and builds sustainable wealth.</p>
+                  <p>To empower members through inclusive financial services, strong governance, and practical support
+                    that improves livelihoods and builds sustainable wealth.</p>
                 </div>
               </li>
               <li data-aos="fade-up" data-aos-delay="300">
@@ -157,14 +169,16 @@
         <div class="row gy-4 d-flex justify-content-center">
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="57" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="57" data-purecounter-duration="1"
+                class="purecounter"></span>
               <p>Members</p>
             </div>
           </div><!-- End Stats Item -->
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1" class="purecounter"></span>
+              <span data-purecounter-start="0" data-purecounter-end="12" data-purecounter-duration="1"
+                class="purecounter"></span>
               <p>Team</p>
             </div>
           </div><!-- End Stats Item -->
@@ -193,7 +207,8 @@
                 <h4>Stephen Juma</h4>
                 <span>Chairman of the Board</span>
                 <p>
-                  Provides strategic leadership and governance oversight to ensure Mashirikiano SACCO remains focused on member value and long-term sustainability.
+                  Provides strategic leadership and governance oversight to ensure Mashirikiano SACCO remains focused on
+                  member value and long-term sustainability.
                 </p>
               </div>
             </div>
@@ -205,12 +220,13 @@
                 <img src="assets/img/micah-mosomi2.jpeg" class="img-fluid" alt="ICT manager profile image">
 
               </div>
-              
+
               <div class="member-content">
                 <h4>Micah Mosomi</h4>
-                <span>Implementation Manager</span>
+                <span>IT Operations Manager</span>
+
                 <p>
-                  Specialized in implementing and deploying new systems, processes, and technologies from planning and rollout to staff training, system integration, and performance monitoring to ensure smooth adoption and long-term success.
+                  Specialized in implementing and deploying new systems, processes, and technologies, overseeing the entire lifecycle from planning and rollout to staff training, system integration, and performance monitoring. Responsible for maintaining the overall health and efficiency of the organization’s IT systems to ensure smooth adoption, operational stability, and long-term success.
                 </p>
               </div>
             </div>
@@ -223,7 +239,8 @@
                 <h4>Vice Chairperson</h4>
                 <span>Leadership Team</span>
                 <p>
-                  Supports board leadership and policy implementation while helping coordinate strategic priorities across the SACCO.
+                  Supports board leadership and policy implementation while helping coordinate strategic priorities
+                  across the SACCO.
                 </p>
               </div>
             </div>
@@ -236,7 +253,8 @@
                 <h4>National Treasurer</h4>
                 <span>Leadership Team</span>
                 <p>
-                  Oversees financial stewardship, budget controls, and accountability standards to safeguard member resources.
+                  Oversees financial stewardship, budget controls, and accountability standards to safeguard member
+                  resources.
                 </p>
               </div>
             </div>
@@ -249,7 +267,8 @@
                 <h4>Honorary Secretary</h4>
                 <span>Leadership Team</span>
                 <p>
-                  Coordinates official records, governance documentation, and board communication for transparent SACCO administration.
+                  Coordinates official records, governance documentation, and board communication for transparent SACCO
+                  administration.
                 </p>
               </div>
             </div>
@@ -284,7 +303,9 @@
           <a href="index.php" class="logo d-flex align-items-center">
             <span>Mashirikiano SACCO</span>
           </a>
-          <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for updates and member education.</p>
+          <p>For all your SACCO needs, connect with us on our social media channels. Our team is ready to support your
+            savings, loans, and financial growth journey. Follow us on Twitter, Facebook, Instagram, and LinkedIn for
+            updates and member education.</p>
           <div class="social-links d-flex mt-4">
             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
@@ -340,16 +361,18 @@
         <!-- You can delete the links only if you purchased the pro version. -->
         <!-- Licensing information: https://bootstrapmade.com/license/ -->
         <!-- Contact form integration customized for Mashirikiano SACCO. -->
-</div>
+      </div>
     </div>
 
   </footer><!-- End Footer -->
   <!-- End Footer -->
 
-  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
+      class="bi bi-arrow-up-short"></i></a>
 
   <div class="floating-container">
-    <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join." target="_blank" class="float-btn float-whatsapp">
+    <a href="https://wa.me/254758500557?text=Hello%20Mashirikiano%20SACCO%2C%20I%20would%20like%20to%20request%20to%20join."
+      target="_blank" class="float-btn float-whatsapp">
       <i class="bi bi-whatsapp"></i>
     </a>
     <a href="member_registration.php" class="float-btn float-join">
@@ -376,39 +399,3 @@
 </body>
 
 </html>
-
-<!--
-<li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-              <li><a href="#">Drop Down 1</a></li>
-              <li class="dropdown"><a href="#"><span>Deep Drop Down</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                <ul>
-                  <li><a href="#">Deep Drop Down 1</a></li>
-                  <li><a href="#">Deep Drop Down 2</a></li>
-                  <li><a href="#">Deep Drop Down 3</a></li>
-                  <li><a href="#">Deep Drop Down 4</a></li>
-                  <li><a href="#">Deep Drop Down 5</a></li>
-                </ul>
-              </li>
-              <li><a href="#">Drop Down 2</a></li>
-              <li><a href="#">Drop Down 3</a></li>
-              <li><a href="#">Drop Down 4</a></li>
-            </ul>
-          </li>
--->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
