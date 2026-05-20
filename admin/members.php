@@ -87,6 +87,11 @@ $contributionStats = $pdo->query(
      WHERE TransactionType = 'contribution'"
 )->fetch();
 
+$depositStats = $pdo->query(
+    'SELECT COALESCE(SUM(PaidAmount), 0) AS TotalDeposits, COALESCE(SUM(Balance), 0) AS TotalDepositBalance
+     FROM deposits'
+)->fetch();
+
 $pendingContributions = $pdo->query(
     'SELECT NationalID, FirstName, LastName, MSISDN, COUNT(*) AS ContributionCount, SUM(Amount) AS TotalAmount
      FROM member_transactions
@@ -173,6 +178,7 @@ function renderMemberRows(array $members): string
         <td><span class="badge text-bg-<?= $member['Status'] === 'Active' ? 'success' : ($member['Status'] === 'Suspended' ? 'danger' : 'secondary') ?>"><?= e($member['Status']) ?></span></td>
         <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
         <td><?= e($member['CreatedAt']) ?></td>
+        <td class="text-end">KES <?= number_format((float)($member['PaidAmount'] ?? 0), 2) ?></td>
         <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
         <td class="actions-cell text-end">
           <a href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">Edit</a>
@@ -182,7 +188,7 @@ function renderMemberRows(array $members): string
     <?php endforeach;
 
     if (!$members): ?>
-      <tr><td colspan="10" class="text-muted">No members match that name or MemberID.</td></tr>
+      <tr><td colspan="11" class="text-muted">No members match that name or MemberID.</td></tr>
     <?php endif;
 
     return trim((string)ob_get_clean());
@@ -300,7 +306,7 @@ function renderPagination(int $currentPage, int $totalPages): string
     .actions-cell { white-space: nowrap; min-width: 132px; }
     .actions-cell a { color: #0b5ed7; font-weight: 600; text-decoration: none; margin-right: 12px; }
     .actions-cell a:hover { text-decoration: underline; }
-    @media (max-width: 767px) { .table { min-width: 980px; } }
+    @media (max-width: 767px) { .table { min-width: 1120px; } }
   </style>
 </head>
 <body>
@@ -330,17 +336,20 @@ function renderPagination(int $currentPage, int $totalPages): string
     <?php endif; ?>
 
     <div class="row g-3 mb-4">
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['TotalMembers'] ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Active Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['ActiveMembers'] ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Pending Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['PendingMembers'] ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$contributionStats['TotalContributions'], 2) ?></div></div></div>
+      </div>
+      <div class="col-md-4 col-xl">
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Deposits</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$depositStats['TotalDeposits'], 2) ?></div></div></div>
       </div>
     </div>
 
@@ -369,7 +378,7 @@ function renderPagination(int $currentPage, int $totalPages): string
         </div>
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
+            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Deposits</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
             <tbody id="membersTableBody">
               <?= renderMemberRows($members) ?>
             </tbody>
@@ -463,7 +472,7 @@ function renderPagination(int $currentPage, int $totalPages): string
         })
         .catch(function (error) {
           if (error.name !== 'AbortError') {
-            membersTableBody.innerHTML = '<tr><td colspan="10" class="text-danger">Unable to load members right now.</td></tr>';
+            membersTableBody.innerHTML = '<tr><td colspan="11" class="text-danger">Unable to load members right now.</td></tr>';
           }
         });
     }

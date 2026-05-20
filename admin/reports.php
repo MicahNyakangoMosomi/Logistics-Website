@@ -16,6 +16,14 @@ $summary = $pdo->query(
      WHERE TransactionType = "contribution"'
 )->fetch();
 
+$depositSummary = $pdo->query(
+     'SELECT
+        COALESCE(SUM(PaidAmount), 0) AS TotalDeposits,
+        COALESCE(SUM(Balance), 0) AS TotalDepositBalance,
+        COUNT(*) AS DepositAccounts
+     FROM deposits'
+)->fetch();
+
 $monthly = $pdo->query(
     "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
      FROM member_transactions
@@ -43,6 +51,15 @@ $recent = $pdo->query(
      FROM member_transactions t
      LEFT JOIN members m ON m.MemberID = t.MemberID
      WHERE t.TransactionType = "contribution"
+     ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
+     LIMIT 25'
+)->fetchAll();
+
+$recentDeposits = $pdo->query(
+    'SELECT t.*, m.MemberID AS LinkedMemberID
+     FROM member_transactions t
+     LEFT JOIN members m ON m.MemberID = t.MemberID
+     WHERE t.TransactionType = "deposit"
      ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
      LIMIT 25'
 )->fetchAll();
@@ -78,16 +95,19 @@ $recent = $pdo->query(
 
   <main class="container py-4">
     <div class="row g-4 mb-4">
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card panel"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold">KES <?= number_format((float) $summary['TotalContributions'], 2) ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
+        <div class="card panel"><div class="card-body"><div class="text-muted small">Total Deposits</div><div class="h3 fw-bold">KES <?= number_format((float) $depositSummary['TotalDeposits'], 2) ?></div></div></div>
+      </div>
+      <div class="col-md-4 col-xl">
         <div class="card panel"><div class="card-body"><div class="text-muted small">Contribution Records</div><div class="h3 fw-bold"><?= (int) $summary['ContributionCount'] ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card panel"><div class="card-body"><div class="text-muted small">Contributing Members</div><div class="h3 fw-bold"><?= (int) $summary['ContributingMembers'] ?></div></div></div>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-4 col-xl">
         <div class="card panel"><div class="card-body"><div class="text-muted small">Unmatched</div><div class="h3 fw-bold"><?= (int) $summary['UnmatchedTransactions'] ?></div></div></div>
       </div>
     </div>
@@ -129,7 +149,7 @@ $recent = $pdo->query(
       </section>
     </div>
 
-    <section class="card panel">
+    <section class="card panel mb-4">
       <div class="card-body">
         <h2 class="h5 fw-bold mb-3">Recent M-Pesa Contributions</h2>
         <div class="table-responsive">
@@ -147,6 +167,33 @@ $recent = $pdo->query(
                   <td class="text-end">KES <?= number_format((float) $row['Amount'], 2) ?></td>
                 </tr>
               <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="card panel">
+      <div class="card-body">
+        <h2 class="h5 fw-bold mb-3">Recent M-Pesa Deposits</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead><tr><th>TranID</th><th>National ID</th><th>Name</th><th>Phone</th><th>MemberID</th><th>Date</th><th class="text-end">Amount</th></tr></thead>
+            <tbody>
+              <?php foreach ($recentDeposits as $row): ?>
+                <tr>
+                  <td><?= htmlspecialchars($row['TranID'], ENT_QUOTES, 'UTF-8') ?></td>
+                  <td><?= htmlspecialchars($row['NationalID'], ENT_QUOTES, 'UTF-8') ?></td>
+                  <td><?= htmlspecialchars(trim($row['FirstName'] . ' ' . $row['LastName']), ENT_QUOTES, 'UTF-8') ?></td>
+                  <td><?= htmlspecialchars($row['MSISDN'], ENT_QUOTES, 'UTF-8') ?></td>
+                  <td><?= $row['MemberID'] ? htmlspecialchars($row['MemberID'], ENT_QUOTES, 'UTF-8') : '<span class="badge text-bg-warning">NULL</span>' ?></td>
+                  <td><?= htmlspecialchars($row['TranTime'] ?: $row['CreatedAt'], ENT_QUOTES, 'UTF-8') ?></td>
+                  <td class="text-end">KES <?= number_format((float) $row['Amount'], 2) ?></td>
+                </tr>
+              <?php endforeach; ?>
+              <?php if (!$recentDeposits): ?>
+                <tr><td colspan="7" class="text-muted">No M-Pesa deposit records found.</td></tr>
+              <?php endif; ?>
             </tbody>
           </table>
         </div>
