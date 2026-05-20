@@ -106,7 +106,7 @@ function loadMembers(PDO $pdo, string $search, int $limit, int $page): array
     $params = [];
 
     if ($search !== '') {
-        $whereSql = 'WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, " ", m.LastName) LIKE :search)';
+        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search)";
         $params[':search'] = '%' . $search . '%';
     }
 
@@ -428,14 +428,16 @@ function renderPagination(int $currentPage, int $totalPages): string
 
       activeController = new AbortController();
       currentPage = Math.max(1, parseInt(page, 10) || 1);
-      const params = new URLSearchParams({
-        ajax: 'members',
-        search: memberSearch.value,
-        limit: rowLimit.value,
-        page: currentPage
-      });
+      const params = new URLSearchParams(window.location.search);
+      params.set('ajax', 'members');
+      params.set('search', memberSearch.value);
+      params.set('limit', rowLimit.value);
+      params.set('page', currentPage);
 
-      fetch(`members.php?${params.toString()}`, { signal: activeController.signal })
+      fetch(`members.php?${params.toString()}`, {
+        credentials: 'same-origin',
+        signal: activeController.signal
+      })
         .then(function (response) {
           if (!response.ok) {
             throw new Error('Member search failed');
