@@ -178,7 +178,6 @@ function renderMemberRows(array $members): string
         <td><span class="badge text-bg-<?= $member['Status'] === 'Active' ? 'success' : ($member['Status'] === 'Suspended' ? 'danger' : 'secondary') ?>"><?= e($member['Status']) ?></span></td>
         <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
         <td><?= e($member['CreatedAt']) ?></td>
-        <td class="text-end">KES <?= number_format((float)($member['PaidAmount'] ?? 0), 2) ?></td>
         <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
         <td class="actions-cell text-end">
           <a href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">Edit</a>
@@ -188,7 +187,7 @@ function renderMemberRows(array $members): string
     <?php endforeach;
 
     if (!$members): ?>
-      <tr><td colspan="11" class="text-muted">No members match that name or MemberID.</td></tr>
+      <tr><td colspan="10" class="text-muted">No members match that name or MemberID.</td></tr>
     <?php endif;
 
     return trim((string)ob_get_clean());
@@ -378,7 +377,7 @@ function renderPagination(int $currentPage, int $totalPages): string
         </div>
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Deposits</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
+            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
             <tbody id="membersTableBody">
               <?= renderMemberRows($members) ?>
             </tbody>
@@ -472,7 +471,7 @@ function renderPagination(int $currentPage, int $totalPages): string
         })
         .catch(function (error) {
           if (error.name !== 'AbortError') {
-            membersTableBody.innerHTML = '<tr><td colspan="11" class="text-danger">Unable to load members right now.</td></tr>';
+            membersTableBody.innerHTML = '<tr><td colspan="10" class="text-danger">Unable to load members right now.</td></tr>';
           }
         });
     }
