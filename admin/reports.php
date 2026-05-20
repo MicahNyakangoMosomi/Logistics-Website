@@ -1,68 +1,181 @@
 <?php
 
 require_once __DIR__ . '/../classes/Auth.php';
+require_once __DIR__ . '/../classes/SimplePdfTable.php';
 
 Auth::requireAdmin();
 
 $pdo = Database::connection();
+$allowedTypes = ['contribution', 'deposit'];
+$allowedLimits = [5, 10, 25, 50];
+$reportType = in_array(($_GET['type'] ?? 'contribution'), $allowedTypes, true) ? $_GET['type'] : 'contribution';
+$rowLimit = (int)($_GET['limit'] ?? 10);
+if (!in_array($rowLimit, $allowedLimits, true)) {
+    $rowLimit = 10;
+}
+$currentPage = max(1, (int)($_GET['page'] ?? 1));
 
-$summary = $pdo->query(
-     'SELECT
-        COALESCE(SUM(Amount), 0) AS TotalContributions,
-        COUNT(*) AS ContributionCount,
-        COUNT(DISTINCT MemberID) AS ContributingMembers,
-        SUM(CASE WHEN MemberID IS NULL THEN 1 ELSE 0 END) AS UnmatchedTransactions
-     FROM member_transactions
-     WHERE TransactionType = "contribution"'
-)->fetch();
+$summary = loadReportSummary($pdo);
+[$transactions, $totalRecords, $totalPages, $currentPage] = loadReportTransactions($pdo, $reportType, $rowLimit, $currentPage);
 
-$depositSummary = $pdo->query(
-     'SELECT
-        COALESCE(SUM(PaidAmount), 0) AS TotalDeposits,
-        COALESCE(SUM(Balance), 0) AS TotalDepositBalance,
-        COUNT(*) AS DepositAccounts
-     FROM deposits'
-)->fetch();
+if (($_GET['download'] ?? '') === 'pdf') {
+    $pdfRows = loadReportTransactionsForPdf($pdo, $reportType);
+    SimplePdfTable::download(
+        $reportType . '-report.pdf',
+        ucfirst($reportType) . ' Report',
+        ['TranID', 'Type', 'Category', 'NationalID', 'Name', 'Phone', 'MemberID', 'Date', 'Amount', 'Description'],
+        array_map('transactionPdfRow', $pdfRows),
+        [72, 58, 78, 68, 100, 70, 62, 82, 62, 110]
+    );
+}
 
-$monthly = $pdo->query(
-    "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
-     FROM member_transactions
-     WHERE TransactionType = 'contribution'
-     GROUP BY DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m')
-     ORDER BY Month DESC
-     LIMIT 12"
-)->fetchAll();
+if (($_GET['ajax'] ?? '') === 'reports') {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'rows' => renderTransactionRows($transactions),
+        'summary' => reportResultSummary(count($transactions), $totalRecords, $currentPage, $rowLimit),
+        'pagination' => renderPagination($currentPage, $totalPages),
+        'page' => $currentPage,
+        'totalPages' => $totalPages,
+    ]);
+    exit;
+}
 
-$topMembers = $pdo->query(
-    'SELECT m.MemberID, m.NationalID, m.FirstName, m.LastName, totals.Total
-     FROM (
-        SELECT MemberID, SUM(Amount) AS Total
-        FROM member_transactions
-        WHERE MemberID IS NOT NULL AND TransactionType = "contribution"
-        GROUP BY MemberID
-     ) totals
-     INNER JOIN members m ON m.MemberID = totals.MemberID
-     ORDER BY totals.Total DESC
-     LIMIT 10'
-)->fetchAll();
+$downloadReportParams = $_GET;
+unset($downloadReportParams['ajax'], $downloadReportParams['page'], $downloadReportParams['limit']);
+$downloadReportParams['download'] = 'pdf';
+$downloadReportParams['type'] = $reportType;
 
-$recent = $pdo->query(
-    'SELECT t.*, m.MemberID AS LinkedMemberID
-     FROM member_transactions t
-     LEFT JOIN members m ON m.MemberID = t.MemberID
-     WHERE t.TransactionType = "contribution"
-     ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
-     LIMIT 25'
-)->fetchAll();
+function e($value): string
+{
+    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+}
 
-$recentDeposits = $pdo->query(
-    'SELECT t.*, m.MemberID AS LinkedMemberID
-     FROM member_transactions t
-     LEFT JOIN members m ON m.MemberID = t.MemberID
-     WHERE t.TransactionType = "deposit"
-     ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
-     LIMIT 25'
-)->fetchAll();
+function loadReportSummary(PDO $pdo): array
+{
+    $stmt = $pdo->query(
+        "SELECT
+            COALESCE(SUM(CASE WHEN TransactionType = 'contribution' THEN Amount ELSE 0 END), 0) AS TotalContributions,
+            COALESCE(SUM(CASE WHEN TransactionType = 'deposit' THEN Amount ELSE 0 END), 0) AS TotalDeposits,
+            SUM(CASE WHEN TransactionType = 'contribution' THEN 1 ELSE 0 END) AS ContributionCount,
+            SUM(CASE WHEN TransactionType = 'deposit' THEN 1 ELSE 0 END) AS DepositCount,
+            SUM(CASE WHEN MemberID IS NULL THEN 1 ELSE 0 END) AS UnmatchedTransactions
+         FROM member_transactions"
+    );
+
+    return $stmt->fetch() ?: [];
+}
+
+function loadReportTransactions(PDO $pdo, string $type, int $limit, int $page): array
+{
+    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM member_transactions WHERE TransactionType = :type');
+    $countStmt->execute([':type' => $type]);
+    $totalRecords = (int)$countStmt->fetchColumn();
+    $totalPages = max(1, (int)ceil($totalRecords / $limit));
+    $page = min(max(1, $page), $totalPages);
+    $offset = ($page - 1) * $limit;
+
+    $stmt = $pdo->prepare(
+        "SELECT *
+         FROM member_transactions
+         WHERE TransactionType = :type
+         ORDER BY COALESCE(TranTime, CreatedAt) DESC
+         LIMIT {$limit} OFFSET {$offset}"
+    );
+    $stmt->execute([':type' => $type]);
+
+    return [$stmt->fetchAll(), $totalRecords, $totalPages, $page];
+}
+
+function loadReportTransactionsForPdf(PDO $pdo, string $type): array
+{
+    $stmt = $pdo->prepare(
+        "SELECT *
+         FROM member_transactions
+         WHERE TransactionType = :type
+         ORDER BY COALESCE(TranTime, CreatedAt) DESC"
+    );
+    $stmt->execute([':type' => $type]);
+
+    return $stmt->fetchAll();
+}
+
+function transactionPdfRow(array $row): array
+{
+    return [
+        (string)$row['TranID'],
+        (string)$row['TransactionType'],
+        (string)$row['TransactionCategory'],
+        (string)$row['NationalID'],
+        trim($row['FirstName'] . ' ' . $row['LastName']),
+        (string)$row['MSISDN'],
+        (string)($row['MemberID'] ?: 'NULL'),
+        (string)($row['TranTime'] ?: $row['CreatedAt']),
+        number_format((float)$row['Amount'], 2),
+        (string)($row['Description'] ?? ''),
+    ];
+}
+
+function renderTransactionRows(array $transactions): string
+{
+    ob_start();
+    foreach ($transactions as $row): ?>
+      <tr>
+        <td><?= e($row['TranID']) ?></td>
+        <td><?= e($row['TransactionCategory']) ?></td>
+        <td><?= e($row['NationalID']) ?></td>
+        <td><?= e(trim($row['FirstName'] . ' ' . $row['LastName'])) ?></td>
+        <td><?= e($row['MSISDN']) ?></td>
+        <td><?= $row['MemberID'] ? e($row['MemberID']) : '<span class="badge text-bg-warning">NULL</span>' ?></td>
+        <td><?= e($row['TranTime'] ?: $row['CreatedAt']) ?></td>
+        <td><?= e($row['Description'] ?? '') ?></td>
+        <td class="text-end">KES <?= number_format((float)$row['Amount'], 2) ?></td>
+      </tr>
+    <?php endforeach;
+
+    if (!$transactions): ?>
+      <tr><td colspan="9" class="text-muted">No records found.</td></tr>
+    <?php endif;
+
+    return trim((string)ob_get_clean());
+}
+
+function reportResultSummary(int $visibleCount, int $totalRecords, int $page, int $limit): string
+{
+    if ($totalRecords === 0) {
+        return '0 records found';
+    }
+
+    $start = (($page - 1) * $limit) + 1;
+    $end = $start + $visibleCount - 1;
+
+    return "Showing {$start}-{$end} of {$totalRecords} record" . ($totalRecords === 1 ? '' : 's');
+}
+
+function renderPagination(int $currentPage, int $totalPages): string
+{
+    if ($totalPages <= 1) {
+        return '';
+    }
+
+    ob_start(); ?>
+      <nav aria-label="Report pages">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+            <a class="page-link" href="#" data-page="<?= max(1, $currentPage - 1) ?>">Previous</a>
+          </li>
+          <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+            <li class="page-item <?= $page === $currentPage ? 'active' : '' ?>">
+              <a class="page-link" href="#" data-page="<?= $page ?>"><?= $page ?></a>
+            </li>
+          <?php endfor; ?>
+          <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+            <a class="page-link" href="#" data-page="<?= min($totalPages, $currentPage + 1) ?>">Next</a>
+          </li>
+        </ul>
+      </nav>
+    <?php return trim((string)ob_get_clean());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +188,10 @@ $recentDeposits = $pdo->query(
   <style>
     body { background: #f4f7fb; }
     .admin-header { background: #0b3b66; color: #fff; }
-    .panel { border: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .panel, .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
+    .table td, .table th { vertical-align: middle; }
+    @media (max-width: 767px) { .table { min-width: 1040px; } }
   </style>
 </head>
 <body>
@@ -95,110 +211,149 @@ $recentDeposits = $pdo->query(
 
   <main class="container py-4">
     <div class="row g-4 mb-4">
-      <div class="col-md-4 col-xl">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold">KES <?= number_format((float) $summary['TotalContributions'], 2) ?></div></div></div>
+      <div class="col-md-4">
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold">KES <?= number_format((float)($summary['TotalContributions'] ?? 0), 2) ?></div></div></div>
       </div>
-      <div class="col-md-4 col-xl">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Total Deposits</div><div class="h3 fw-bold">KES <?= number_format((float) $depositSummary['TotalDeposits'], 2) ?></div></div></div>
+      <div class="col-md-4">
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Deposits</div><div class="h3 fw-bold">KES <?= number_format((float)($summary['TotalDeposits'] ?? 0), 2) ?></div></div></div>
       </div>
-      <div class="col-md-4 col-xl">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Contribution Records</div><div class="h3 fw-bold"><?= (int) $summary['ContributionCount'] ?></div></div></div>
-      </div>
-      <div class="col-md-4 col-xl">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Contributing Members</div><div class="h3 fw-bold"><?= (int) $summary['ContributingMembers'] ?></div></div></div>
-      </div>
-      <div class="col-md-4 col-xl">
-        <div class="card panel"><div class="card-body"><div class="text-muted small">Unmatched</div><div class="h3 fw-bold"><?= (int) $summary['UnmatchedTransactions'] ?></div></div></div>
+      <div class="col-md-4">
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Unmatched Records</div><div class="h3 fw-bold"><?= (int)($summary['UnmatchedTransactions'] ?? 0) ?></div></div></div>
       </div>
     </div>
-
-    <div class="row g-4 mb-4">
-      <section class="col-lg-6">
-        <div class="card panel h-100">
-          <div class="card-body">
-            <h1 class="h5 fw-bold mb-3">Monthly Contributions</h1>
-            <div class="table-responsive">
-              <table class="table">
-                <thead><tr><th>Month</th><th>Records</th><th class="text-end">Total</th></tr></thead>
-                <tbody>
-                  <?php foreach ($monthly as $row): ?>
-                    <tr><td><?= htmlspecialchars($row['Month'], ENT_QUOTES, 'UTF-8') ?></td><td><?= (int) $row['Count'] ?></td><td class="text-end">KES <?= number_format((float) $row['Total'], 2) ?></td></tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section class="col-lg-6">
-        <div class="card panel h-100">
-          <div class="card-body">
-            <h2 class="h5 fw-bold mb-3">Top Contributors</h2>
-            <div class="table-responsive">
-              <table class="table">
-                <thead><tr><th>Member</th><th>National ID</th><th class="text-end">Total</th></tr></thead>
-                <tbody>
-                  <?php foreach ($topMembers as $row): ?>
-                    <tr><td><?= htmlspecialchars($row['FirstName'] . ' ' . $row['LastName'], ENT_QUOTES, 'UTF-8') ?></td><td><?= htmlspecialchars($row['NationalID'], ENT_QUOTES, 'UTF-8') ?></td><td class="text-end">KES <?= number_format((float) $row['Total'], 2) ?></td></tr>
-                  <?php endforeach; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <section class="card panel mb-4">
-      <div class="card-body">
-        <h2 class="h5 fw-bold mb-3">Recent M-Pesa Contributions</h2>
-        <div class="table-responsive">
-          <table class="table align-middle">
-            <thead><tr><th>TranID</th><th>National ID</th><th>Name</th><th>Phone</th><th>MemberID</th><th>Date</th><th class="text-end">Amount</th></tr></thead>
-            <tbody>
-              <?php foreach ($recent as $row): ?>
-                <tr>
-                  <td><?= htmlspecialchars($row['TranID'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars($row['NationalID'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars(trim($row['FirstName'] . ' ' . $row['LastName']), ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars($row['MSISDN'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= $row['MemberID'] ? htmlspecialchars($row['MemberID'], ENT_QUOTES, 'UTF-8') : '<span class="badge text-bg-warning">NULL</span>' ?></td>
-                  <td><?= htmlspecialchars($row['TranTime'] ?: $row['CreatedAt'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td class="text-end">KES <?= number_format((float) $row['Amount'], 2) ?></td>
-                </tr>
-              <?php endforeach; ?>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
 
     <section class="card panel">
       <div class="card-body">
-        <h2 class="h5 fw-bold mb-3">Recent M-Pesa Deposits</h2>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+          <h1 class="h5 fw-bold mb-0">Transaction Report</h1>
+          <form method="get" id="reportControls" class="row g-2 flex-grow-1 justify-content-end">
+            <div class="col-lg-3">
+              <select class="form-select" id="reportType" name="type">
+                <option value="contribution" <?= $reportType === 'contribution' ? 'selected' : '' ?>>Contributions</option>
+                <option value="deposit" <?= $reportType === 'deposit' ? 'selected' : '' ?>>Deposits</option>
+              </select>
+            </div>
+            <div class="col-lg-2">
+              <select class="form-select" id="rowLimit" name="limit">
+                <?php foreach ($allowedLimits as $limitOption): ?>
+                  <option value="<?= (int)$limitOption ?>" <?= $rowLimit === $limitOption ? 'selected' : '' ?>><?= (int)$limitOption ?> rows</option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+            <div class="col-lg-2">
+              <a class="btn btn-outline-primary w-100" id="downloadReportPdf" href="reports.php?<?= e(http_build_query($downloadReportParams)) ?>">Download PDF</a>
+            </div>
+          </form>
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+          <div class="text-muted small" id="reportResultSummary"><?= e(reportResultSummary(count($transactions), $totalRecords, $currentPage, $rowLimit)) ?></div>
+          <div id="reportPagination">
+            <?= renderPagination($currentPage, $totalPages) ?>
+          </div>
+        </div>
+
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>TranID</th><th>National ID</th><th>Name</th><th>Phone</th><th>MemberID</th><th>Date</th><th class="text-end">Amount</th></tr></thead>
-            <tbody>
-              <?php foreach ($recentDeposits as $row): ?>
-                <tr>
-                  <td><?= htmlspecialchars($row['TranID'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars($row['NationalID'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars(trim($row['FirstName'] . ' ' . $row['LastName']), ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= htmlspecialchars($row['MSISDN'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td><?= $row['MemberID'] ? htmlspecialchars($row['MemberID'], ENT_QUOTES, 'UTF-8') : '<span class="badge text-bg-warning">NULL</span>' ?></td>
-                  <td><?= htmlspecialchars($row['TranTime'] ?: $row['CreatedAt'], ENT_QUOTES, 'UTF-8') ?></td>
-                  <td class="text-end">KES <?= number_format((float) $row['Amount'], 2) ?></td>
-                </tr>
-              <?php endforeach; ?>
-              <?php if (!$recentDeposits): ?>
-                <tr><td colspan="7" class="text-muted">No M-Pesa deposit records found.</td></tr>
-              <?php endif; ?>
+            <thead><tr><th>TranID</th><th>Category</th><th>National ID</th><th>Name</th><th>Phone</th><th>MemberID</th><th>Date</th><th>Description</th><th class="text-end">Amount</th></tr></thead>
+            <tbody id="reportTableBody">
+              <?= renderTransactionRows($transactions) ?>
             </tbody>
           </table>
         </div>
       </div>
     </section>
   </main>
+
+  <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const reportControls = document.getElementById('reportControls');
+    const reportType = document.getElementById('reportType');
+    const rowLimit = document.getElementById('rowLimit');
+    const reportTableBody = document.getElementById('reportTableBody');
+    const reportResultSummary = document.getElementById('reportResultSummary');
+    const reportPagination = document.getElementById('reportPagination');
+    const downloadReportPdf = document.getElementById('downloadReportPdf');
+    let currentPage = <?= (int)$currentPage ?>;
+    let activeController = null;
+
+    function updateDownloadLink() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('download', 'pdf');
+      url.searchParams.set('type', reportType.value);
+      url.searchParams.delete('ajax');
+      url.searchParams.delete('page');
+      url.searchParams.delete('limit');
+      downloadReportPdf.href = url.toString();
+    }
+
+    function updateReport(page = currentPage) {
+      if (activeController) {
+        activeController.abort();
+      }
+
+      activeController = new AbortController();
+      currentPage = Math.max(1, parseInt(page, 10) || 1);
+      const params = new URLSearchParams(window.location.search);
+      params.set('ajax', 'reports');
+      params.set('type', reportType.value);
+      params.set('limit', rowLimit.value);
+      params.set('page', currentPage);
+
+      fetch(`reports.php?${params.toString()}`, {
+        credentials: 'same-origin',
+        signal: activeController.signal
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error('Report load failed');
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          reportTableBody.innerHTML = data.rows;
+          reportResultSummary.textContent = data.summary;
+          reportPagination.innerHTML = data.pagination;
+          currentPage = data.page;
+
+          const url = new URL(window.location.href);
+          url.searchParams.set('type', reportType.value);
+          url.searchParams.set('limit', rowLimit.value);
+          url.searchParams.set('page', currentPage);
+          window.history.replaceState({}, '', url);
+          updateDownloadLink();
+        })
+        .catch(function (error) {
+          if (error.name !== 'AbortError') {
+            reportTableBody.innerHTML = '<tr><td colspan="9" class="text-danger">Unable to load report right now.</td></tr>';
+          }
+        });
+    }
+
+    reportControls.addEventListener('submit', function (event) {
+      event.preventDefault();
+      updateReport(1);
+    });
+
+    reportType.addEventListener('change', function () {
+      updateReport(1);
+    });
+
+    rowLimit.addEventListener('change', function () {
+      updateReport(1);
+    });
+
+    reportPagination.addEventListener('click', function (event) {
+      const link = event.target.closest('[data-page]');
+      if (!link || link.parentElement.classList.contains('disabled') || link.parentElement.classList.contains('active')) {
+        return;
+      }
+
+      event.preventDefault();
+      updateReport(link.dataset.page);
+    });
+
+    updateDownloadLink();
+  </script>
 </body>
 </html>

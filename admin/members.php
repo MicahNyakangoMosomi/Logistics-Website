@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/MemberService.php';
+require_once __DIR__ . '/../classes/SimplePdfTable.php';
 
 Auth::requireAdmin();
 
@@ -57,6 +58,29 @@ try {
 
 [$members, $memberContributions, $totalMembers, $totalPages, $currentPage] = loadMembers($pdo, $search, $rowLimit, $currentPage);
 
+if (($_GET['download'] ?? '') === 'pdf') {
+    $pdfMembers = loadMembersForPdf($pdo, $search);
+    SimplePdfTable::download(
+        'members-report.pdf',
+        'Members Report',
+        ['MemberID', 'Name', 'Phone', 'Email', 'NationalID', 'Status', 'Deposit Bal.', 'Created', 'Contributions'],
+        array_map(static function (array $member): array {
+            return [
+                (string)$member['MemberID'],
+                trim($member['FirstName'] . ' ' . $member['LastName']),
+                (string)$member['PrimaryNumber'],
+                (string)($member['Email'] ?: 'Not provided'),
+                (string)$member['NationalID'],
+                (string)$member['Status'],
+                number_format((float)($member['Balance'] ?? 0), 2),
+                (string)$member['CreatedAt'],
+                number_format((float)$member['TotalContributions'], 2),
+            ];
+        }, $pdfMembers),
+        [62, 110, 76, 116, 72, 56, 68, 84, 76]
+    );
+}
+
 if (($_GET['ajax'] ?? '') === 'members') {
     header('Content-Type: application/json');
     echo json_encode([
@@ -99,6 +123,11 @@ $pendingContributions = $pdo->query(
      GROUP BY NationalID, FirstName, LastName, MSISDN
      ORDER BY MAX(CreatedAt) DESC'
 )->fetchAll();
+
+$downloadMembersParams = $_GET;
+unset($downloadMembersParams['ajax'], $downloadMembersParams['page'], $downloadMembersParams['limit']);
+$downloadMembersParams['download'] = 'pdf';
+$downloadMembersParams['search'] = $search;
 
 function e($value): string
 {
@@ -163,6 +192,35 @@ function loadMembers(PDO $pdo, string $search, int $limit, int $page): array
     }
 
     return [$members, $memberContributions, $totalMembers, $totalPages, $page];
+}
+
+function loadMembersForPdf(PDO $pdo, string $search): array
+{
+    $whereSql = '';
+    $params = [];
+
+    if ($search !== '') {
+        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search)";
+        $params[':search'] = '%' . $search . '%';
+    }
+
+    $stmt = $pdo->prepare(
+        "SELECT m.*, d.Balance,
+            COALESCE(totals.TotalContributions, 0) AS TotalContributions
+         FROM members m
+         LEFT JOIN deposits d ON d.MemberID = m.MemberID
+         LEFT JOIN (
+            SELECT MemberID, SUM(Amount) AS TotalContributions
+            FROM member_transactions
+            WHERE MemberID IS NOT NULL AND TransactionType = 'contribution'
+            GROUP BY MemberID
+         ) totals ON totals.MemberID = m.MemberID
+         {$whereSql}
+         ORDER BY m.FirstName ASC, m.LastName ASC, m.MemberID ASC"
+    );
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
 }
 
 function renderMemberRows(array $members): string
@@ -367,6 +425,9 @@ function renderPagination(int $currentPage, int $totalPages): string
                 <?php endforeach; ?>
               </select>
             </div>
+            <div class="col-lg-2">
+              <a class="btn btn-outline-primary w-100" id="downloadMembersPdf" href="members.php?<?= e(http_build_query($downloadMembersParams)) ?>">Download PDF</a>
+            </div>
           </form>
         </div>
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
@@ -468,6 +529,18 @@ function renderPagination(int $currentPage, int $totalPages): string
           url.searchParams.set('limit', rowLimit.value);
           url.searchParams.set('page', currentPage);
           window.history.replaceState({}, '', url);
+
+          const downloadUrl = new URL(window.location.href);
+          downloadUrl.searchParams.set('download', 'pdf');
+          downloadUrl.searchParams.delete('ajax');
+          downloadUrl.searchParams.delete('page');
+          downloadUrl.searchParams.delete('limit');
+          if (memberSearch.value) {
+            downloadUrl.searchParams.set('search', memberSearch.value);
+          } else {
+            downloadUrl.searchParams.delete('search');
+          }
+          document.getElementById('downloadMembersPdf').href = downloadUrl.toString();
         })
         .catch(function (error) {
           if (error.name !== 'AbortError') {
