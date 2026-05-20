@@ -16,6 +16,7 @@ class MemberService
         $phone = self::cleanPhone($data['phone'] ?? $data['PrimaryNumber'] ?? '');
         $email = self::cleanEmail($data['email'] ?? $data['Email'] ?? '');
         $password = trim((string)($data['password'] ?? $data['Password'] ?? ''));
+        $depositPaid = self::boolValue($data['deposit_paid'] ?? false);
 
         self::validateRequired($firstName, $lastName, $nationalId, $phone, $password);
 
@@ -25,28 +26,69 @@ class MemberService
 
         $memberId = self::generateMemberId($nationalId, $firstName, $lastName);
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $depositRequired = self::currentDepositAmount();
+        $depositPaidAmount = $depositPaid ? $depositRequired : 0.00;
+        $depositBalance = max(0.00, $depositRequired - $depositPaidAmount);
+        $status = $depositBalance <= 0 ? 'Active' : 'Pending';
 
-        $stmt = $pdo->prepare(
-            'INSERT INTO members (MemberID, NationalID, FirstName, LastName, PrimaryNumber, Email, Password, Status)
-             VALUES (:member_id, :national_id, :first_name, :last_name, :phone, :email, :password, :status)'
-        );
-        $stmt->execute([
-            ':member_id' => $memberId,
-            ':national_id' => $nationalId,
-            ':first_name' => $firstName,
-            ':last_name' => $lastName,
-            ':phone' => $phone,
-            ':email' => $email ?: null,
-            ':password' => $passwordHash,
-            ':status' => 'Active',
-        ]);
+        $pdo->beginTransaction();
+        try {
+            $stmt = $pdo->prepare(
+                'INSERT INTO members (MemberID, NationalID, FirstName, LastName, PrimaryNumber, Email, Password, Status)
+                 VALUES (:member_id, :national_id, :first_name, :last_name, :phone, :email, :password, :status)'
+            );
+            $stmt->execute([
+                ':member_id' => $memberId,
+                ':national_id' => $nationalId,
+                ':first_name' => $firstName,
+                ':last_name' => $lastName,
+                ':phone' => $phone,
+                ':email' => $email ?: null,
+                ':password' => $passwordHash,
+                ':status' => $status,
+            ]);
 
-        self::linkUnmatchedContributions($memberId, $nationalId);
+            $depositStmt = $pdo->prepare(
+                'INSERT INTO deposits (MemberID, RequiredAmount, PaidAmount, Balance, Status)
+                 VALUES (:member_id, :required_amount, :paid_amount, :balance, :status)'
+            );
+            $depositStmt->execute([
+                ':member_id' => $memberId,
+                ':required_amount' => $depositRequired,
+                ':paid_amount' => $depositPaidAmount,
+                ':balance' => $depositBalance,
+                ':status' => $depositBalance <= 0 ? 'cleared' : 'pending',
+            ]);
 
-        // Send Welcome SMS
-        $fullName = trim($firstName . ' ' . $lastName);
-        $smsMessage = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login. Keep saving to qualify for loans of up to 3 times your savings.";
-        SmsService::sendSms($phone, $smsMessage);
+            if ($depositPaidAmount > 0) {
+                self::insertLedgerTransaction($pdo, [
+                    'TranID' => 'ONBOARD-' . $memberId,
+                    'MemberID' => $memberId,
+                    'NationalID' => $nationalId,
+                    'FirstName' => $firstName,
+                    'LastName' => $lastName,
+                    'MSISDN' => $phone,
+                    'Amount' => $depositPaidAmount,
+                    'TransactionType' => 'deposit',
+                    'TransactionCategory' => 'onboarding',
+                    'Reference' => 'ONBOARD-' . $memberId,
+                    'Description' => 'Initial onboarding deposit',
+                    'TranTime' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
+            self::linkUnmatchedContributions($memberId, $nationalId);
+            $pdo->commit();
+        } catch (Throwable $error) {
+            $pdo->rollBack();
+            throw $error;
+        }
+
+        if ($status === 'Active') {
+            $fullName = trim($firstName . ' ' . $lastName);
+            $smsMessage = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login. Keep saving to qualify for loans of up to 3 times your savings.";
+            SmsService::sendSms($phone, $smsMessage);
+        }
 
         return [
             'MemberID' => $memberId,
@@ -55,7 +97,7 @@ class MemberService
             'LastName' => $lastName,
             'PrimaryNumber' => $phone,
             'Email' => $email,
-            'Status' => 'Active',
+            'Status' => $status,
         ];
     }
 
@@ -144,12 +186,48 @@ class MemberService
     public static function linkUnmatchedContributions(string $memberId, string $nationalId): void
     {
         $stmt = Database::connection()->prepare(
-            'UPDATE contributions SET MemberID = :member_id WHERE NationalID = :national_id AND MemberID IS NULL'
+            'UPDATE member_transactions SET MemberID = :member_id WHERE NationalID = :national_id AND MemberID IS NULL'
         );
         $stmt->execute([
             ':member_id' => $memberId,
             ':national_id' => $nationalId,
         ]);
+    }
+
+    public static function currentDepositAmount(): float
+    {
+        $stmt = Database::connection()->query('SELECT DepositAmount FROM system_settings WHERE SettingID = 1 LIMIT 1');
+
+        return (float)($stmt->fetchColumn() ?: 0);
+    }
+
+    private static function insertLedgerTransaction(PDO $pdo, array $data): void
+    {
+        $stmt = $pdo->prepare(
+            'INSERT INTO member_transactions
+             (TranID, MemberID, NationalID, FirstName, LastName, MSISDN, Amount, TransactionType, TransactionCategory, Reference, Description, TranTime)
+             VALUES
+             (:tran_id, :member_id, :national_id, :first_name, :last_name, :msisdn, :amount, :transaction_type, :transaction_category, :reference, :description, :tran_time)'
+        );
+        $stmt->execute([
+            ':tran_id' => $data['TranID'],
+            ':member_id' => $data['MemberID'],
+            ':national_id' => $data['NationalID'],
+            ':first_name' => $data['FirstName'],
+            ':last_name' => $data['LastName'],
+            ':msisdn' => $data['MSISDN'],
+            ':amount' => $data['Amount'],
+            ':transaction_type' => $data['TransactionType'],
+            ':transaction_category' => $data['TransactionCategory'],
+            ':reference' => $data['Reference'] ?? null,
+            ':description' => $data['Description'] ?? null,
+            ':tran_time' => $data['TranTime'] ?? null,
+        ]);
+    }
+
+    private static function boolValue($value): bool
+    {
+        return in_array(strtolower(trim((string)$value)), ['1', 'yes', 'true', 'on'], true);
     }
 
     private static function nationalIdExists(string $nationalId, ?string $exceptMemberId = null): bool

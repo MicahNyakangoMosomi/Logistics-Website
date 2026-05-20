@@ -110,8 +110,8 @@ class Mpesa
 
         $pdo = Database::connection();
 
-        // Prevent duplicate contribution insertion
-        $check = $pdo->prepare("SELECT TranID FROM contributions WHERE TranID = :id LIMIT 1");
+        // Prevent duplicate transaction processing.
+        $check = $pdo->prepare("SELECT TranID FROM member_transactions WHERE TranID = :id LIMIT 1");
         $check->execute([':id' => $data['TranID']]);
 
         if ($check->fetch()) {
@@ -125,25 +125,56 @@ class Mpesa
         // Try match member by National ID
         $member = self::findMemberByNationalId($data['NationalID']);
         $memberId = $member ? (string)$member['MemberID'] : null;
+        $segments = [];
 
-        // Insert contribution
-        $stmt = $pdo->prepare("
-            INSERT INTO contributions
-            (TranID, MemberID, NationalID, FirstName, LastName, MSISDN, Amount, TranTime)
-            VALUES
-            (:tran_id, :member_id, :national_id, :first_name, :last_name, :msisdn, :amount, :tran_time)
-        ");
+        $pdo->beginTransaction();
+        try {
+            $remaining = (float)$data['Amount'];
 
-        $stmt->execute([
-            ':tran_id' => $data['TranID'],
-            ':member_id' => $memberId,
-            ':national_id' => $data['NationalID'],
-            ':first_name' => $data['FirstName'],
-            ':last_name' => $data['LastName'],
-            ':msisdn' => $data['MSISDN'],
-            ':amount' => $data['Amount'],
-            ':tran_time' => $data['TranTime']
-        ]);
+            if ($memberId !== null) {
+                self::ensureDepositRecord($pdo, $memberId);
+                $deposit = self::lockDeposit($pdo, $memberId);
+                $depositBalance = $deposit ? (float)$deposit['Balance'] : 0.00;
+                $depositAmount = min($remaining, max(0.00, $depositBalance));
+
+                if ($depositAmount > 0) {
+                    self::insertLedgerTransaction($pdo, $data, $member, $depositAmount, 'deposit', 'onboarding', 'Deposit payment from M-Pesa');
+                    $segments[] = ['type' => 'deposit', 'amount' => $depositAmount];
+                    $remaining -= $depositAmount;
+
+                    $newPaidAmount = (float)$deposit['PaidAmount'] + $depositAmount;
+                    $newBalance = max(0.00, (float)$deposit['RequiredAmount'] - $newPaidAmount);
+                    $depositStatus = $newBalance <= 0 ? 'cleared' : 'pending';
+
+                    $updateDeposit = $pdo->prepare(
+                        'UPDATE deposits
+                         SET PaidAmount = :paid_amount, Balance = :balance, Status = :status
+                         WHERE DepositID = :deposit_id'
+                    );
+                    $updateDeposit->execute([
+                        ':paid_amount' => $newPaidAmount,
+                        ':balance' => $newBalance,
+                        ':status' => $depositStatus,
+                        ':deposit_id' => $deposit['DepositID'],
+                    ]);
+
+                    if ($depositStatus === 'cleared') {
+                        $activate = $pdo->prepare("UPDATE members SET Status = 'Active' WHERE MemberID = :member_id AND Status = 'Pending'");
+                        $activate->execute([':member_id' => $memberId]);
+                    }
+                }
+            }
+
+            if ($remaining > 0) {
+                self::insertLedgerTransaction($pdo, $data, $member, $remaining, 'contribution', 'monthly_contribution', 'Contribution payment from M-Pesa');
+                $segments[] = ['type' => 'contribution', 'amount' => $remaining];
+            }
+
+            $pdo->commit();
+        } catch (Throwable $error) {
+            $pdo->rollBack();
+            throw $error;
+        }
 
         return [
             'status' => 'recorded',
@@ -152,8 +183,58 @@ class Mpesa
                 : 'Transaction stored without match',
             'tran_id' => $data['TranID'],
             'member_id' => $memberId,
+            'segments' => $segments,
             'data' => $data
         ];
+    }
+
+    private static function ensureDepositRecord(PDO $pdo, string $memberId): void
+    {
+        $stmt = $pdo->prepare('SELECT DepositID FROM deposits WHERE MemberID = :member_id LIMIT 1');
+        $stmt->execute([':member_id' => $memberId]);
+
+        if ($stmt->fetch()) {
+            return;
+        }
+
+        $insert = $pdo->prepare(
+            "INSERT INTO deposits (MemberID, RequiredAmount, PaidAmount, Balance, Status)
+             VALUES (:member_id, 0.00, 0.00, 0.00, 'cleared')"
+        );
+        $insert->execute([':member_id' => $memberId]);
+    }
+
+    private static function lockDeposit(PDO $pdo, string $memberId): ?array
+    {
+        $stmt = $pdo->prepare('SELECT * FROM deposits WHERE MemberID = :member_id LIMIT 1 FOR UPDATE');
+        $stmt->execute([':member_id' => $memberId]);
+
+        return $stmt->fetch() ?: null;
+    }
+
+    private static function insertLedgerTransaction(PDO $pdo, array $data, ?array $member, float $amount, string $type, string $category, string $description): void
+    {
+        $stmt = $pdo->prepare("
+            INSERT INTO member_transactions
+            (TranID, MemberID, NationalID, FirstName, LastName, MSISDN, Amount, TransactionType, TransactionCategory, Reference, Description, TranTime)
+            VALUES
+            (:tran_id, :member_id, :national_id, :first_name, :last_name, :msisdn, :amount, :transaction_type, :transaction_category, :reference, :description, :tran_time)
+        ");
+
+        $stmt->execute([
+            ':tran_id' => $data['TranID'],
+            ':member_id' => $member ? (string)$member['MemberID'] : null,
+            ':national_id' => $data['NationalID'],
+            ':first_name' => $member ? (string)$member['FirstName'] : $data['FirstName'],
+            ':last_name' => $member ? (string)$member['LastName'] : $data['LastName'],
+            ':msisdn' => $data['MSISDN'],
+            ':amount' => $amount,
+            ':transaction_type' => $type,
+            ':transaction_category' => $category,
+            ':reference' => $data['TranID'],
+            ':description' => $description,
+            ':tran_time' => $data['TranTime'],
+        ]);
     }
 
     /**

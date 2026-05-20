@@ -27,8 +27,16 @@ admin_health_check('members table', function () {
     Database::connection()->query('SELECT MemberID, NationalID, FirstName, LastName, PrimaryNumber, Email, Password, Status, CreatedAt FROM members LIMIT 1');
 });
 
-admin_health_check('contributions table', function () {
-    Database::connection()->query('SELECT ContributionID, TranID, MemberID, NationalID, Amount, CreatedAt FROM contributions LIMIT 1');
+admin_health_check('member_transactions table', function () {
+    Database::connection()->query('SELECT TransactionID, TranID, MemberID, NationalID, Amount, TransactionType, CreatedAt FROM member_transactions LIMIT 1');
+});
+
+admin_health_check('deposits table', function () {
+    Database::connection()->query('SELECT DepositID, MemberID, RequiredAmount, PaidAmount, Balance, Status FROM deposits LIMIT 1');
+});
+
+admin_health_check('system_settings table', function () {
+    Database::connection()->query('SELECT SettingID, DepositAmount, UpdatedAt FROM system_settings LIMIT 1');
 });
 
 admin_health_check('admin_users table', function () {
@@ -60,7 +68,7 @@ foreach ($checks as $check) {
         <p class="text-muted">Use this page to see which database part is causing the admin 500 error.</p>
 
         <?php if ($hasFailures): ?>
-          <div class="alert alert-warning">One or more setup checks failed. Run the SQL shown in <code>ADMIN_LOGIN_SETUP.md</code> and the SACCO migration.</div>
+          <div class="alert alert-warning">One or more setup checks failed. Run <code>database/financial_workflow_migration.sql</code>.</div>
         <?php else: ?>
           <div class="alert alert-success">All admin database checks passed.</div>
         <?php endif; ?>

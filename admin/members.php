@@ -15,7 +15,8 @@ $isAdmin = $adminRole === 'admin';
 try {
     $pdo = Database::connection();
     $pdo->query('SELECT 1 FROM members LIMIT 1');
-    $pdo->query('SELECT 1 FROM contributions LIMIT 1');
+    $pdo->query('SELECT 1 FROM deposits LIMIT 1');
+    $pdo->query('SELECT 1 FROM member_transactions LIMIT 1');
 } catch (Throwable $error) {
     error_log('Admin dashboard setup error: ' . $error->getMessage());
     ?>
@@ -37,8 +38,8 @@ try {
               <?= htmlspecialchars($error->getMessage(), ENT_QUOTES, 'UTF-8') ?>
             </div>
             <p>Run the migration in phpMyAdmin, then reload this page:</p>
-            <pre class="bg-light p-3 rounded">database/sacco_management_migration.sql</pre>
-            <p class="mb-0">If the migration keeps failing, open <code>ADMIN_LOGIN_SETUP.md</code> and run the required table SQL manually.</p>
+            <pre class="bg-light p-3 rounded">database/financial_workflow_migration.sql</pre>
+            <p class="mb-0">If the migration keeps failing, open the migration file and run the required table SQL manually.</p>
           </div>
         </section>
       </main>
@@ -65,12 +66,15 @@ if ($statusFilter !== '' && in_array($statusFilter, MemberService::STATUSES, tru
 $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
 $stmt = $pdo->prepare(
-    "SELECT m.*, COALESCE(totals.TotalContributions, 0) AS TotalContributions, COALESCE(totals.ContributionCount, 0) AS ContributionCount
+    "SELECT m.*, d.RequiredAmount, d.PaidAmount, d.Balance, d.Status AS DepositStatus,
+        COALESCE(totals.TotalContributions, 0) AS TotalContributions,
+        COALESCE(totals.ContributionCount, 0) AS ContributionCount
      FROM members m
+     LEFT JOIN deposits d ON d.MemberID = m.MemberID
      LEFT JOIN (
-        SELECT MemberID, SUM(Amount) AS TotalContributions, COUNT(ContributionID) AS ContributionCount
-        FROM contributions
-        WHERE MemberID IS NOT NULL
+        SELECT MemberID, SUM(Amount) AS TotalContributions, COUNT(TransactionID) AS ContributionCount
+        FROM member_transactions
+        WHERE MemberID IS NOT NULL AND TransactionType = 'contribution'
         GROUP BY MemberID
      ) totals ON totals.MemberID = m.MemberID
      {$whereSql}
@@ -85,8 +89,8 @@ if ($members) {
     $placeholders = implode(',', array_fill(0, count($memberIds), '?'));
     $contributionStmt = $pdo->prepare(
         "SELECT *
-         FROM contributions
-         WHERE MemberID IN ({$placeholders})
+         FROM member_transactions
+         WHERE MemberID IN ({$placeholders}) AND TransactionType = 'contribution'
          ORDER BY COALESCE(TranTime, CreatedAt) DESC"
     );
     $contributionStmt->execute($memberIds);
@@ -104,18 +108,21 @@ $stats = $pdo->query(
     "SELECT
         COUNT(*) AS TotalMembers,
         SUM(CASE WHEN Status = 'Active' THEN 1 ELSE 0 END) AS ActiveMembers,
-        SUM(CASE WHEN Status = 'Suspended' THEN 1 ELSE 0 END) AS SuspendedMembers
+        SUM(CASE WHEN Status = 'Suspended' THEN 1 ELSE 0 END) AS SuspendedMembers,
+        SUM(CASE WHEN Status = 'Pending' THEN 1 ELSE 0 END) AS PendingMembers
      FROM members"
 )->fetch();
 
 $contributionStats = $pdo->query(
-    'SELECT COALESCE(SUM(Amount), 0) AS TotalContributions, COUNT(*) AS ContributionCount FROM contributions'
+    "SELECT COALESCE(SUM(Amount), 0) AS TotalContributions, COUNT(*) AS ContributionCount
+     FROM member_transactions
+     WHERE TransactionType = 'contribution'"
 )->fetch();
 
 $pendingContributions = $pdo->query(
     'SELECT NationalID, FirstName, LastName, MSISDN, COUNT(*) AS ContributionCount, SUM(Amount) AS TotalAmount
-     FROM contributions
-     WHERE MemberID IS NULL
+     FROM member_transactions
+     WHERE MemberID IS NULL AND TransactionType = "contribution"
      GROUP BY NationalID, FirstName, LastName, MSISDN
      ORDER BY MAX(CreatedAt) DESC'
 )->fetchAll();
@@ -178,10 +185,10 @@ function e($value): string
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Active Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['ActiveMembers'] ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$contributionStats['TotalContributions'], 2) ?></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Pending Members</div><div class="h3 fw-bold mb-0"><?= (int)$stats['PendingMembers'] ?></div></div></div>
       </div>
       <div class="col-md-3">
-        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Unmatched Contributions</div><div class="h3 fw-bold mb-0"><?= count($pendingContributions) ?></div></div></div>
+        <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold mb-0">KES <?= number_format((float)$contributionStats['TotalContributions'], 2) ?></div></div></div>
       </div>
     </div>
 
@@ -208,7 +215,7 @@ function e($value): string
         </div>
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th></th></tr></thead>
+            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th></th></tr></thead>
             <tbody>
               <?php foreach ($members as $member): ?>
                 <tr>
@@ -218,6 +225,7 @@ function e($value): string
                   <td><?= e($member['Email'] ?: 'Not provided') ?></td>
                   <td><?= e($member['NationalID']) ?></td>
                   <td><span class="badge text-bg-<?= $member['Status'] === 'Active' ? 'success' : ($member['Status'] === 'Suspended' ? 'danger' : 'secondary') ?>"><?= e($member['Status']) ?></span></td>
+                  <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
                   <td><?= e($member['CreatedAt']) ?></td>
                   <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
                   <td class="text-end">
@@ -231,7 +239,7 @@ function e($value): string
                 </tr>
               <?php endforeach; ?>
               <?php if (!$members): ?>
-                <tr><td colspan="9" class="text-muted">No members match your search.</td></tr>
+                <tr><td colspan="10" class="text-muted">No members match your search.</td></tr>
               <?php endif; ?>
             </tbody>
           </table>

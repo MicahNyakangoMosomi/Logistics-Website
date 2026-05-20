@@ -7,17 +7,19 @@ Auth::requireAdmin();
 $pdo = Database::connection();
 
 $summary = $pdo->query(
-    'SELECT
+     'SELECT
         COALESCE(SUM(Amount), 0) AS TotalContributions,
         COUNT(*) AS ContributionCount,
         COUNT(DISTINCT MemberID) AS ContributingMembers,
         SUM(CASE WHEN MemberID IS NULL THEN 1 ELSE 0 END) AS UnmatchedTransactions
-     FROM contributions'
+     FROM member_transactions
+     WHERE TransactionType = "contribution"'
 )->fetch();
 
 $monthly = $pdo->query(
     "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
-     FROM contributions
+     FROM member_transactions
+     WHERE TransactionType = 'contribution'
      GROUP BY DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m')
      ORDER BY Month DESC
      LIMIT 12"
@@ -27,8 +29,8 @@ $topMembers = $pdo->query(
     'SELECT m.MemberID, m.NationalID, m.FirstName, m.LastName, totals.Total
      FROM (
         SELECT MemberID, SUM(Amount) AS Total
-        FROM contributions
-        WHERE MemberID IS NOT NULL
+        FROM member_transactions
+        WHERE MemberID IS NOT NULL AND TransactionType = "contribution"
         GROUP BY MemberID
      ) totals
      INNER JOIN members m ON m.MemberID = totals.MemberID
@@ -38,8 +40,9 @@ $topMembers = $pdo->query(
 
 $recent = $pdo->query(
     'SELECT t.*, m.MemberID AS LinkedMemberID
-     FROM contributions t
+     FROM member_transactions t
      LEFT JOIN members m ON m.MemberID = t.MemberID
+     WHERE t.TransactionType = "contribution"
      ORDER BY COALESCE(t.TranTime, t.CreatedAt) DESC
      LIMIT 25'
 )->fetchAll();

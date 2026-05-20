@@ -11,7 +11,9 @@ $messageType = 'info';
 try {
     $pdo = Database::connection();
     $pdo->query('SELECT 1 FROM members LIMIT 1');
-    $pdo->query('SELECT 1 FROM contributions LIMIT 1');
+    $pdo->query('SELECT 1 FROM deposits LIMIT 1');
+    $pdo->query('SELECT 1 FROM member_transactions LIMIT 1');
+    $pdo->query('SELECT 1 FROM system_settings LIMIT 1');
 } catch (Throwable $error) {
     error_log('Register member setup error: ' . $error->getMessage());
     $messageType = 'warning';
@@ -102,6 +104,13 @@ function e($value): string
           <div class="col-md-6">
             <label class="form-label" for="password">Password</label>
             <input class="form-control" id="password" name="password" type="password" required autocomplete="new-password">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="deposit_paid">Deposit Paid?</label>
+            <select class="form-select" id="deposit_paid" name="deposit_paid" required>
+              <option value="yes">Yes - activate and send credentials</option>
+              <option value="no">No - keep member pending</option>
+            </select>
           </div>
           <div class="col-12">
             <button class="btn btn-primary" type="submit">Register Member</button>

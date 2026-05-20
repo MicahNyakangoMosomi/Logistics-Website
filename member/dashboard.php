@@ -9,24 +9,28 @@ $message = '';
 $messageType = 'info';
 
 
-$totalStmt = $pdo->prepare('SELECT COALESCE(SUM(Amount), 0) AS Total FROM contributions WHERE MemberID = :member_id');
+$totalStmt = $pdo->prepare("SELECT COALESCE(SUM(Amount), 0) AS Total FROM member_transactions WHERE MemberID = :member_id AND TransactionType = 'contribution'");
 $totalStmt->execute([':member_id' => $member['MemberID']]);
 $total = (float) $totalStmt->fetchColumn();
 
-$recentStmt = $pdo->prepare('SELECT * FROM contributions WHERE MemberID = :member_id ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT 8');
+$recentStmt = $pdo->prepare("SELECT * FROM member_transactions WHERE MemberID = :member_id AND TransactionType = 'contribution' ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT 8");
 $recentStmt->execute([':member_id' => $member['MemberID']]);
 $recentTransactions = $recentStmt->fetchAll();
 
 $monthlyStmt = $pdo->prepare(
     "SELECT DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m') AS Month, SUM(Amount) AS Total, COUNT(*) AS Count
-     FROM contributions
-     WHERE MemberID = :member_id
+     FROM member_transactions
+     WHERE MemberID = :member_id AND TransactionType = 'contribution'
      GROUP BY DATE_FORMAT(COALESCE(TranTime, CreatedAt), '%Y-%m')
      ORDER BY Month DESC
      LIMIT 12"
 );
 $monthlyStmt->execute([':member_id' => $member['MemberID']]);
 $monthly = $monthlyStmt->fetchAll();
+
+$depositStmt = $pdo->prepare('SELECT * FROM deposits WHERE MemberID = :member_id LIMIT 1');
+$depositStmt->execute([':member_id' => $member['MemberID']]);
+$deposit = $depositStmt->fetch() ?: ['RequiredAmount' => 0, 'PaidAmount' => 0, 'Balance' => 0, 'Status' => 'cleared'];
 
 $maxMonthly = 0;
 foreach ($monthly as $row) {
@@ -96,6 +100,14 @@ function e($value): string
           <div class="card-body">
             <div class="text-muted small">Membership ID</div>
             <div class="h3 fw-bold mb-0"><?= htmlspecialchars($member['MemberID'], ENT_QUOTES, 'UTF-8') ?></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card metric h-100">
+          <div class="card-body">
+            <div class="text-muted small">Deposit Balance</div>
+            <div class="h3 fw-bold mb-0">KES <?= number_format((float)$deposit['Balance'], 2) ?></div>
           </div>
         </div>
       </div>

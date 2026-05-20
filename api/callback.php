@@ -75,11 +75,32 @@ try {
         $memberStmt->execute([':national_id' => $nationalId]);
         $memberPhone = trim((string)($memberStmt->fetchColumn() ?: ''));
 
-        $stmt = $pdo->prepare('SELECT SUM(Amount) FROM contributions WHERE NationalID = :national_id');
+        $stmt = $pdo->prepare("SELECT SUM(Amount) FROM member_transactions WHERE NationalID = :national_id AND TransactionType = 'contribution'");
         $stmt->execute([':national_id' => $nationalId]);
         $totalContribution = number_format((float)$stmt->fetchColumn(), 2);
 
-        $smsMessage = "Confirmed. Payment of {$amount} to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime} for queries contact 0758500557. Total Contribution is {$totalContribution}. Keep saving to Qualify for loan of up to 3 times yours savings";
+        $segments = $result['segments'] ?? [];
+        $depositAmount = 0.00;
+        $contributionAmount = 0.00;
+        foreach ($segments as $segment) {
+            if (($segment['type'] ?? '') === 'deposit') {
+                $depositAmount += (float)$segment['amount'];
+            }
+            if (($segment['type'] ?? '') === 'contribution') {
+                $contributionAmount += (float)$segment['amount'];
+            }
+        }
+
+        $allocation = [];
+        if ($depositAmount > 0) {
+            $allocation[] = 'Deposit KES ' . number_format($depositAmount, 2);
+        }
+        if ($contributionAmount > 0) {
+            $allocation[] = 'Contribution KES ' . number_format($contributionAmount, 2);
+        }
+        $allocationText = $allocation ? ' Allocation: ' . implode(', ', $allocation) . '.' : '';
+
+        $smsMessage = "Confirmed. Payment of {$amount} to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime}.{$allocationText} Total Contribution is {$totalContribution}. For queries contact 0758500557.";
         
         require_once __DIR__ . '/../classes/SmsService.php';
         if ($memberPhone !== '') {
