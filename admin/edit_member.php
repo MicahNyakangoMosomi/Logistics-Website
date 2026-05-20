@@ -136,7 +136,12 @@ function e($value): string
             </div>
             <div class="col-12">
               <label class="form-label">New Password</label>
-              <input class="form-control" name="password" type="password" autocomplete="new-password" placeholder="Leave blank to keep the current password">
+              <div class="input-group">
+                <input class="form-control" id="password" name="password" type="text" autocomplete="new-password" placeholder="Leave blank to keep the current password" readonly>
+                <button class="btn btn-outline-primary" type="button" id="generatePassword">Auto Generate Password</button>
+                <button class="btn btn-outline-secondary" type="button" id="clearPassword">Clear</button>
+              </div>
+              <div class="form-text">A password SMS is sent only if this field has a generated password when you save.</div>
             </div>
           <?php else: ?>
             <div class="col-md-6">
@@ -153,5 +158,30 @@ function e($value): string
       </div>
     </section>
   </main>
+  <script>
+    const passwordInput = document.getElementById('password');
+    const generatePasswordButton = document.getElementById('generatePassword');
+    const clearPasswordButton = document.getElementById('clearPassword');
+    const passwordCharacters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+
+    if (passwordInput && generatePasswordButton && clearPasswordButton) {
+      generatePasswordButton.addEventListener('click', function () {
+        let password = '';
+
+        for (let index = 0; index < 8; index++) {
+          const randomValues = new Uint32Array(1);
+          window.crypto.getRandomValues(randomValues);
+          const randomIndex = randomValues[0] % passwordCharacters.length;
+          password += passwordCharacters[randomIndex];
+        }
+
+        passwordInput.value = password;
+      });
+
+      clearPasswordButton.addEventListener('click', function () {
+        passwordInput.value = '';
+      });
+    }
+  </script>
 </body>
 </html>

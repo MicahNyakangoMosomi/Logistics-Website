@@ -80,7 +80,7 @@ function e($value): string
     <section class="card panel">
       <div class="card-body">
         <h1 class="h4 fw-bold mb-1">Register Member</h1>
-        <p class="text-muted mb-4">Create SACCO members through the internal staff/admin workflow.</p>
+        <p class="text-muted mb-4">Create SACCO members through the internal staff/admin workflow. Passwords are generated automatically.</p>
         <form method="post" class="row g-3" onsubmit="return confirm('Register this member and save the record to the database?');">
           <div class="col-md-3">
             <label class="form-label" for="first_name">FirstName</label>
@@ -101,10 +101,6 @@ function e($value): string
           <div class="col-md-6">
             <label class="form-label" for="email">Email <span class="text-muted">(optional)</span></label>
             <input class="form-control" id="email" name="email" type="email">
-          </div>
-          <div class="col-md-6">
-            <label class="form-label" for="password">Password</label>
-            <input class="form-control" id="password" name="password" type="password" required autocomplete="new-password">
           </div>
           <div class="col-md-6">
             <label class="form-label" for="deposit_paid">Deposit Paid?</label>

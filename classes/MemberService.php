@@ -15,10 +15,10 @@ class MemberService
         $nationalId = self::cleanNationalId($data['national_id'] ?? $data['NationalID'] ?? '');
         $phone = self::cleanPhone($data['phone'] ?? $data['PrimaryNumber'] ?? '');
         $email = self::cleanEmail($data['email'] ?? $data['Email'] ?? '');
-        $password = trim((string)($data['password'] ?? $data['Password'] ?? ''));
+        $password = self::generatePassword();
         $depositPaid = self::boolValue($data['deposit_paid'] ?? false);
 
-        self::validateRequired($firstName, $lastName, $nationalId, $phone, $password);
+        self::validateRequired($firstName, $lastName, $nationalId, $phone);
 
         if (self::nationalIdExists($nationalId)) {
             throw new InvalidArgumentException('A member with this National ID already exists.');
@@ -144,6 +144,10 @@ class MemberService
         $stmt->execute($params);
 
         self::linkUnmatchedContributions($memberId, $nationalId);
+
+        if ($canChangePassword && $password !== '') {
+            self::sendPasswordChangedSms($phone, $firstName, $lastName, $memberId, $password);
+        }
     }
 
     public static function generateMemberId(string $nationalId, string $firstName, string $lastName): string
@@ -187,6 +191,32 @@ class MemberService
         return (float)($stmt->fetchColumn() ?: 0);
     }
 
+    public static function generatePassword(int $length = 8): string
+    {
+        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+        $password = '';
+        $maxIndex = strlen($characters) - 1;
+
+        for ($index = 0; $index < $length; $index++) {
+            $password .= $characters[random_int(0, $maxIndex)];
+        }
+
+        return $password;
+    }
+
+    private static function sendPasswordChangedSms(
+        string $phone,
+        string $firstName,
+        string $lastName,
+        string $memberId,
+        string $password
+    ): void {
+        $fullName = trim($firstName . ' ' . $lastName);
+        $smsMessage = "Dear {$fullName}, your Mashirikiano Sacco member password has been changed. Your Membership ID is {$memberId} and your new password is {$password}. Login url:https://mashirikianosacco.co.ke/auth/login.php For support contact itsupport@mashirikianosacco.co.ke or call 0758500557";
+
+        SmsService::sendSms($phone, $smsMessage);
+    }
+
     private static function boolValue($value): bool
     {
         return in_array(strtolower(trim((string)$value)), ['1', 'yes', 'true', 'on'], true);
@@ -208,10 +238,10 @@ class MemberService
         return (bool)$stmt->fetch();
     }
 
-    private static function validateRequired(string $firstName, string $lastName, string $nationalId, string $phone, string $password): void
+    private static function validateRequired(string $firstName, string $lastName, string $nationalId, string $phone): void
     {
-        if ($firstName === '' || $lastName === '' || $nationalId === '' || $phone === '' || $password === '') {
-            throw new InvalidArgumentException('First name, last name, phone, password, and National ID are required.');
+        if ($firstName === '' || $lastName === '' || $nationalId === '' || $phone === '') {
+            throw new InvalidArgumentException('First name, last name, phone, and National ID are required.');
         }
     }
 

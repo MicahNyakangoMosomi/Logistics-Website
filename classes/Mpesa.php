@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/SmsService.php';
 
 /**
  * Class Mpesa
@@ -126,6 +127,7 @@ class Mpesa
         $member = self::findMemberByNationalId($data['NationalID']);
         $memberId = $member ? (string)$member['MemberID'] : null;
         $segments = [];
+        $activationSms = null;
 
         $pdo->beginTransaction();
         try {
@@ -158,9 +160,27 @@ class Mpesa
                         ':deposit_id' => $deposit['DepositID'],
                     ]);
 
-                    if ($depositStatus === 'cleared') {
-                        $activate = $pdo->prepare("UPDATE members SET Status = 'Active' WHERE MemberID = :member_id AND Status = 'Pending'");
-                        $activate->execute([':member_id' => $memberId]);
+                    if ($depositStatus === 'cleared' && (string)($member['Status'] ?? '') === 'Pending') {
+                        $temporaryPassword = self::generateTemporaryPassword();
+                        $activate = $pdo->prepare(
+                            "UPDATE members
+                             SET Status = 'Active', Password = :password
+                             WHERE MemberID = :member_id AND Status = 'Pending'"
+                        );
+                        $activate->execute([
+                            ':password' => password_hash($temporaryPassword, PASSWORD_DEFAULT),
+                            ':member_id' => $memberId,
+                        ]);
+
+                        if ($activate->rowCount() > 0) {
+                            $activationSms = [
+                                'phone' => (string)($member['PrimaryNumber'] ?: $data['MSISDN']),
+                                'member_id' => $memberId,
+                                'first_name' => (string)$member['FirstName'],
+                                'last_name' => (string)$member['LastName'],
+                                'password' => $temporaryPassword,
+                            ];
+                        }
                     }
                 }
             }
@@ -176,6 +196,11 @@ class Mpesa
             throw $error;
         }
 
+        $activationSmsSent = null;
+        if ($activationSms !== null) {
+            $activationSmsSent = self::sendActivationSms($activationSms);
+        }
+
         return [
             'status' => 'recorded',
             'message' => $memberId
@@ -184,8 +209,35 @@ class Mpesa
             'tran_id' => $data['TranID'],
             'member_id' => $memberId,
             'segments' => $segments,
-            'data' => $data
+            'data' => $data,
+            'activation_sms_sent' => $activationSmsSent,
         ];
+    }
+
+    private static function sendActivationSms(array $activation): bool
+    {
+        $fullName = trim($activation['first_name'] . ' ' . $activation['last_name']);
+        $memberId = $activation['member_id'];
+        $password = $activation['password'];
+        $message = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login.
+            Login url:https://mashirikianosacco.co.ke/auth/login.php
+            Keep saving to qualify for loans of up to 3 times your savings.
+            for support contact: itsupport@mashirikianosacco.co.ke or call 0758500557";
+
+        return SmsService::sendSms($activation['phone'], $message);
+    }
+
+    private static function generateTemporaryPassword(int $length = 8): string
+    {
+        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+        $password = '';
+        $maxIndex = strlen($characters) - 1;
+
+        for ($index = 0; $index < $length; $index++) {
+            $password .= $characters[random_int(0, $maxIndex)];
+        }
+
+        return $password;
     }
 
     private static function ensureDepositRecord(PDO $pdo, string $memberId): void
