@@ -152,10 +152,6 @@ function renderMemberRows(array $members): string
     ob_start();
     foreach ($members as $member): ?>
       <tr>
-        <td class="actions-cell">
-          <a href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">Edit</a>
-          <a href="#" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">Contributions</a>
-        </td>
         <td class="member-id"><?= e($member['MemberID']) ?></td>
         <td><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></td>
         <td><?= e($member['PrimaryNumber']) ?></td>
@@ -165,6 +161,10 @@ function renderMemberRows(array $members): string
         <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
         <td><?= e($member['CreatedAt']) ?></td>
         <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
+        <td class="actions-cell text-end">
+          <a href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">Edit</a>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">Contributions</a>
+        </td>
       </tr>
     <?php endforeach;
 
@@ -314,7 +314,7 @@ function renderMemberModals(array $members, array $memberContributions): string
         <div class="text-muted small mb-2" id="memberResultSummary"><?= count($members) ?> member<?= count($members) === 1 ? '' : 's' ?> shown</div>
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>Actions</th><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th></tr></thead>
+            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
             <tbody id="membersTableBody">
               <?= renderMemberRows($members) ?>
             </tbody>
