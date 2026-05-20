@@ -56,7 +56,7 @@ class SimplePdfTable
     private static function pageHeader(string $title, int $margin, int $pageHeight, int $titleSize): string
     {
         $date = date('Y-m-d H:i');
-        return "0.4 G 0.5 w 0 g\n"
+        return "0 0 0 RG 1 w 0 0 0 rg\n"
             . self::text($margin, $pageHeight - 28, $titleSize, $title)
             . self::text($margin, $pageHeight - 44, 8, 'Generated: ' . $date);
     }
@@ -77,7 +77,7 @@ class SimplePdfTable
     {
         $cursor = $x;
         foreach ($widths as $index => $width) {
-            $content .= sprintf("%.2F %.2F %.2F %.2F re %s\n", $cursor, $y - $height, $width, $height, $fill ? 'B' : 'S');
+            $content .= sprintf("0 0 0 RG 1 w %.2F %.2F %.2F %.2F re %s\n", $cursor, $y - $height, $width, $height, $fill ? 'B' : 'S');
             $text = self::truncate((string)($cells[$index] ?? ''), max(4, (int)floor($width / ($fontSize * 0.55))));
             $content .= self::text($cursor + 3, $y - 12, $fontSize, $text);
             $cursor += $width;
