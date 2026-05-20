@@ -56,7 +56,8 @@ class SimplePdfTable
     private static function pageHeader(string $title, int $margin, int $pageHeight, int $titleSize): string
     {
         $date = date('Y-m-d H:i');
-        return self::text($margin, $pageHeight - 28, $titleSize, $title)
+        return "0.4 G 0.5 w 0 g\n"
+            . self::text($margin, $pageHeight - 28, $titleSize, $title)
             . self::text($margin, $pageHeight - 44, 8, 'Generated: ' . $date);
     }
 
