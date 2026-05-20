@@ -13,6 +13,7 @@ $rowLimit = (int)($_GET['limit'] ?? 10);
 if (!in_array($rowLimit, $allowedLimits, true)) {
     $rowLimit = 10;
 }
+$currentPage = max(1, (int)($_GET['page'] ?? 1));
 $adminRole = Auth::adminRole();
 $isAdmin = $adminRole === 'admin';
 
@@ -54,7 +55,7 @@ try {
 }
 
 
-[$members, $memberContributions] = loadMembers($pdo, $search, $rowLimit);
+[$members, $memberContributions, $totalMembers, $totalPages, $currentPage] = loadMembers($pdo, $search, $rowLimit, $currentPage);
 
 if (($_GET['ajax'] ?? '') === 'members') {
     header('Content-Type: application/json');
@@ -62,6 +63,11 @@ if (($_GET['ajax'] ?? '') === 'members') {
         'rows' => renderMemberRows($members),
         'modals' => renderMemberModals($members, $memberContributions),
         'count' => count($members),
+        'total' => $totalMembers,
+        'page' => $currentPage,
+        'totalPages' => $totalPages,
+        'pagination' => renderPagination($currentPage, $totalPages),
+        'summary' => memberResultSummary(count($members), $totalMembers, $currentPage, $rowLimit),
     ]);
     exit;
 }
@@ -94,7 +100,7 @@ function e($value): string
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
 
-function loadMembers(PDO $pdo, string $search, int $limit): array
+function loadMembers(PDO $pdo, string $search, int $limit, int $page): array
 {
     $whereSql = '';
     $params = [];
@@ -103,6 +109,13 @@ function loadMembers(PDO $pdo, string $search, int $limit): array
         $whereSql = 'WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, " ", m.LastName) LIKE :search)';
         $params[':search'] = '%' . $search . '%';
     }
+
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM members m {$whereSql}");
+    $countStmt->execute($params);
+    $totalMembers = (int)$countStmt->fetchColumn();
+    $totalPages = max(1, (int)ceil($totalMembers / $limit));
+    $page = min(max(1, $page), $totalPages);
+    $offset = ($page - 1) * $limit;
 
     $stmt = $pdo->prepare(
         "SELECT m.*, d.RequiredAmount, d.PaidAmount, d.Balance, d.Status AS DepositStatus,
@@ -118,7 +131,7 @@ function loadMembers(PDO $pdo, string $search, int $limit): array
          ) totals ON totals.MemberID = m.MemberID
          {$whereSql}
          ORDER BY m.FirstName ASC, m.LastName ASC, m.MemberID ASC
-         LIMIT {$limit}"
+         LIMIT {$limit} OFFSET {$offset}"
     );
     $stmt->execute($params);
     $members = $stmt->fetchAll();
@@ -144,7 +157,7 @@ function loadMembers(PDO $pdo, string $search, int $limit): array
         }
     }
 
-    return [$members, $memberContributions];
+    return [$members, $memberContributions, $totalMembers, $totalPages, $page];
 }
 
 function renderMemberRows(array $members): string
@@ -229,6 +242,43 @@ function renderMemberModals(array $members, array $memberContributions): string
 
     return trim((string)ob_get_clean());
 }
+
+function memberResultSummary(int $visibleCount, int $totalMembers, int $page, int $limit): string
+{
+    if ($totalMembers === 0) {
+        return '0 members found';
+    }
+
+    $start = (($page - 1) * $limit) + 1;
+    $end = $start + $visibleCount - 1;
+
+    return "Showing {$start}-{$end} of {$totalMembers} member" . ($totalMembers === 1 ? '' : 's');
+}
+
+function renderPagination(int $currentPage, int $totalPages): string
+{
+    if ($totalPages <= 1) {
+        return '';
+    }
+
+    ob_start(); ?>
+      <nav aria-label="Members pages">
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item <?= $currentPage <= 1 ? 'disabled' : '' ?>">
+            <a class="page-link" href="#" data-page="<?= max(1, $currentPage - 1) ?>">Previous</a>
+          </li>
+          <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+            <li class="page-item <?= $page === $currentPage ? 'active' : '' ?>">
+              <a class="page-link" href="#" data-page="<?= $page ?>"><?= $page ?></a>
+            </li>
+          <?php endfor; ?>
+          <li class="page-item <?= $currentPage >= $totalPages ? 'disabled' : '' ?>">
+            <a class="page-link" href="#" data-page="<?= min($totalPages, $currentPage + 1) ?>">Next</a>
+          </li>
+        </ul>
+      </nav>
+    <?php return trim((string)ob_get_clean());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -311,7 +361,12 @@ function renderMemberModals(array $members, array $memberContributions): string
             </div>
           </form>
         </div>
-        <div class="text-muted small mb-2" id="memberResultSummary"><?= count($members) ?> member<?= count($members) === 1 ? '' : 's' ?> shown</div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+          <div class="text-muted small" id="memberResultSummary"><?= e(memberResultSummary(count($members), $totalMembers, $currentPage, $rowLimit)) ?></div>
+          <div id="memberPagination">
+            <?= renderPagination($currentPage, $totalPages) ?>
+          </div>
+        </div>
         <div class="table-responsive">
           <table class="table align-middle">
             <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th class="text-end">Actions</th></tr></thead>
@@ -361,19 +416,23 @@ function renderMemberModals(array $members, array $memberContributions): string
     const membersTableBody = document.getElementById('membersTableBody');
     const memberContributionModals = document.getElementById('memberContributionModals');
     const memberResultSummary = document.getElementById('memberResultSummary');
+    const memberPagination = document.getElementById('memberPagination');
     let searchTimer = null;
     let activeController = null;
+    let currentPage = <?= (int)$currentPage ?>;
 
-    function updateMembers() {
+    function updateMembers(page = currentPage) {
       if (activeController) {
         activeController.abort();
       }
 
       activeController = new AbortController();
+      currentPage = Math.max(1, parseInt(page, 10) || 1);
       const params = new URLSearchParams({
         ajax: 'members',
         search: memberSearch.value,
-        limit: rowLimit.value
+        limit: rowLimit.value,
+        page: currentPage
       });
 
       fetch(`members.php?${params.toString()}`, { signal: activeController.signal })
@@ -386,7 +445,9 @@ function renderMemberModals(array $members, array $memberContributions): string
         .then(function (data) {
           membersTableBody.innerHTML = data.rows;
           memberContributionModals.innerHTML = data.modals;
-          memberResultSummary.textContent = `${data.count} member${data.count === 1 ? '' : 's'} shown`;
+          memberResultSummary.textContent = data.summary;
+          memberPagination.innerHTML = data.pagination;
+          currentPage = data.page;
 
           const url = new URL(window.location.href);
           if (memberSearch.value) {
@@ -395,6 +456,7 @@ function renderMemberModals(array $members, array $memberContributions): string
             url.searchParams.delete('search');
           }
           url.searchParams.set('limit', rowLimit.value);
+          url.searchParams.set('page', currentPage);
           window.history.replaceState({}, '', url);
         })
         .catch(function (error) {
@@ -411,10 +473,24 @@ function renderMemberModals(array $members, array $memberContributions): string
 
     memberSearch.addEventListener('input', function () {
       window.clearTimeout(searchTimer);
-      searchTimer = window.setTimeout(updateMembers, 250);
+      searchTimer = window.setTimeout(function () {
+        updateMembers(1);
+      }, 250);
     });
 
-    rowLimit.addEventListener('change', updateMembers);
+    rowLimit.addEventListener('change', function () {
+      updateMembers(1);
+    });
+
+    memberPagination.addEventListener('click', function (event) {
+      const link = event.target.closest('[data-page]');
+      if (!link || link.parentElement.classList.contains('disabled') || link.parentElement.classList.contains('active')) {
+        return;
+      }
+
+      event.preventDefault();
+      updateMembers(link.dataset.page);
+    });
   </script>
 </body>
 </html>
