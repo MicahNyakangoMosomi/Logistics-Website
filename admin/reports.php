@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', '1');
-ini_set('display_startup_errors', '1');
-error_reporting(E_ALL);
-
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/SimplePdfTable.php';
 
@@ -48,7 +44,8 @@ try {
 
 $allowedTypes = ['contribution', 'deposit'];
 $allowedLimits = [5, 10, 25, 50];
-$reportType = in_array(($_GET['type'] ?? 'contribution'), $allowedTypes, true) ? $_GET['type'] : 'contribution';
+$typeInput = $_GET['type'] ?? 'contribution';
+$reportType = in_array($typeInput, $allowedTypes, true) ? $typeInput : 'contribution';
 $rowLimit = (int)($_GET['limit'] ?? 10);
 if (!in_array($rowLimit, $allowedLimits, true)) {
     $rowLimit = 10;
