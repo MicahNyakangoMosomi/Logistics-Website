@@ -60,6 +60,24 @@ class MemberService
                 ':status' => $depositBalance <= 0 ? 'cleared' : 'pending',
             ]);
 
+            if ($depositPaidAmount > 0) {
+                $manualTranId = 'ONBOARD-' . $memberId;
+                self::insertLedgerTransaction($pdo, [
+                    'TranID' => $manualTranId,
+                    'MemberID' => $memberId,
+                    'NationalID' => $nationalId,
+                    'FirstName' => $firstName,
+                    'LastName' => $lastName,
+                    'MSISDN' => $phone,
+                    'Amount' => $depositPaidAmount,
+                    'TransactionType' => 'deposit',
+                    'TransactionCategory' => 'onboarding',
+                    'Reference' => $manualTranId,
+                    'Description' => 'Paid manually',
+                    'TranTime' => date('Y-m-d H:i:s'),
+                ]);
+            }
+
             self::linkUnmatchedContributions($memberId, $nationalId);
             $pdo->commit();
         } catch (Throwable $error) {
@@ -224,6 +242,30 @@ class MemberService
         $smsMessage = "Dear {$fullName}, your Mashirikiano Sacco member password has been changed. Your Membership ID is {$memberId} and your new password is {$password}. Login url:https://mashirikianosacco.co.ke/auth/login.php For support contact itsupport@mashirikianosacco.co.ke or call 0758500557";
 
         SmsService::sendSms($phone, $smsMessage);
+    }
+
+    private static function insertLedgerTransaction(PDO $pdo, array $data): void
+    {
+        $stmt = $pdo->prepare(
+            'INSERT INTO member_transactions
+             (TranID, MemberID, NationalID, FirstName, LastName, MSISDN, Amount, TransactionType, TransactionCategory, Reference, Description, TranTime)
+             VALUES
+             (:tran_id, :member_id, :national_id, :first_name, :last_name, :msisdn, :amount, :transaction_type, :transaction_category, :reference, :description, :tran_time)'
+        );
+        $stmt->execute([
+            ':tran_id' => $data['TranID'],
+            ':member_id' => $data['MemberID'],
+            ':national_id' => $data['NationalID'],
+            ':first_name' => $data['FirstName'],
+            ':last_name' => $data['LastName'],
+            ':msisdn' => $data['MSISDN'],
+            ':amount' => $data['Amount'],
+            ':transaction_type' => $data['TransactionType'],
+            ':transaction_category' => $data['TransactionCategory'],
+            ':reference' => $data['Reference'] ?? null,
+            ':description' => $data['Description'] ?? null,
+            ':tran_time' => $data['TranTime'] ?? null,
+        ]);
     }
 
     private static function boolValue($value): bool
