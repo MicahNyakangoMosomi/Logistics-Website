@@ -86,7 +86,10 @@ class MemberService
 
         if ($status === 'Active') {
             $fullName = trim($firstName . ' ' . $lastName);
-            $smsMessage = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login. Keep saving to qualify for loans of up to 3 times your savings.";
+            $smsMessage = "Dear {$fullName}, Thank you for joining Mashirikiano Sacco. You have been successfully registered. Your Membership ID is {$memberId} and your password is {$password}. Use your membershipid and the password as your login.
+            Login url:https://mashirikianosacco.co.ke/auth/login.php
+            Keep saving to qualify for loans of up to 3 times your savings.
+            for support contact: itsupport@mashirikianosacco.co.ke or call 0758500557";
             SmsService::sendSms($phone, $smsMessage);
         }
 
