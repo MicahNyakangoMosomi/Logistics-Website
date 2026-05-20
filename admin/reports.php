@@ -70,6 +70,7 @@ $recent = $pdo->query(
         <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
         <a class="btn btn-sm btn-light" href="reports.php">Reports</a>
         <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
+        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>

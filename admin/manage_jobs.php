@@ -82,6 +82,7 @@ $jobs = $pdo->query("SELECT * FROM jobs ORDER BY job_deadline ASC")->fetchAll();
         <a class="btn btn-sm btn-light" href="manage_jobs.php">Manage Jobs</a>
         <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
         <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
+        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
         <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
       </nav>
     </div>
