@@ -229,15 +229,24 @@ class Mpesa
 
     private static function generateTemporaryPassword(int $length = 8): string
     {
-        $characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
-        $password = '';
-        $maxIndex = strlen($characters) - 1;
+        $digits = '0123456789';
+        $letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $characters = [];
 
-        for ($index = 0; $index < $length; $index++) {
-            $password .= $characters[random_int(0, $maxIndex)];
+        for ($index = 0; $index < 5; $index++) {
+            $characters[] = $digits[random_int(0, strlen($digits) - 1)];
         }
 
-        return $password;
+        for ($index = 0; $index < 3; $index++) {
+            $characters[] = $letters[random_int(0, strlen($letters) - 1)];
+        }
+
+        for ($index = count($characters) - 1; $index > 0; $index--) {
+            $swapIndex = random_int(0, $index);
+            [$characters[$index], $characters[$swapIndex]] = [$characters[$swapIndex], $characters[$index]];
+        }
+
+        return implode('', $characters);
     }
 
     private static function ensureDepositRecord(PDO $pdo, string $memberId): void

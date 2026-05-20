@@ -162,20 +162,33 @@ function e($value): string
     const passwordInput = document.getElementById('password');
     const generatePasswordButton = document.getElementById('generatePassword');
     const clearPasswordButton = document.getElementById('clearPassword');
-    const passwordCharacters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    const passwordDigits = '0123456789';
+    const passwordLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function randomIndex(max) {
+      const randomValues = new Uint32Array(1);
+      window.crypto.getRandomValues(randomValues);
+      return randomValues[0] % max;
+    }
 
     if (passwordInput && generatePasswordButton && clearPasswordButton) {
       generatePasswordButton.addEventListener('click', function () {
-        let password = '';
+        const characters = [];
 
-        for (let index = 0; index < 8; index++) {
-          const randomValues = new Uint32Array(1);
-          window.crypto.getRandomValues(randomValues);
-          const randomIndex = randomValues[0] % passwordCharacters.length;
-          password += passwordCharacters[randomIndex];
+        for (let index = 0; index < 5; index++) {
+          characters.push(passwordDigits[randomIndex(passwordDigits.length)]);
         }
 
-        passwordInput.value = password;
+        for (let index = 0; index < 3; index++) {
+          characters.push(passwordLetters[randomIndex(passwordLetters.length)]);
+        }
+
+        for (let index = characters.length - 1; index > 0; index--) {
+          const swapIndex = randomIndex(index + 1);
+          [characters[index], characters[swapIndex]] = [characters[swapIndex], characters[index]];
+        }
+
+        passwordInput.value = characters.join('');
       });
 
       clearPasswordButton.addEventListener('click', function () {
