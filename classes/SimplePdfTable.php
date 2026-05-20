@@ -120,7 +120,7 @@ class SimplePdfTable
         }
 
         $objects[1] = '<< /Type /Catalog /Pages 2 0 R >>';
-        $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', array_map(fn($number) => $number . ' 0 R', $pageObjectNumbers)) . '] /Count ' . count($pageObjectNumbers) . ' >>';
+        $objects[2] = '<< /Type /Pages /Kids [' . implode(' ', array_map(function ($number) { return $number . ' 0 R'; }, $pageObjectNumbers)) . '] /Count ' . count($pageObjectNumbers) . ' >>';
         $objects[$fontObject] = '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>';
         ksort($objects);
 
