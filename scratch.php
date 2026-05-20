@@ -1,17 +1,11 @@
 <?php
-require __DIR__ . '/classes/SmsService.php';
+require __DIR__ . '/classes/Database.php';
 
-// Test phone formatting using Reflection since it's private
-$method = new ReflectionMethod('SmsService', 'normalizePhone');
-$method->setAccessible(true);
-
-$tests = [
-    '0700123456',
-    '254700123456',
-    '+254700123456',
-    '700123456', // 9 digits
-];
-
-foreach ($tests as $test) {
-    echo $test . " => " . $method->invoke(null, $test) . "\n";
+try {
+    $pdo = Database::connection();
+    $sql = file_get_contents(__DIR__ . '/database/loan_applications_migration.sql');
+    $pdo->exec($sql);
+    echo "MIGRATION_SUCCESSFUL\n";
+} catch (Throwable $e) {
+    echo "MIGRATION_FAILED: " . $e->getMessage() . "\n";
 }
