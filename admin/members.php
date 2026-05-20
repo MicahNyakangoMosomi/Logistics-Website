@@ -8,7 +8,11 @@ Auth::requireAdmin();
 $message = '';
 $messageType = 'info';
 $search = trim($_GET['search'] ?? '');
-$statusFilter = trim($_GET['status'] ?? '');
+$allowedLimits = [5, 10, 25, 50];
+$rowLimit = (int)($_GET['limit'] ?? 10);
+if (!in_array($rowLimit, $allowedLimits, true)) {
+    $rowLimit = 10;
+}
 $adminRole = Auth::adminRole();
 $isAdmin = $adminRole === 'admin';
 
@@ -50,58 +54,16 @@ try {
 }
 
 
-$where = [];
-$params = [];
+[$members, $memberContributions] = loadMembers($pdo, $search, $rowLimit);
 
-if ($search !== '') {
-    $where[] = '(m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR m.NationalID LIKE :search OR m.PrimaryNumber LIKE :search OR m.Email LIKE :search)';
-    $params[':search'] = '%' . $search . '%';
-}
-
-if ($statusFilter !== '' && in_array($statusFilter, MemberService::STATUSES, true)) {
-    $where[] = 'm.Status = :status';
-    $params[':status'] = $statusFilter;
-}
-
-$whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
-$stmt = $pdo->prepare(
-    "SELECT m.*, d.RequiredAmount, d.PaidAmount, d.Balance, d.Status AS DepositStatus,
-        COALESCE(totals.TotalContributions, 0) AS TotalContributions,
-        COALESCE(totals.ContributionCount, 0) AS ContributionCount
-     FROM members m
-     LEFT JOIN deposits d ON d.MemberID = m.MemberID
-     LEFT JOIN (
-        SELECT MemberID, SUM(Amount) AS TotalContributions, COUNT(TransactionID) AS ContributionCount
-        FROM member_transactions
-        WHERE MemberID IS NOT NULL AND TransactionType = 'contribution'
-        GROUP BY MemberID
-     ) totals ON totals.MemberID = m.MemberID
-     {$whereSql}
-     ORDER BY m.CreatedAt DESC"
-);
-$stmt->execute($params);
-$members = $stmt->fetchAll();
-$memberContributions = [];
-
-if ($members) {
-    $memberIds = array_column($members, 'MemberID');
-    $placeholders = implode(',', array_fill(0, count($memberIds), '?'));
-    $contributionStmt = $pdo->prepare(
-        "SELECT *
-         FROM member_transactions
-         WHERE MemberID IN ({$placeholders}) AND TransactionType = 'contribution'
-         ORDER BY COALESCE(TranTime, CreatedAt) DESC"
-    );
-    $contributionStmt->execute($memberIds);
-
-    foreach ($contributionStmt->fetchAll() as $contribution) {
-        $memberId = (string)$contribution['MemberID'];
-        if (!isset($memberContributions[$memberId])) {
-            $memberContributions[$memberId] = [];
-        }
-        $memberContributions[$memberId][] = $contribution;
-    }
+if (($_GET['ajax'] ?? '') === 'members') {
+    header('Content-Type: application/json');
+    echo json_encode([
+        'rows' => renderMemberRows($members),
+        'modals' => renderMemberModals($members, $memberContributions),
+        'count' => count($members),
+    ]);
+    exit;
 }
 
 $stats = $pdo->query(
@@ -131,6 +93,142 @@ function e($value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
+
+function loadMembers(PDO $pdo, string $search, int $limit): array
+{
+    $whereSql = '';
+    $params = [];
+
+    if ($search !== '') {
+        $whereSql = 'WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, " ", m.LastName) LIKE :search)';
+        $params[':search'] = '%' . $search . '%';
+    }
+
+    $stmt = $pdo->prepare(
+        "SELECT m.*, d.RequiredAmount, d.PaidAmount, d.Balance, d.Status AS DepositStatus,
+            COALESCE(totals.TotalContributions, 0) AS TotalContributions,
+            COALESCE(totals.ContributionCount, 0) AS ContributionCount
+         FROM members m
+         LEFT JOIN deposits d ON d.MemberID = m.MemberID
+         LEFT JOIN (
+            SELECT MemberID, SUM(Amount) AS TotalContributions, COUNT(TransactionID) AS ContributionCount
+            FROM member_transactions
+            WHERE MemberID IS NOT NULL AND TransactionType = 'contribution'
+            GROUP BY MemberID
+         ) totals ON totals.MemberID = m.MemberID
+         {$whereSql}
+         ORDER BY m.FirstName ASC, m.LastName ASC, m.MemberID ASC
+         LIMIT {$limit}"
+    );
+    $stmt->execute($params);
+    $members = $stmt->fetchAll();
+    $memberContributions = [];
+
+    if ($members) {
+        $memberIds = array_column($members, 'MemberID');
+        $placeholders = implode(',', array_fill(0, count($memberIds), '?'));
+        $contributionStmt = $pdo->prepare(
+            "SELECT *
+             FROM member_transactions
+             WHERE MemberID IN ({$placeholders}) AND TransactionType = 'contribution'
+             ORDER BY COALESCE(TranTime, CreatedAt) DESC"
+        );
+        $contributionStmt->execute($memberIds);
+
+        foreach ($contributionStmt->fetchAll() as $contribution) {
+            $memberId = (string)$contribution['MemberID'];
+            if (!isset($memberContributions[$memberId])) {
+                $memberContributions[$memberId] = [];
+            }
+            $memberContributions[$memberId][] = $contribution;
+        }
+    }
+
+    return [$members, $memberContributions];
+}
+
+function renderMemberRows(array $members): string
+{
+    ob_start();
+    foreach ($members as $member): ?>
+      <tr>
+        <td class="actions-cell">
+          <a href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">Edit</a>
+          <a href="#" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">Contributions</a>
+        </td>
+        <td class="member-id"><?= e($member['MemberID']) ?></td>
+        <td><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></td>
+        <td><?= e($member['PrimaryNumber']) ?></td>
+        <td><?= e($member['Email'] ?: 'Not provided') ?></td>
+        <td><?= e($member['NationalID']) ?></td>
+        <td><span class="badge text-bg-<?= $member['Status'] === 'Active' ? 'success' : ($member['Status'] === 'Suspended' ? 'danger' : 'secondary') ?>"><?= e($member['Status']) ?></span></td>
+        <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
+        <td><?= e($member['CreatedAt']) ?></td>
+        <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
+      </tr>
+    <?php endforeach;
+
+    if (!$members): ?>
+      <tr><td colspan="10" class="text-muted">No members match that name or MemberID.</td></tr>
+    <?php endif;
+
+    return trim((string)ob_get_clean());
+}
+
+function renderMemberModals(array $members, array $memberContributions): string
+{
+    ob_start();
+    foreach ($members as $member): ?>
+      <div class="modal fade" id="memberContributions<?= e($member['MemberID']) ?>" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div>
+                <h3 class="modal-title h5">Contributions for <?= e($member['MemberID']) ?></h3>
+                <div class="small text-muted"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></div>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
+                <div>
+                  <div class="text-muted small">Total Contributions</div>
+                  <div class="h4 fw-bold">KES <?= number_format((float)$member['TotalContributions'], 2) ?></div>
+                </div>
+                <div>
+                  <div class="text-muted small">Contribution Records</div>
+                  <div class="h4 fw-bold"><?= (int)$member['ContributionCount'] ?></div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-middle">
+                  <thead><tr><th>TranID</th><th>Date</th><th>Phone</th><th class="text-end">Amount</th></tr></thead>
+                  <tbody>
+                    <?php foreach (($memberContributions[$member['MemberID']] ?? []) as $contribution): ?>
+                      <tr>
+                        <td><?= e($contribution['TranID']) ?></td>
+                        <td><?= e($contribution['TranTime'] ?: $contribution['CreatedAt']) ?></td>
+                        <td><?= e($contribution['MSISDN']) ?></td>
+                        <td class="text-end">KES <?= number_format((float)$contribution['Amount'], 2) ?></td>
+                      </tr>
+                    <?php endforeach; ?>
+                    <?php if (empty($memberContributions[$member['MemberID']])): ?>
+                      <tr><td colspan="4" class="text-muted">No contributions found for this member.</td></tr>
+                    <?php endif; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <?php endforeach;
+
+    return trim((string)ob_get_clean());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -149,6 +247,9 @@ function e($value): string
     .table td, .table th { vertical-align: middle; }
     .member-id { font-weight: 700; color: #0b3b66; }
     .search-row .form-control, .search-row .form-select { min-height: 44px; }
+    .actions-cell { white-space: nowrap; min-width: 132px; }
+    .actions-cell a { color: #0b5ed7; font-weight: 600; text-decoration: none; margin-right: 12px; }
+    .actions-cell a:hover { text-decoration: underline; }
     @media (max-width: 767px) { .table { min-width: 980px; } }
   </style>
 </head>
@@ -197,51 +298,25 @@ function e($value): string
       <div class="card-body">
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
           <h2 class="h5 fw-bold mb-0">Registered Members</h2>
-          <form method="get" class="row g-2 search-row flex-grow-1 justify-content-end">
+          <form method="get" id="memberSearchForm" class="row g-2 search-row flex-grow-1 justify-content-end">
             <div class="col-lg-5">
-              <input class="form-control" name="search" value="<?= e($search) ?>" placeholder="Search MemberID, name, phone, or NationalID">
+              <input class="form-control" id="memberSearch" name="search" value="<?= e($search) ?>" placeholder="Search by MemberID or name" autocomplete="off">
             </div>
             <div class="col-lg-2">
-              <select class="form-select" name="status">
-                <option value="">All statuses</option>
-                <?php foreach (MemberService::STATUSES as $status): ?>
-                  <option value="<?= e($status) ?>" <?= $statusFilter === $status ? 'selected' : '' ?>><?= e($status) ?></option>
+              <select class="form-select" id="rowLimit" name="limit">
+                <?php foreach ($allowedLimits as $limitOption): ?>
+                  <option value="<?= (int)$limitOption ?>" <?= $rowLimit === $limitOption ? 'selected' : '' ?>><?= (int)$limitOption ?> rows</option>
                 <?php endforeach; ?>
               </select>
             </div>
-            <div class="col-lg-2">
-              <button class="btn btn-outline-primary w-100" type="submit">Search</button>
-            </div>
           </form>
         </div>
+        <div class="text-muted small mb-2" id="memberResultSummary"><?= count($members) ?> member<?= count($members) === 1 ? '' : 's' ?> shown</div>
         <div class="table-responsive">
           <table class="table align-middle">
-            <thead><tr><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th><th></th></tr></thead>
-            <tbody>
-              <?php foreach ($members as $member): ?>
-                <tr>
-                  <td class="member-id"><?= e($member['MemberID']) ?></td>
-                  <td><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></td>
-                  <td><?= e($member['PrimaryNumber']) ?></td>
-                  <td><?= e($member['Email'] ?: 'Not provided') ?></td>
-                  <td><?= e($member['NationalID']) ?></td>
-                  <td><span class="badge text-bg-<?= $member['Status'] === 'Active' ? 'success' : ($member['Status'] === 'Suspended' ? 'danger' : 'secondary') ?>"><?= e($member['Status']) ?></span></td>
-                  <td>KES <?= number_format((float)($member['Balance'] ?? 0), 2) ?></td>
-                  <td><?= e($member['CreatedAt']) ?></td>
-                  <td class="text-end">KES <?= number_format((float)$member['TotalContributions'], 2) ?></td>
-                  <td class="text-end">
-                    <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="modal" data-bs-target="#memberContributions<?= e($member['MemberID']) ?>">
-                      Contributions
-                    </button>
-                    <a class="btn btn-sm btn-outline-primary" href="edit_member.php?id=<?= urlencode($member['MemberID']) ?>">
-                      Edit
-                    </a>
-                  </td>
-                </tr>
-              <?php endforeach; ?>
-              <?php if (!$members): ?>
-                <tr><td colspan="10" class="text-muted">No members match your search.</td></tr>
-              <?php endif; ?>
+            <thead><tr><th>Actions</th><th>MemberID</th><th>Full Name</th><th>Phone</th><th>Email</th><th>NationalID</th><th>Status</th><th>Deposit Balance</th><th>CreatedAt</th><th class="text-end">Total Contributions</th></tr></thead>
+            <tbody id="membersTableBody">
+              <?= renderMemberRows($members) ?>
             </tbody>
           </table>
         </div>
@@ -274,57 +349,72 @@ function e($value): string
     </section>
   </main>
 
-  <?php foreach ($members as $member): ?>
-    <div class="modal fade" id="memberContributions<?= e($member['MemberID']) ?>" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div>
-              <h3 class="modal-title h5">Contributions for <?= e($member['MemberID']) ?></h3>
-              <div class="small text-muted"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></div>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="d-flex flex-wrap justify-content-between gap-3 mb-3">
-              <div>
-                <div class="text-muted small">Total Contributions</div>
-                <div class="h4 fw-bold">KES <?= number_format((float)$member['TotalContributions'], 2) ?></div>
-              </div>
-              <div>
-                <div class="text-muted small">Contribution Records</div>
-                <div class="h4 fw-bold"><?= (int)$member['ContributionCount'] ?></div>
-              </div>
-            </div>
-            <div class="table-responsive">
-              <table class="table align-middle">
-                <thead><tr><th>TranID</th><th>Date</th><th>Phone</th><th class="text-end">Amount</th></tr></thead>
-                <tbody>
-                  <?php foreach (($memberContributions[$member['MemberID']] ?? []) as $contribution): ?>
-                    <tr>
-                      <td><?= e($contribution['TranID']) ?></td>
-                      <td><?= e($contribution['TranTime'] ?: $contribution['CreatedAt']) ?></td>
-                      <td><?= e($contribution['MSISDN']) ?></td>
-                      <td class="text-end">KES <?= number_format((float)$contribution['Amount'], 2) ?></td>
-                    </tr>
-                  <?php endforeach; ?>
-                  <?php if (empty($memberContributions[$member['MemberID']])): ?>
-                    <tr><td colspan="4" class="text-muted">No contributions found for this member.</td></tr>
-                  <?php endif; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-  <?php endforeach; ?>
+  <div id="memberContributionModals">
+    <?= renderMemberModals($members, $memberContributions) ?>
+  </div>
 
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const memberSearchForm = document.getElementById('memberSearchForm');
+    const memberSearch = document.getElementById('memberSearch');
+    const rowLimit = document.getElementById('rowLimit');
+    const membersTableBody = document.getElementById('membersTableBody');
+    const memberContributionModals = document.getElementById('memberContributionModals');
+    const memberResultSummary = document.getElementById('memberResultSummary');
+    let searchTimer = null;
+    let activeController = null;
+
+    function updateMembers() {
+      if (activeController) {
+        activeController.abort();
+      }
+
+      activeController = new AbortController();
+      const params = new URLSearchParams({
+        ajax: 'members',
+        search: memberSearch.value,
+        limit: rowLimit.value
+      });
+
+      fetch(`members.php?${params.toString()}`, { signal: activeController.signal })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error('Member search failed');
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          membersTableBody.innerHTML = data.rows;
+          memberContributionModals.innerHTML = data.modals;
+          memberResultSummary.textContent = `${data.count} member${data.count === 1 ? '' : 's'} shown`;
+
+          const url = new URL(window.location.href);
+          if (memberSearch.value) {
+            url.searchParams.set('search', memberSearch.value);
+          } else {
+            url.searchParams.delete('search');
+          }
+          url.searchParams.set('limit', rowLimit.value);
+          window.history.replaceState({}, '', url);
+        })
+        .catch(function (error) {
+          if (error.name !== 'AbortError') {
+            membersTableBody.innerHTML = '<tr><td colspan="10" class="text-danger">Unable to load members right now.</td></tr>';
+          }
+        });
+    }
+
+    memberSearchForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      updateMembers();
+    });
+
+    memberSearch.addEventListener('input', function () {
+      window.clearTimeout(searchTimer);
+      searchTimer = window.setTimeout(updateMembers, 250);
+    });
+
+    rowLimit.addEventListener('change', updateMembers);
+  </script>
 </body>
 </html>
