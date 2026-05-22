@@ -41,7 +41,7 @@ class SmsService
         $data = [
             'phone'    => self::normalizePhone($phone),
             'message'  => $message,
-            'senderId' => $senderId,
+            'senderID' => $senderId,
             'trackingId' => self::generateTrackingId()
         ];
 
