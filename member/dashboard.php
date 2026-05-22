@@ -5,9 +5,16 @@ require_once __DIR__ . '/../classes/MemberService.php';
 require_once __DIR__ . '/../classes/SmsService.php';
 
 $member = Auth::requireMember();
+Auth::startSession();
 $pdo = Database::connection();
 $message = '';
 $messageType = 'info';
+
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_message_type'] ?? 'info';
+    unset($_SESSION['flash_message'], $_SESSION['flash_message_type']);
+}
 
 // Auto-create loan_applications table if not exists (self-healing migration)
 try {
@@ -76,12 +83,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['apply_loan'])) {
         $smsMsg = "Dear " . $member['FirstName'] . ", your application for " . $loanType . " of KES " . number_format($amount, 2) . " repayable by " . $returnDate . " has been received. Feedback will be given as soon as possible. Thank you.";
         SmsService::sendSms($member['PrimaryNumber'], $smsMsg);
         
-        // Switch tab to loan to see the application list
-        $activeTab = 'loan';
+        $_SESSION['flash_message'] = $message;
+        $_SESSION['flash_message_type'] = $messageType;
+        header("Location: dashboard.php?tab=loan");
+        exit;
 
     } catch (Throwable $e) {
-        $messageType = 'danger';
-        $message = $e->getMessage();
+        $_SESSION['flash_message'] = $e->getMessage();
+        $_SESSION['flash_message_type'] = 'danger';
+        header("Location: dashboard.php?tab=loan");
+        exit;
     }
 }
 
@@ -264,17 +275,17 @@ function e($value): string
     <ul class="nav nav-pills mb-4 justify-content-center bg-white p-2 rounded shadow-sm gap-2" id="dashboardTabs" role="tablist">
       <li class="nav-item">
         <a class="nav-link <?= $activeTab === 'dashboard' ? 'active' : '' ?>" href="?tab=dashboard">
-          <i class="bi bi-speedometer2 me-2"></i>Dashboard
+          Dashboard
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link <?= $activeTab === 'loan' ? 'active' : '' ?>" href="?tab=loan">
-          <i class="bi bi-wallet2 me-2"></i>Loan Services
+          Loan Services
         </a>
       </li>
       <li class="nav-item">
         <a class="nav-link <?= $activeTab === 'record' ? 'active' : '' ?>" href="?tab=record">
-          <i class="bi bi-clock-history me-2"></i>Transaction Records
+          Transaction Records
         </a>
       </li>
     </ul>
@@ -413,9 +424,13 @@ function e($value): string
                       <td class="fw-bold">KES <?= number_format((float)$app['Amount'], 2) ?></td>
                       <td><?= e($app['ReturnDate']) ?></td>
                       <td>
-                        <span class="badge text-bg-<?= $app['Status'] === 'Approved' ? 'success' : ($app['Status'] === 'Not Approved' ? 'danger' : 'warning') ?>">
-                          <?= e($app['Status']) ?>
-                        </span>
+                        <?php if ($app['Status'] === 'Approved'): ?>
+                          <strong class="text-success">Approved</strong>
+                        <?php elseif ($app['Status'] === 'Not Approved'): ?>
+                          <strong class="text-danger">Not Approved</strong>
+                        <?php else: ?>
+                          <strong class="text-warning">Pending</strong>
+                        <?php endif; ?>
                       </td>
                       <td><span class="text-muted small"><?= e($app['RejectionReason'] ?: '-') ?></span></td>
                     </tr>
@@ -478,7 +493,7 @@ function e($value): string
                     <input type="date" class="form-control" id="modalReturnDate" name="return_date" min="<?= date('Y-m-d', strtotime('+1 day')) ?>" required>
                   </div>
                   <div class="alert alert-info small py-2 mb-0">
-                    <i class="bi bi-info-circle me-1"></i> A confirmation SMS will be sent to your registered phone: <strong><?= e($member['PrimaryNumber']) ?></strong>.
+                    A confirmation SMS will be sent to your registered phone: <strong><?= e($member['PrimaryNumber']) ?></strong>.
                   </div>
                 </div>
                 <div class="modal-footer border-0 p-3">

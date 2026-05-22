@@ -5,10 +5,17 @@ require_once __DIR__ . '/../classes/MemberService.php';
 require_once __DIR__ . '/../classes/SmsService.php';
 
 Auth::requireAdmin();
+Auth::startSession();
 
 $pdo = Database::connection();
 $message = '';
 $messageType = 'info';
+
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_message_type'] ?? 'info';
+    unset($_SESSION['flash_message'], $_SESSION['flash_message_type']);
+}
 
 $adminRole = Auth::adminRole();
 $isAdmin = $adminRole === 'admin';
@@ -68,6 +75,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'approve') {
         $messageType = 'danger';
         $message = $e->getMessage();
     }
+    $_SESSION['flash_message'] = $message;
+    $_SESSION['flash_message_type'] = $messageType;
+    $qs = $_SERVER['QUERY_STRING'] ?? '';
+    header("Location: loan_applications.php" . ($qs !== '' ? '?' . $qs : ''));
+    exit;
 }
 
 // Handle Reject Action
@@ -109,6 +121,11 @@ if (isset($_POST['action']) && $_POST['action'] === 'reject') {
         $messageType = 'danger';
         $message = $e->getMessage();
     }
+    $_SESSION['flash_message'] = $message;
+    $_SESSION['flash_message_type'] = $messageType;
+    $qs = $_SERVER['QUERY_STRING'] ?? '';
+    header("Location: loan_applications.php" . ($qs !== '' ? '?' . $qs : ''));
+    exit;
 }
 
 // Filters & Pagination Setup
@@ -289,9 +306,13 @@ function e($value): string
                   <td><?= e($app['ReturnDate']) ?></td>
                   <td><?= e($app['CreatedAt']) ?></td>
                   <td>
-                    <span class="badge text-bg-<?= $app['Status'] === 'Approved' ? 'success' : ($app['Status'] === 'Not Approved' ? 'danger' : 'warning') ?>">
-                      <?= e($app['Status']) ?>
-                    </span>
+                    <?php if ($app['Status'] === 'Approved'): ?>
+                      <strong class="text-success">Approved</strong>
+                    <?php elseif ($app['Status'] === 'Not Approved'): ?>
+                      <strong class="text-danger">Not Approved</strong>
+                    <?php else: ?>
+                      <strong class="text-warning">Pending</strong>
+                    <?php endif; ?>
                   </td>
                   <td><span class="text-muted small"><?= e($app['RejectionReason'] ?: '-') ?></span></td>
                   <td class="actions-cell text-end">
@@ -300,20 +321,20 @@ function e($value): string
                       <form method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to APPROVE this loan application?');">
                         <input type="hidden" name="action" value="approve">
                         <input type="hidden" name="application_id" value="<?= (int)$app['LoanApplicationID'] ?>">
-                        <button type="submit" class="btn btn-success btn-sm me-1"><i class="bi bi-check-circle me-1"></i>Approve</button>
+                        <button type="submit" class="btn btn-link text-success fw-bold p-0 me-3 text-decoration-none">Approve</button>
                       </form>
                       
                       <!-- Reject Trigger -->
                       <button 
                         type="button" 
-                        class="btn btn-danger btn-sm" 
+                        class="btn btn-link text-danger fw-bold p-0 text-decoration-none" 
                         data-bs-toggle="modal" 
                         data-bs-target="#rejectModal" 
                         data-app-id="<?= (int)$app['LoanApplicationID'] ?>"
                         data-app-member="<?= e($app['FirstName'] . ' ' . $app['LastName']) ?>"
                         data-app-type="<?= e($app['LoanType']) ?>"
                       >
-                        <i class="bi bi-x-circle me-1"></i>Reject
+                        Reject
                       </button>
                     <?php else: ?>
                       <span class="text-muted small fw-bold">Processed</span>
