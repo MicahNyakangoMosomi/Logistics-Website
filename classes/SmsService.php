@@ -32,16 +32,17 @@ class SmsService
         $senderId = $mobilesasa['sender_id'] ?? '';
 
         if (empty($apiKey)) {
-            self::logError("SMS skipped: MobileSasa API key is not configured. Phone: $phone, Message: $message");
+            self::logError("SMS skipped: Oracom API key is not configured. Phone: $phone, Message: $message");
             return false;
         }
 
-        $url = 'https://api.mobilesasa.com/v1/send/message';
+        $url = 'https://vas.oramobile.co.ke/api/v2/send/message';
 
         $data = [
             'phone'    => self::normalizePhone($phone),
             'message'  => $message,
-            'senderId' => $senderId
+            'senderId' => $senderId,
+            'trackingId' => self::generateTrackingId()
         ];
 
         $ch = curl_init($url);
@@ -70,6 +71,14 @@ class SmsService
 
         return true;
     }
+
+    /* generate a unique tracking ID for each message */
+    private static function generateTrackingId(): string
+    {        
+        // Using random_bytes for better uniqueness and security
+        return bin2hex(random_bytes(16));
+    }
+
 
     /**
      * Normalize phone number to +254 format required by MobileSasa
