@@ -66,15 +66,28 @@ try {
     if (isset($result['status']) && $result['status'] === 'recorded' && isset($result['data'])) {
         $data = $result['data'];
         $amount = number_format($data['Amount'], 2);
-        $fullName = trim($data['FirstName'] . ' ' . $data['LastName']);
+        $sender_fullName = trim($data['FirstName'] . ' ' . $data['LastName']);
         $nationalId = $data['NationalID'];
         $tranId = $data['TranID'];
         $tranTime = $data['TranTime'] ?? date('Y-m-d H:i:s');
-        $pdo = Database::connection();
-        $memberStmt = $pdo->prepare('SELECT PrimaryNumber FROM members WHERE NationalID = :national_id LIMIT 1');
-        $memberStmt->execute([':national_id' => $nationalId]);
-        $memberPhone = trim((string)($memberStmt->fetchColumn() ?: ''));
 
+        // Fetch member phone number using NationalID for SMS notification
+        $pdo = Database::connection();
+        // Use prepared statement to prevent SQL injection to get member phone number and FirstName and LastName where NationalID = $nationalId
+        $memberStmt = $pdo->prepare('SELECT PrimaryNumber, FirstName, LastName FROM members WHERE NationalID = :national_id LIMIT 1');
+
+        // Execute the statement with the provided national ID
+        $memberStmt->execute([':national_id' => $nationalId]);
+        // place a varibale of user number, and name(first and last name) and combine them to a full name
+
+        $memberData = $memberStmt->fetch(PDO::FETCH_ASSOC);
+        $memberPhone = trim((string)($memberData['PrimaryNumber'] ?? ''));
+        $memberFirstName = trim((string)($memberData['FirstName'] ?? ''));
+        $memberLastName = trim((string)($memberData['LastName'] ?? ''));
+        $fullName = trim($memberFirstName . ' ' . $memberLastName);
+
+        // Calculate total contribution for the member (for SMS content) and get user name where id = nationalId
+        $userStmt = $pdo->prepare("SELECT FullName FROM members WHERE NationalID = :national_id LIMIT 1");
         $stmt = $pdo->prepare("SELECT SUM(Amount) FROM member_transactions WHERE NationalID = :national_id AND TransactionType = 'contribution'");
         $stmt->execute([':national_id' => $nationalId]);
         $totalContribution = number_format((float)$stmt->fetchColumn(), 2);
@@ -100,7 +113,7 @@ try {
         }
         $allocationText = $allocation ? ' Allocation: ' . implode(', ', $allocation) . '.' : '';
 
-        $smsMessage = "Confirmed. Payment of {$amount} to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime}.{$allocationText} Total Contribution is {$totalContribution}. For queries contact 0758500557 or email: support@mashirikianosacco.co.ke.";
+        $smsMessage = "Confirmed. Payment of {$amount} sent to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime}.{$allocationText} Total Contribution is {$totalContribution}. For queries contact 0758500557 or email: support@mashirikianosacco.co.ke.";
         
         require_once __DIR__ . '/../classes/SmsService.php';
         if ($memberPhone !== '') {
