@@ -76,7 +76,14 @@ class SmsService
     private static function generateTrackingId(): string
     {        
         // Using random_bytes for better uniqueness and security
-        return bin2hex(random_bytes(16));
+        // generate 4 groups of bin2hex then combine then to 16
+
+
+        $parts = [];
+        for ($i = 0; $i < 4; $i++) {
+            $parts[] = bin2hex(random_bytes(4)); // 8 hex chars = 4 bytes
+        }
+        return implode('-', $parts);
     }
 
 
