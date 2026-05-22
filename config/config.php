@@ -95,6 +95,6 @@ return [
      */
     'mobilesasa' => [
         'api_key'   => env('MOBILESASA_API_KEY'),
-        'sender_id' => env('MOBILESASA_SENDER_ID', 'YOUR_SENDER_ID'),
+        'sender_id' => env('MOBILESASA_SENDER_ID', 'MSHRKIANO'),
     ],
 ];
