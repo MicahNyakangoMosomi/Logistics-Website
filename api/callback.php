@@ -80,14 +80,15 @@ try {
         $memberStmt->execute([':national_id' => $nationalId]);
         // place a varibale of user number, and name(first and last name) and combine them to a full name
 
+
+        // Fetch the member data and extract phone number and full name
         $memberData = $memberStmt->fetch(PDO::FETCH_ASSOC);
         $memberPhone = trim((string)($memberData['PrimaryNumber'] ?? ''));
         $memberFirstName = trim((string)($memberData['FirstName'] ?? ''));
         $memberLastName = trim((string)($memberData['LastName'] ?? ''));
         $fullName = trim($memberFirstName . ' ' . $memberLastName);
 
-        // Calculate total contribution for the member (for SMS content) and get user name where id = nationalId
-        $userStmt = $pdo->prepare("SELECT FullName FROM members WHERE NationalID = :national_id LIMIT 1");
+        
         $stmt = $pdo->prepare("SELECT SUM(Amount) FROM member_transactions WHERE NationalID = :national_id AND TransactionType = 'contribution'");
         $stmt->execute([':national_id' => $nationalId]);
         $totalContribution = number_format((float)$stmt->fetchColumn(), 2);
