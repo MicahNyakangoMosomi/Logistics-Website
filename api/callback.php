@@ -105,16 +105,43 @@ try {
             }
         }
 
+        // Send SMS notification to member with transaction details and contribution summary(deposit and contribution amounts) and total contribution to date. 
         $allocation = [];
         if ($depositAmount > 0) {
+            // If there is a deposit amount, include it in the allocation details. This way, if there are no deposits, we won't show "Deposit KES 0.00" in the SMS, which could be confusing for the member.
             $allocation[] = 'Deposit KES ' . number_format($depositAmount, 2);
         }
         if ($contributionAmount > 0) {
+            // If there is a contribution amount, include it in the allocation details. This way, if there are no contributions, we won't show "Contribution KES 0.00" in the SMS, which could be confusing for the member. 
             $allocation[] = 'Contribution KES ' . number_format($contributionAmount, 2);
         }
+        // If there are allocation details, include them in the message, otherwise skip that part of the message to avoid confusion if there are no allocation details.
         $allocationText = $allocation ? ' Allocation: ' . implode(', ', $allocation) . '.' : '';
 
-        $smsMessage = "Confirmed. Payment of {$amount} sent to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime}.{$allocationText} Total Contribution is {$totalContribution}. For queries contact 0758500557 or email: support@mashirikianosacco.co.ke.";
+        // auto generate the last sentence from a list of possible sentences to add some variation to the SMS messages sent to members. This will make the messages feel more personalized and less robotic, which can improve member engagement and satisfaction. We can use a simple array of sentence templates and randomly select one each time we send an SMS.
+        $closingSentences = [
+            "Thank you for being part of Mashirikiano SACCO. Explore more member benefits and services at https://mashirikianosacco.co.ke/ or call 0758500557 for support.",
+
+            "Your contribution is building your financial future with Mashirikiano SACCO. Discover more services at https://mashirikianosacco.co.ke/ or reach us on 0758500557.",
+
+            "Grow with us. Visit https://mashirikianosacco.co.ke/ to explore loans, savings, and more SACCO services. Need help? Call 0758500557.",
+
+            "There’s more waiting for you at Mashirikiano SACCO. Learn about our savings and loan products at https://mashirikianosacco.co.ke/ or call 0758500557.",
+
+            "Thank you for trusting Mashirikiano SACCO. Stay connected and explore member opportunities at https://mashirikianosacco.co.ke/ or 0758500557.",
+
+            "Make the most of your membership. Visit https://mashirikianosacco.co.ke/ to discover our services and financial solutions.",
+
+            "Your SACCO journey is growing stronger. See what’s new at https://mashirikianosacco.co.ke/ or talk to us on 0758500557.",
+            
+            "We’re building wealth together. Check out more SACCO services at https://mashirikianosacco.co.ke/ and stay engaged with us via 0758500557."
+        ];
+        // Randomly select a closing sentence from the array
+        $closingSentence = $closingSentences[array_rand($closingSentences)];
+
+        $smsMessage = "Dear {$fullName}, payment of KES {$amount} has been successfully received. Transaction Ref: {$tranId}. Time: {$tranTime}. {$allocationText}, Your Total contribution balance is KES {$totalContribution}. {$closingSentence}";
+
+        //$smsMessage = "Confirmed. Payment of {$amount} sent to {$fullName} of ID {$nationalId} Ref {$tranId} at {$tranTime}.{$allocationText} Total Contribution is {$totalContribution}. {$closingSentence}";
         
         require_once __DIR__ . '/../classes/SmsService.php';
         if ($memberPhone !== '') {
