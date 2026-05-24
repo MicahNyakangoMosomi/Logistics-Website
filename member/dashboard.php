@@ -105,10 +105,6 @@ $recentStmt = $pdo->prepare("SELECT * FROM member_transactions WHERE MemberID = 
 $recentStmt->execute([':member_id' => $member['MemberID']]);
 $recentTransactions = $recentStmt->fetchAll();
 
-$depositStmt = $pdo->prepare('SELECT * FROM deposits WHERE MemberID = :member_id LIMIT 1');
-$depositStmt->execute([':member_id' => $member['MemberID']]);
-$deposit = $depositStmt->fetch() ?: ['RequiredAmount' => 0, 'PaidAmount' => 0, 'Balance' => 0, 'Status' => 'cleared'];
-
 // Fetch member's loan applications
 $loanAppsStmt = $pdo->prepare("SELECT * FROM loan_applications WHERE MemberID = :member_id ORDER BY CreatedAt DESC");
 $loanAppsStmt->execute([':member_id' => $member['MemberID']]);
@@ -261,12 +257,16 @@ function dashboardUrl(array $params): string
     .portal-header { background: #087a43; color: #fff; padding: 14px 0 10px; }
     .member-brand { display: flex; align-items: center; gap: 12px; }
     .member-brand img { background: #fff; border-radius: 50%; padding: 4px; }
-    .member-top-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; background: #fff; border-bottom: 1px solid #dce8e1; box-shadow: 0 8px 24px rgba(28, 77, 51, .08); }
+    .member-top-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; background: #fff; border-bottom: 1px solid #dce8e1; box-shadow: 0 8px 24px rgba(28, 77, 51, .08); position: sticky; top: 0; z-index: 1030; }
     .member-top-nav a { color: #5e7068; font-weight: 700; text-decoration: none; padding: 14px 0 12px; border-bottom: 3px solid transparent; }
     .member-top-nav a:hover, .member-top-nav a.active { color: #087a43; border-bottom-color: #087a43; }
     .member-hero { background: linear-gradient(135deg, #087a43, #0a5534); color: #fff; border-radius: 8px; padding: 22px; box-shadow: 0 18px 40px rgba(8, 122, 67, .18); }
     .member-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,.88); background: #fff; }
     .hero-stat { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 14px; height: 100%; }
+    .profile-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .profile-detail { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 12px; min-width: 0; }
+    .profile-detail .label { display: block; color: rgba(255,255,255,.72); font-size: .76rem; font-weight: 700; text-transform: uppercase; }
+    .profile-detail .value { display: block; color: #fff; font-weight: 700; overflow-wrap: anywhere; }
     .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(20, 55, 38, .08); }
     .metric-icon { width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #e7f5ed; color: #087a43; }
     .metric-icon.danger { background: #fdeaea; color: #c03232; }
@@ -307,7 +307,11 @@ function dashboardUrl(array $params): string
       .member-top-nav { gap: 14px; overflow-x: auto; justify-content: flex-start; padding: 0 14px; flex-wrap: nowrap; }
       .member-top-nav a { white-space: nowrap; }
       .member-hero { padding: 18px; }
+      .profile-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .table { min-width: 760px; }
+    }
+    @media (max-width: 480px) {
+      .profile-detail-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -340,43 +344,66 @@ function dashboardUrl(array $params): string
       </div>
     <?php endif; ?>
 
+    <section class="member-hero mb-4">
+      <div class="row g-4 align-items-center">
+        <div class="col-lg-6">
+          <div class="d-flex align-items-center gap-3">
+            <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
+            <div>
+              <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
+              <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
+              <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="hero-stat">
+            <div class="small opacity-75">Total Contributions</div>
+            <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-3">
+          <div class="hero-stat">
+            <div class="small opacity-75">Status</div>
+            <div class="h4 fw-bold mb-0"><?= e($member['Status']) ?></div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-detail-grid">
+        <div class="profile-detail">
+          <span class="label">Full Name</span>
+          <span class="value"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></span>
+        </div>
+        <div class="profile-detail">
+          <span class="label">Member ID</span>
+          <span class="value"><?= e($member['MemberID']) ?></span>
+        </div>
+        <div class="profile-detail">
+          <span class="label">National ID</span>
+          <span class="value"><?= e($member['NationalID']) ?></span>
+        </div>
+        <div class="profile-detail">
+          <span class="label">Phone</span>
+          <span class="value"><?= e($member['PrimaryNumber']) ?></span>
+        </div>
+        <div class="profile-detail">
+          <span class="label">Email</span>
+          <span class="value"><?= e($member['Email'] ?: 'Not provided') ?></span>
+        </div>
+        <div class="profile-detail">
+          <span class="label">Account Status</span>
+          <span class="value"><?= e($member['Status']) ?></span>
+        </div>
+      </div>
+    </section>
+
     <!-- Tab Content -->
     <div class="tab-content" id="dashboardTabsContent">
       
       <!-- DASHBOARD TAB -->
       <?php if ($activeTab === 'dashboard'): ?>
-        <section class="member-hero mb-4">
-          <div class="row g-4 align-items-center">
-            <div class="col-lg-5">
-              <div class="d-flex align-items-center gap-3">
-                <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
-                <div>
-                  <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
-                  <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
-                  <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-              <div class="hero-stat">
-                <div class="small opacity-75">Member Balance</div>
-                <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-2">
-              <div class="hero-stat">
-                <div class="small opacity-75">Status</div>
-                <div class="h4 fw-bold mb-0"><?= e($member['Status']) ?></div>
-              </div>
-            </div>
-            <div class="col-lg-2">
-              <a href="?tab=loan" class="btn btn-light w-100 fw-bold">Apply Loan</a>
-            </div>
-          </div>
-        </section>
-
         <div class="row g-3 mb-4">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="card metric h-100">
               <div class="card-body d-flex align-items-center gap-3">
                 <span class="metric-icon"><i class="bi bi-check2-circle"></i></span>
@@ -387,18 +414,7 @@ function dashboardUrl(array $params): string
               </div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="card metric h-100">
-              <div class="card-body d-flex align-items-center gap-3">
-                <span class="metric-icon danger"><i class="bi bi-bank"></i></span>
-                <div>
-                  <div class="text-muted small">Deposit Balance</div>
-                  <div class="h4 fw-bold mb-0">KES <?= number_format((float)$deposit['Balance'], 2) ?></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="card metric h-100">
               <div class="card-body d-flex align-items-center gap-3">
                 <span class="metric-icon"><i class="bi bi-file-earmark-text"></i></span>
@@ -413,22 +429,7 @@ function dashboardUrl(array $params): string
         </div>
 
         <div class="row g-4">
-          <section class="col-lg-4">
-            <div class="card metric h-100">
-              <div class="card-body">
-                <h2 class="h5 fw-bold mb-3">Profile Details</h2>
-                <dl class="mb-0">
-                  <dt>National ID</dt>
-                  <dd><?= e($member['NationalID']) ?></dd>
-                  <dt>Phone</dt>
-                  <dd><?= e($member['PrimaryNumber']) ?></dd>
-                  <dt>Email</dt>
-                  <dd><?= e($member['Email'] ?: 'Not provided') ?></dd>
-                </dl>
-              </div>
-            </div>
-          </section>
-          <section class="col-lg-8">
+          <section class="col-12">
             <div class="card metric h-100">
               <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
