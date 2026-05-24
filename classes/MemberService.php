@@ -235,6 +235,7 @@ class MemberService
         string $memberId,
         string $password
     ): void {
+        // send sms to user notifying them of password change with the new password and membership id and a login url and support contact information
         $fullName = trim($firstName . ' ' . $lastName);
         $smsMessage = "Dear {$fullName}, your Mashirikiano Sacco member password has been changed. Your Membership ID is {$memberId} and your new password is {$password}. Login url:https://mashirikianosacco.co.ke/auth/login.php For support contact itsupport@mashirikianosacco.co.ke or call 0758500557";
 
