@@ -41,7 +41,7 @@ try {
 }
 
 $activeTab = $_GET['tab'] ?? 'dashboard';
-if (!in_array($activeTab, ['dashboard', 'loan', 'record'])) {
+if (!in_array($activeTab, ['dashboard', 'loan', 'applications', 'record'])) {
     $activeTab = 'dashboard';
 }
 
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['apply_loan'])) {
         
         $_SESSION['flash_message'] = $message;
         $_SESSION['flash_message_type'] = $messageType;
-        header("Location: dashboard.php?tab=loan");
+        header("Location: dashboard.php?tab=applications");
         exit;
 
     } catch (Throwable $e) {
@@ -113,25 +113,74 @@ $deposit = $depositStmt->fetch() ?: ['RequiredAmount' => 0, 'PaidAmount' => 0, '
 $loanAppsStmt = $pdo->prepare("SELECT * FROM loan_applications WHERE MemberID = :member_id ORDER BY CreatedAt DESC");
 $loanAppsStmt->execute([':member_id' => $member['MemberID']]);
 $loanApplications = $loanAppsStmt->fetchAll();
+$pendingLoanCount = 0;
+$approvedLoanCount = 0;
+foreach ($loanApplications as $loanApplication) {
+    if ($loanApplication['Status'] === 'Pending') {
+        $pendingLoanCount++;
+    }
+    if ($loanApplication['Status'] === 'Approved') {
+        $approvedLoanCount++;
+    }
+}
 
 // Paginated Transactions (for Record tab)
 $recordLimit = 10;
 $recordPage = max(1, (int)($_GET['page'] ?? 1));
 $recordOffset = ($recordPage - 1) * $recordLimit;
+$transactionIdSearch = trim($_GET['transaction_id'] ?? '');
+$dateFrom = trim($_GET['date_from'] ?? '');
+$dateTo = trim($_GET['date_to'] ?? '');
+if ($dateFrom !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFrom)) {
+    $dateFrom = '';
+}
+if ($dateTo !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateTo)) {
+    $dateTo = '';
+}
 
-$countStmt = $pdo->prepare("SELECT COUNT(*) FROM member_transactions WHERE MemberID = :member_id AND TransactionType = 'contribution'");
-$countStmt->execute([':member_id' => $member['MemberID']]);
+$recordWhere = "WHERE MemberID = :member_id AND TransactionType = 'contribution'";
+$recordParams = [':member_id' => $member['MemberID']];
+
+if ($transactionIdSearch !== '') {
+    $recordWhere .= " AND TranID LIKE :transaction_id";
+    $recordParams[':transaction_id'] = '%' . $transactionIdSearch . '%';
+}
+
+if ($dateFrom !== '') {
+    $recordWhere .= " AND DATE(COALESCE(TranTime, CreatedAt)) >= :date_from";
+    $recordParams[':date_from'] = $dateFrom;
+}
+
+if ($dateTo !== '') {
+    $recordWhere .= " AND DATE(COALESCE(TranTime, CreatedAt)) <= :date_to";
+    $recordParams[':date_to'] = $dateTo;
+}
+
+$countStmt = $pdo->prepare("SELECT COUNT(*) FROM member_transactions {$recordWhere}");
+$countStmt->execute($recordParams);
 $totalRecords = (int)$countStmt->fetchColumn();
 $totalRecordPages = max(1, (int)ceil($totalRecords / $recordLimit));
 $recordPage = min(max(1, $recordPage), $totalRecordPages);
 $recordOffset = ($recordPage - 1) * $recordLimit;
 
-$recordsStmt = $pdo->prepare("SELECT * FROM member_transactions WHERE MemberID = :member_id AND TransactionType = 'contribution' ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT :limit OFFSET :offset");
-$recordsStmt->bindValue(':member_id', $member['MemberID'], PDO::PARAM_STR);
+$recordsStmt = $pdo->prepare("SELECT * FROM member_transactions {$recordWhere} ORDER BY COALESCE(TranTime, CreatedAt) DESC LIMIT :limit OFFSET :offset");
+foreach ($recordParams as $key => $value) {
+    $recordsStmt->bindValue($key, $value, PDO::PARAM_STR);
+}
 $recordsStmt->bindValue(':limit', $recordLimit, PDO::PARAM_INT);
 $recordsStmt->bindValue(':offset', $recordOffset, PDO::PARAM_INT);
 $recordsStmt->execute();
 $paginatedTransactions = $recordsStmt->fetchAll();
+$recordQueryParams = ['tab' => 'record'];
+if ($transactionIdSearch !== '') {
+    $recordQueryParams['transaction_id'] = $transactionIdSearch;
+}
+if ($dateFrom !== '') {
+    $recordQueryParams['date_from'] = $dateFrom;
+}
+if ($dateTo !== '') {
+    $recordQueryParams['date_to'] = $dateTo;
+}
 
 $loans = [
     [
@@ -190,6 +239,11 @@ function e($value): string
 {
     return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
 }
+
+function dashboardUrl(array $params): string
+{
+    return 'dashboard.php?' . http_build_query($params);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -202,27 +256,28 @@ function e($value): string
   <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="../assets/css/main.css" rel="stylesheet">
   <style>
-    body { background: #f4f7fb; }
-    .portal-header { background: #0b3b66; color: #fff; }
-    .metric { border: 0; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.05); }
-    .nav-pills .nav-link {
-      color: #617083;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 10px 20px;
-      transition: all 0.2s ease;
-    }
-    .nav-pills .nav-link.active {
-      background-color: #0b3b66;
-      color: #fff;
-    }
-    .nav-pills .nav-link:hover:not(.active) {
-      background-color: rgba(11, 59, 102, 0.05);
-      color: #0b3b66;
-    }
+    body { background: #eef4f0; color: #1d2b26; }
+    .member-shell { max-width: 1180px; }
+    .portal-header { background: #087a43; color: #fff; padding: 14px 0 10px; }
+    .member-brand { display: flex; align-items: center; gap: 12px; }
+    .member-brand img { background: #fff; border-radius: 50%; padding: 4px; }
+    .member-top-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; background: #fff; border-bottom: 1px solid #dce8e1; box-shadow: 0 8px 24px rgba(28, 77, 51, .08); }
+    .member-top-nav a { color: #5e7068; font-weight: 700; text-decoration: none; padding: 14px 0 12px; border-bottom: 3px solid transparent; }
+    .member-top-nav a:hover, .member-top-nav a.active { color: #087a43; border-bottom-color: #087a43; }
+    .member-hero { background: linear-gradient(135deg, #087a43, #0a5534); color: #fff; border-radius: 8px; padding: 22px; box-shadow: 0 18px 40px rgba(8, 122, 67, .18); }
+    .member-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,.88); background: #fff; }
+    .hero-stat { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 14px; height: 100%; }
+    .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(20, 55, 38, .08); }
+    .metric-icon { width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #e7f5ed; color: #087a43; }
+    .metric-icon.danger { background: #fdeaea; color: #c03232; }
+    .recent-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #edf2ef; }
+    .recent-row:last-child { border-bottom: 0; }
+    .recent-icon { width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #e7f5ed; color: #087a43; flex: 0 0 32px; }
+    .remarks-link { color: #087a43; font-weight: 700; text-decoration: none; }
+    .remarks-link:hover { text-decoration: underline; }
     .loan-card {
       border: 0;
-      border-radius: 12px;
+      border-radius: 8px;
       box-shadow: 0 10px 30px rgba(0,0,0,.05);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       overflow: hidden;
@@ -237,7 +292,7 @@ function e($value): string
       width: 100%;
     }
     .apply-btn {
-      background: #0b3b66;
+      background: #087a43;
       color: #fff;
       font-weight: 600;
       border: 0;
@@ -247,23 +302,37 @@ function e($value): string
       background: #f4a621;
       color: #000;
     }
+    .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
+    @media (max-width: 767px) {
+      .member-top-nav { gap: 14px; overflow-x: auto; justify-content: flex-start; padding: 0 14px; flex-wrap: nowrap; }
+      .member-top-nav a { white-space: nowrap; }
+      .member-hero { padding: 18px; }
+      .table { min-width: 760px; }
+    }
   </style>
 </head>
 <body>
-  <header class="portal-header py-3 mb-4">
-    <div class="container d-flex flex-wrap align-items-center justify-content-between gap-3">
-      <div class="d-flex align-items-center gap-3">
+  <header class="portal-header">
+    <div class="container-fluid member-shell d-flex flex-wrap align-items-center justify-content-between gap-3">
+      <div class="member-brand">
         <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="52">
         <div>
           <div class="fw-bold">Mashirikiano SACCO</div>
-          <div class="small opacity-75">Member Dashboard</div>
+          <div class="small opacity-75">Member account</div>
         </div>
       </div>
-      <a class="btn btn-outline-light" href="../auth/logout.php">Logout</a>
+      <a class="text-white fw-bold text-decoration-none" href="../auth/logout.php">Logout</a>
     </div>
   </header>
 
-  <main class="container py-2">
+  <nav class="member-top-nav" aria-label="Member navigation">
+    <a class="<?= $activeTab === 'dashboard' ? 'active' : '' ?>" href="?tab=dashboard">Dashboard</a>
+    <a class="<?= $activeTab === 'loan' ? 'active' : '' ?>" href="?tab=loan">Loans</a>
+    <a class="<?= $activeTab === 'applications' ? 'active' : '' ?>" href="?tab=applications">My Applications</a>
+    <a class="<?= $activeTab === 'record' ? 'active' : '' ?>" href="?tab=record">Transactions</a>
+  </nav>
+
+  <main class="container-fluid member-shell py-4">
     <?php if ($message): ?>
       <div class="alert alert-<?= e($messageType) ?> alert-dismissible fade show" role="alert">
         <?= e($message) ?>
@@ -271,71 +340,72 @@ function e($value): string
       </div>
     <?php endif; ?>
 
-    <!-- Secondary Tabbed Navigation -->
-    <ul class="nav nav-pills mb-4 justify-content-center bg-white p-2 rounded shadow-sm gap-2" id="dashboardTabs" role="tablist">
-      <li class="nav-item">
-        <a class="nav-link <?= $activeTab === 'dashboard' ? 'active' : '' ?>" href="?tab=dashboard">
-          Dashboard
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <?= $activeTab === 'loan' ? 'active' : '' ?>" href="?tab=loan">
-          Loan Services
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link <?= $activeTab === 'record' ? 'active' : '' ?>" href="?tab=record">
-          Transaction Records
-        </a>
-      </li>
-    </ul>
-
     <!-- Tab Content -->
     <div class="tab-content" id="dashboardTabsContent">
       
       <!-- DASHBOARD TAB -->
       <?php if ($activeTab === 'dashboard'): ?>
-        <div class="row g-4 mb-4">
-          <div class="col-md-4">
-            <div class="card metric h-100">
-              <div class="card-body">
-                <div class="text-muted small">Total Contributions</div>
-                <div class="display-6 fw-bold">KES <?= number_format($total, 2) ?></div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card metric h-100">
-              <div class="card-body">
-                <div class="text-muted small">Member Status</div>
-                <div class="h3 fw-bold mb-0 text-capitalize"><?= htmlspecialchars($member['Status'], ENT_QUOTES, 'UTF-8') ?></div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card metric h-100">
-              <div class="card-body">
-                <div class="text-muted small">Membership ID</div>
-                <div class="h3 fw-bold mb-0"><?= htmlspecialchars($member['MemberID'], ENT_QUOTES, 'UTF-8') ?></div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card metric h-100">
-              <div class="card-body">
-                <div class="text-muted small">Deposit Balance</div>
-                <div class="h3 fw-bold mb-0">KES <?= number_format((float)$deposit['Balance'], 2) ?></div>
-              </div>
-            </div>
-          </div>
-          <!-- Apply for a Loan Action Card -->
-          <div class="col-md-8">
-            <div class="card metric h-100 bg-white">
-              <div class="card-body d-flex flex-column justify-content-center py-4">
-                <h5 class="fw-bold mb-2">Need Financial Assistance?</h5>
-                <p class="text-muted small mb-3">Explore and apply for various member-first loan plans including Emergency, Elimu, Car, and Kujenga options immediately.</p>
+        <section class="member-hero mb-4">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-5">
+              <div class="d-flex align-items-center gap-3">
+                <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
                 <div>
-                  <a href="?tab=loan" class="btn apply-btn px-4 py-2 rounded-3 text-decoration-none">Apply for a Loan Now</a>
+                  <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
+                  <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
+                  <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="hero-stat">
+                <div class="small opacity-75">Member Balance</div>
+                <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-2">
+              <div class="hero-stat">
+                <div class="small opacity-75">Status</div>
+                <div class="h4 fw-bold mb-0"><?= e($member['Status']) ?></div>
+              </div>
+            </div>
+            <div class="col-lg-2">
+              <a href="?tab=loan" class="btn btn-light w-100 fw-bold">Apply Loan</a>
+            </div>
+          </div>
+        </section>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-4">
+            <div class="card metric h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="metric-icon"><i class="bi bi-check2-circle"></i></span>
+                <div>
+                  <div class="text-muted small">Total Contributions</div>
+                  <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card metric h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="metric-icon danger"><i class="bi bi-bank"></i></span>
+                <div>
+                  <div class="text-muted small">Deposit Balance</div>
+                  <div class="h4 fw-bold mb-0">KES <?= number_format((float)$deposit['Balance'], 2) ?></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card metric h-100">
+              <div class="card-body d-flex align-items-center gap-3">
+                <span class="metric-icon"><i class="bi bi-file-earmark-text"></i></span>
+                <div>
+                  <div class="text-muted small">Loan Applications</div>
+                  <div class="h4 fw-bold mb-0"><?= count($loanApplications) ?> total</div>
+                  <div class="text-muted small"><?= $pendingLoanCount ?> pending, <?= $approvedLoanCount ?> approved</div>
                 </div>
               </div>
             </div>
@@ -348,10 +418,6 @@ function e($value): string
               <div class="card-body">
                 <h2 class="h5 fw-bold mb-3">Profile Details</h2>
                 <dl class="mb-0">
-                  <dt>Name</dt>
-                  <dd><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></dd>
-                  <dt>Membership ID</dt>
-                  <dd><?= e($member['MemberID']) ?></dd>
                   <dt>National ID</dt>
                   <dd><?= e($member['NationalID']) ?></dd>
                   <dt>Phone</dt>
@@ -362,36 +428,26 @@ function e($value): string
               </div>
             </div>
           </section>
-          
           <section class="col-lg-8">
             <div class="card metric h-100">
               <div class="card-body">
-                <h2 class="h5 fw-bold mb-3">Recent Contributions</h2>
-                <div class="table-responsive">
-                  <table class="table align-middle">
-                    <thead>
-                      <tr>
-                        <th>Transaction</th>
-                        <th>Date</th>
-                        <th>Phone</th>
-                        <th class="text-end">Amount</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <?php foreach ($recentTransactions as $transaction): ?>
-                        <tr>
-                          <td><?= htmlspecialchars($transaction['TranID'], ENT_QUOTES, 'UTF-8') ?></td>
-                          <td><?= htmlspecialchars($transaction['TranTime'] ?: $transaction['CreatedAt'], ENT_QUOTES, 'UTF-8') ?></td>
-                          <td><?= htmlspecialchars($transaction['MSISDN'], ENT_QUOTES, 'UTF-8') ?></td>
-                          <td class="text-end fw-bold">KES <?= number_format((float) $transaction['Amount'], 2) ?></td>
-                        </tr>
-                      <?php endforeach; ?>
-                      <?php if (!$recentTransactions): ?>
-                        <tr><td colspan="4" class="text-muted text-center py-3">No contributions found.</td></tr>
-                      <?php endif; ?>
-                    </tbody>
-                  </table>
+                <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
+                  <h2 class="h5 fw-bold mb-0">Recent Transactions</h2>
+                  <a class="remarks-link" href="?tab=record">View all</a>
                 </div>
+                <?php foreach ($recentTransactions as $transaction): ?>
+                  <div class="recent-row">
+                    <span class="recent-icon"><i class="bi bi-arrow-down-left"></i></span>
+                    <div class="flex-grow-1">
+                      <div class="fw-bold"><?= e($transaction['TranID']) ?></div>
+                      <div class="text-muted small"><?= e($transaction['TranTime'] ?: $transaction['CreatedAt']) ?> &middot; <?= e($transaction['MSISDN']) ?></div>
+                    </div>
+                    <div class="fw-bold text-success text-end">+ KES <?= number_format((float)$transaction['Amount'], 2) ?></div>
+                  </div>
+                <?php endforeach; ?>
+                <?php if (!$recentTransactions): ?>
+                  <div class="text-muted text-center py-3">No contributions found.</div>
+                <?php endif; ?>
               </div>
             </div>
           </section>
@@ -400,52 +456,11 @@ function e($value): string
 
       <!-- LOAN TAB -->
       <?php if ($activeTab === 'loan'): ?>
-        <!-- My Applications Section -->
-        <section class="card metric mb-4">
-          <div class="card-body">
-            <h3 class="h5 fw-bold mb-3">My Loan Applications</h3>
-            <div class="table-responsive">
-              <table class="table align-middle">
-                <thead>
-                  <tr>
-                    <th>Loan Type</th>
-                    <th>Applied Date</th>
-                    <th>Amount</th>
-                    <th>Return Date</th>
-                    <th>Status</th>
-                    <th>Remarks</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($loanApplications as $app): ?>
-                    <tr>
-                      <td class="fw-bold"><?= e($app['LoanType']) ?></td>
-                      <td><?= e($app['CreatedAt']) ?></td>
-                      <td class="fw-bold">KES <?= number_format((float)$app['Amount'], 2) ?></td>
-                      <td><?= e($app['ReturnDate']) ?></td>
-                      <td>
-                        <?php if ($app['Status'] === 'Approved'): ?>
-                          <strong class="text-success">Approved</strong>
-                        <?php elseif ($app['Status'] === 'Not Approved'): ?>
-                          <strong class="text-danger">Not Approved</strong>
-                        <?php else: ?>
-                          <strong class="text-warning">Pending</strong>
-                        <?php endif; ?>
-                      </td>
-                      <td><span class="text-muted small"><?= e($app['RejectionReason'] ?: '-') ?></span></td>
-                    </tr>
-                  <?php endforeach; ?>
-                  <?php if (!$loanApplications): ?>
-                    <tr><td colspan="6" class="text-muted text-center py-3">You have not applied for any loans yet. Select a product below to apply.</td></tr>
-                  <?php endif; ?>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
         <!-- Loan Services Catalog -->
-        <h3 class="fw-bold mb-3 text-center">Available Loan Services</h3>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+          <h1 class="h4 fw-bold mb-0">Available Loan Services</h1>
+          <a class="remarks-link" href="?tab=applications">My Applications</a>
+        </div>
         <div class="row g-4">
           <?php foreach ($loans as $index => $loan): ?>
             <div class="col-md-6 col-lg-4">
@@ -506,6 +521,70 @@ function e($value): string
         </div>
       <?php endif; ?>
 
+      <!-- APPLICATIONS TAB -->
+      <?php if ($activeTab === 'applications'): ?>
+        <section class="card metric">
+          <div class="card-body">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-3">
+              <div>
+                <h1 class="h4 fw-bold mb-1">My Applications</h1>
+                <div class="text-muted small">All submitted loan requests and feedback from the SACCO team.</div>
+              </div>
+              <a href="?tab=loan" class="btn apply-btn">Apply for a Loan</a>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-middle">
+                <thead>
+                  <tr>
+                    <th>Loan Type</th>
+                    <th>Applied Date</th>
+                    <th>Amount</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($loanApplications as $app): ?>
+                    <tr>
+                      <td class="fw-bold"><?= e($app['LoanType']) ?></td>
+                      <td><?= e($app['CreatedAt']) ?></td>
+                      <td class="fw-bold">KES <?= number_format((float)$app['Amount'], 2) ?></td>
+                      <td><?= e($app['ReturnDate']) ?></td>
+                      <td>
+                        <?php if ($app['Status'] === 'Approved'): ?>
+                          <strong class="text-success">Approved</strong>
+                        <?php elseif ($app['Status'] === 'Not Approved'): ?>
+                          <strong class="text-danger">Not Approved</strong>
+                        <?php else: ?>
+                          <strong class="text-warning">Pending</strong>
+                        <?php endif; ?>
+                      </td>
+                      <td>
+                        <?php if (trim((string)$app['RejectionReason']) !== ''): ?>
+                          <a
+                            href="#"
+                            class="remarks-link"
+                            data-bs-toggle="modal"
+                            data-bs-target="#applicationRemarksModal"
+                            data-remarks="<?= e($app['RejectionReason']) ?>"
+                          >View remarks</a>
+                        <?php else: ?>
+                          <span class="text-muted small">-</span>
+                        <?php endif; ?>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+                  <?php if (!$loanApplications): ?>
+                    <tr><td colspan="6" class="text-muted text-center py-3">You have not applied for any loans yet.</td></tr>
+                  <?php endif; ?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      <?php endif; ?>
+
       <!-- RECORD TAB -->
       <?php if ($activeTab === 'record'): ?>
         <section class="card metric">
@@ -514,6 +593,25 @@ function e($value): string
               <h3 class="h5 fw-bold mb-0">Total Contribution Ledger</h3>
               <div class="text-muted small">Showing <?= count($paginatedTransactions) ?> of <?= $totalRecords ?> record(s)</div>
             </div>
+
+            <form method="get" class="row g-2 mb-3">
+              <input type="hidden" name="tab" value="record">
+              <div class="col-md-4">
+                <input class="form-control" name="transaction_id" value="<?= e($transactionIdSearch) ?>" placeholder="Search by transaction ID">
+              </div>
+              <div class="col-md-3">
+                <input class="form-control" name="date_from" type="date" value="<?= e($dateFrom) ?>" aria-label="Date from">
+              </div>
+              <div class="col-md-3">
+                <input class="form-control" name="date_to" type="date" value="<?= e($dateTo) ?>" aria-label="Date to">
+              </div>
+              <div class="col-md-1">
+                <button class="btn apply-btn w-100" type="submit">Search</button>
+              </div>
+              <div class="col-md-1">
+                <a class="btn btn-outline-secondary w-100" href="?tab=record">Clear</a>
+              </div>
+            </form>
             
             <div class="table-responsive">
               <table class="table align-middle table-hover">
@@ -544,15 +642,15 @@ function e($value): string
               <nav aria-label="Transaction pages" class="mt-4">
                 <ul class="pagination pagination-sm justify-content-center mb-0">
                   <li class="page-item <?= $recordPage <= 1 ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?tab=record&page=<?= max(1, $recordPage - 1) ?>">Previous</a>
+                    <a class="page-link" href="<?= e(dashboardUrl(array_merge($recordQueryParams, ['page' => max(1, $recordPage - 1)]))) ?>">Previous</a>
                   </li>
                   <?php for ($p = 1; $p <= $totalRecordPages; $p++): ?>
                     <li class="page-item <?= $p === $recordPage ? 'active' : '' ?>">
-                      <a class="page-link" href="?tab=record&page=<?= $p ?>"><?= $p ?></a>
+                      <a class="page-link" href="<?= e(dashboardUrl(array_merge($recordQueryParams, ['page' => $p]))) ?>"><?= $p ?></a>
                     </li>
                   <?php endfor; ?>
                   <li class="page-item <?= $recordPage >= $totalRecordPages ? 'disabled' : '' ?>">
-                    <a class="page-link" href="?tab=record&page=<?= min($totalRecordPages, $recordPage + 1) ?>">Next</a>
+                    <a class="page-link" href="<?= e(dashboardUrl(array_merge($recordQueryParams, ['page' => min($totalRecordPages, $recordPage + 1)]))) ?>">Next</a>
                   </li>
                 </ul>
               </nav>
@@ -564,6 +662,20 @@ function e($value): string
     </div>
   </main>
 
+  <div class="modal fade" id="applicationRemarksModal" tabindex="-1" aria-labelledby="applicationRemarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="applicationRemarksModalLabel">Application Remarks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0 text-muted" id="applicationRemarksText"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script>
     // Dynamically inject clicked loan details into modal
@@ -574,6 +686,14 @@ function e($value): string
         const loanTitle = button.getAttribute('data-loan-title');
         const modalInputLoanType = applyLoanModal.querySelector('#modalLoanType');
         modalInputLoanType.value = loanTitle;
+      });
+    }
+
+    const applicationRemarksModal = document.getElementById('applicationRemarksModal');
+    if (applicationRemarksModal) {
+      applicationRemarksModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        applicationRemarksModal.querySelector('#applicationRemarksText').textContent = button.getAttribute('data-remarks') || 'No remarks provided.';
       });
     }
   </script>

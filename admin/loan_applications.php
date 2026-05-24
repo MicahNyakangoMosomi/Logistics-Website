@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/MemberService.php';
 require_once __DIR__ . '/../classes/SmsService.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
 Auth::startSession();
@@ -182,38 +183,16 @@ function e($value): string
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="admin.css" rel="stylesheet">
   <style>
-    body { background: #f3f6fa; color: #1c2938; }
-    .admin-header { background: #0b3b66; color: #fff; }
-    .admin-shell { max-width: 1440px; }
-    .panel, .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 28px rgba(13, 38, 67, .08); }
-    .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
-    .table td, .table th { vertical-align: middle; }
     .member-id { font-weight: 700; color: #0b3b66; }
     .actions-cell button { border: 0; font-weight: 600; padding: 4px 12px; border-radius: 4px; }
+    .remarks-link { color: #0b5ed7; font-weight: 700; text-decoration: none; }
+    .remarks-link:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <header class="admin-header py-3">
-    <div class="container-fluid admin-shell d-flex flex-wrap justify-content-between align-items-center gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="48">
-        <div>
-          <div class="fw-bold">Mashirikiano SACCO Admin</div>
-          <div class="small opacity-75">Loan applications &amp; approvals</div>
-        </div>
-      </div>
-      <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
-        <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
-        <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
-        <a class="btn btn-sm btn-light" href="loan_applications.php">Loan Applications</a>
-        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
-        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
-      </nav>
-    </div>
-  </header>
+  <?php admin_header('loan_applications', 'Loan applications and approvals'); ?>
 
   <main class="container-fluid admin-shell py-4">
     <?php if ($message): ?>
@@ -314,7 +293,19 @@ function e($value): string
                       <strong class="text-warning">Pending</strong>
                     <?php endif; ?>
                   </td>
-                  <td><span class="text-muted small"><?= e($app['RejectionReason'] ?: '-') ?></span></td>
+                  <td>
+                    <?php if (trim((string)$app['RejectionReason']) !== ''): ?>
+                      <a
+                        href="#"
+                        class="remarks-link"
+                        data-bs-toggle="modal"
+                        data-bs-target="#remarksModal"
+                        data-remarks="<?= e($app['RejectionReason']) ?>"
+                      >View remarks</a>
+                    <?php else: ?>
+                      <span class="text-muted small">-</span>
+                    <?php endif; ?>
+                  </td>
                   <td class="actions-cell text-end">
                     <?php if ($app['Status'] === 'Pending'): ?>
                       <!-- Approve Action Form -->
@@ -409,6 +400,20 @@ function e($value): string
     </div>
   </div>
 
+  <div class="modal fade" id="remarksModal" tabindex="-1" aria-labelledby="remarksModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="remarksModalLabel">Application Remarks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-0 text-muted" id="remarksModalText"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script>
     const rejectModal = document.getElementById('rejectModal');
@@ -422,6 +427,14 @@ function e($value): string
         rejectModal.querySelector('#rejectAppId').value = appId;
         rejectModal.querySelector('#rejectMemberName').textContent = memberName;
         rejectModal.querySelector('#rejectLoanType').textContent = loanType;
+      });
+    }
+
+    const remarksModal = document.getElementById('remarksModal');
+    if (remarksModal) {
+      remarksModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        remarksModal.querySelector('#remarksModalText').textContent = button.getAttribute('data-remarks') || 'No remarks provided.';
       });
     }
   </script>

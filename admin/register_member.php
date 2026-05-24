@@ -2,11 +2,19 @@
 
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/MemberService.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
+Auth::startSession();
 
 $message = '';
 $messageType = 'info';
+
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    $messageType = $_SESSION['flash_message_type'] ?? 'info';
+    unset($_SESSION['flash_message'], $_SESSION['flash_message_type']);
+}
 
 try {
     $pdo = Database::connection();
@@ -23,12 +31,15 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $message === '') {
     try {
         $createdMember = MemberService::create($_POST);
-        $messageType = 'success';
-        $message = 'Member created successfully. MemberID: ' . $createdMember['MemberID'];
+        $_SESSION['flash_message'] = 'Member created successfully. MemberID: ' . $createdMember['MemberID'];
+        $_SESSION['flash_message_type'] = 'success';
     } catch (Throwable $error) {
-        $messageType = 'warning';
-        $message = $error->getMessage();
+        $_SESSION['flash_message'] = $error->getMessage();
+        $_SESSION['flash_message_type'] = 'warning';
     }
+
+    header('Location: register_member.php');
+    exit;
 }
 
 function e($value): string
@@ -44,34 +55,12 @@ function e($value): string
   <title>Register Member | Mashirikiano SACCO Admin</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="admin.css" rel="stylesheet">
   <style>
-    body { background: #f3f6fa; color: #1c2938; }
-    .admin-header { background: #0b3b66; color: #fff; }
-    .admin-shell { max-width: 1180px; }
-    .panel { border: 0; border-radius: 8px; box-shadow: 0 10px 28px rgba(13, 38, 67, .08); }
   </style>
 </head>
 <body>
-  <header class="admin-header py-3">
-    <div class="container-fluid admin-shell d-flex flex-wrap justify-content-between align-items-center gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="48">
-        <div>
-          <div class="fw-bold">Mashirikiano SACCO Admin</div>
-          <div class="small opacity-75">Internal member registration</div>
-        </div>
-      </div>
-      <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-light" href="register_member.php">Register Member</a>
-        <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
-        <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
-        <a class="btn btn-sm btn-outline-light" href="loan_applications.php">Loan Applications</a>
-        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
-        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
-      </nav>
-    </div>
-  </header>
+  <?php admin_header('register_member', 'Internal member registration', false); ?>
 
   <main class="container-fluid admin-shell py-4">
     <?php if ($message): ?>

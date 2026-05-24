@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../classes/Auth.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
 
@@ -59,9 +60,12 @@ foreach ($checks as $check) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Admin Health Check | Mashirikiano SACCO</title>
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="admin.css" rel="stylesheet">
 </head>
-<body style="background:#f3f6fa;">
-  <main class="container py-5">
+<body>
+  <?php admin_header('members', 'System health check'); ?>
+
+  <main class="container-fluid admin-shell py-4">
     <section class="card border-0 shadow-sm">
       <div class="card-body p-4">
         <h1 class="h4 fw-bold">Admin Health Check</h1>

@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/MemberService.php';
 require_once __DIR__ . '/../classes/SimplePdfTable.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
 
@@ -140,7 +141,7 @@ function loadMembers(PDO $pdo, string $search, int $limit, int $page): array
     $params = [];
 
     if ($search !== '') {
-        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search)";
+        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search OR m.PrimaryNumber LIKE :search OR m.Email LIKE :search OR m.NationalID LIKE :search OR m.Status LIKE :search)";
         $params[':search'] = '%' . $search . '%';
     }
 
@@ -200,7 +201,7 @@ function loadMembersForPdf(PDO $pdo, string $search): array
     $params = [];
 
     if ($search !== '') {
-        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search)";
+        $whereSql = "WHERE (m.MemberID LIKE :search OR m.FirstName LIKE :search OR m.LastName LIKE :search OR CONCAT(m.FirstName, ' ', m.LastName) LIKE :search OR m.PrimaryNumber LIKE :search OR m.Email LIKE :search OR m.NationalID LIKE :search OR m.Status LIKE :search)";
         $params[':search'] = '%' . $search . '%';
     }
 
@@ -351,13 +352,8 @@ function renderPagination(int $currentPage, int $totalPages): string
   <title>Admin Dashboard | Mashirikiano SACCO</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="admin.css" rel="stylesheet">
   <style>
-    body { background: #f3f6fa; color: #1c2938; }
-    .admin-header { background: #0b3b66; color: #fff; }
-    .admin-shell { max-width: 1440px; }
-    .panel, .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 28px rgba(13, 38, 67, .08); }
-    .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
-    .table td, .table th { vertical-align: middle; }
     .member-id { font-weight: 700; color: #0b3b66; }
     .search-row .form-control, .search-row .form-select { min-height: 44px; }
     .actions-cell { white-space: nowrap; min-width: 132px; }
@@ -367,26 +363,7 @@ function renderPagination(int $currentPage, int $totalPages): string
   </style>
 </head>
 <body>
-  <header class="admin-header py-3">
-    <div class="container-fluid admin-shell d-flex flex-wrap justify-content-between align-items-center gap-3">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="48">
-        <div>
-          <div class="fw-bold">Mashirikiano SACCO Admin</div>
-          <div class="small opacity-75">Member management and contributions</div>
-        </div>
-      </div>
-      <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
-        <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
-        <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-light" href="members.php">Members</a>
-        <a class="btn btn-sm btn-outline-light" href="loan_applications.php">Loan Applications</a>
-        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
-        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
-      </nav>
-    </div>
-  </header>
+  <?php admin_header('members', 'Member management and contributions'); ?>
 
   <main class="container-fluid admin-shell py-4">
     <?php if ($message): ?>
@@ -417,7 +394,7 @@ function renderPagination(int $currentPage, int $totalPages): string
           <h2 class="h5 fw-bold mb-0">Registered Members</h2>
           <form method="get" id="memberSearchForm" class="row g-2 search-row flex-grow-1 justify-content-end">
             <div class="col-lg-5">
-              <input class="form-control" id="memberSearch" name="search" value="<?= e($search) ?>" placeholder="Search by MemberID or name" autocomplete="off">
+              <input class="form-control" id="memberSearch" name="search" value="<?= e($search) ?>" placeholder="Search by name, MemberID, phone, email, status or NationalID" autocomplete="off">
             </div>
             <div class="col-lg-2">
               <select class="form-select" id="rowLimit" name="limit">
@@ -426,8 +403,14 @@ function renderPagination(int $currentPage, int $totalPages): string
                 <?php endforeach; ?>
               </select>
             </div>
+            <div class="col-lg-1">
+              <button class="btn btn-primary w-100" type="submit">Search</button>
+            </div>
             <div class="col-lg-2">
               <a class="btn btn-outline-primary w-100" id="downloadMembersPdf" href="members.php?<?= e(http_build_query($downloadMembersParams)) ?>">Download PDF</a>
+            </div>
+            <div class="col-lg-1">
+              <a class="btn btn-outline-secondary w-100" href="members.php">Clear</a>
             </div>
           </form>
         </div>
@@ -487,7 +470,6 @@ function renderPagination(int $currentPage, int $totalPages): string
     const memberContributionModals = document.getElementById('memberContributionModals');
     const memberResultSummary = document.getElementById('memberResultSummary');
     const memberPagination = document.getElementById('memberPagination');
-    let searchTimer = null;
     let activeController = null;
     let currentPage = <?= (int)$currentPage ?>;
 
@@ -552,14 +534,7 @@ function renderPagination(int $currentPage, int $totalPages): string
 
     memberSearchForm.addEventListener('submit', function (event) {
       event.preventDefault();
-      updateMembers();
-    });
-
-    memberSearch.addEventListener('input', function () {
-      window.clearTimeout(searchTimer);
-      searchTimer = window.setTimeout(function () {
-        updateMembers(1);
-      }, 250);
+      updateMembers(1);
     });
 
     rowLimit.addEventListener('change', function () {

@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/SimplePdfTable.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
 
@@ -51,12 +52,21 @@ if (!in_array($rowLimit, $allowedLimits, true)) {
     $rowLimit = 10;
 }
 $currentPage = max(1, (int)($_GET['page'] ?? 1));
+$transactionSearch = trim($_GET['transaction_id'] ?? '');
+$dateFrom = trim($_GET['date_from'] ?? '');
+$dateTo = trim($_GET['date_to'] ?? '');
+if ($dateFrom !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFrom)) {
+    $dateFrom = '';
+}
+if ($dateTo !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateTo)) {
+    $dateTo = '';
+}
 
 $summary = loadReportSummary($pdo);
-[$transactions, $totalRecords, $totalPages, $currentPage] = loadReportTransactions($pdo, $reportType, $rowLimit, $currentPage);
+[$transactions, $totalRecords, $totalPages, $currentPage] = loadReportTransactions($pdo, $reportType, $rowLimit, $currentPage, $transactionSearch, $dateFrom, $dateTo);
 
 if (($_GET['download'] ?? '') === 'pdf') {
-    $pdfRows = loadReportTransactionsForPdf($pdo, $reportType);
+    $pdfRows = loadReportTransactionsForPdf($pdo, $reportType, $transactionSearch, $dateFrom, $dateTo);
     SimplePdfTable::download(
         $reportType . '-report.pdf',
         ucfirst($reportType) . ' Report',
@@ -103,10 +113,35 @@ function loadReportSummary(PDO $pdo): array
     return $stmt->fetch() ?: [];
 }
 
-function loadReportTransactions(PDO $pdo, string $type, int $limit, int $page): array
+function reportFilterSql(string $type, string $transactionSearch, string $dateFrom, string $dateTo): array
 {
-    $countStmt = $pdo->prepare('SELECT COUNT(*) FROM member_transactions WHERE TransactionType = :type');
-    $countStmt->execute([':type' => $type]);
+    $where = 'WHERE TransactionType = :type';
+    $params = [':type' => $type];
+
+    if ($transactionSearch !== '') {
+        $where .= ' AND TranID LIKE :transaction_id';
+        $params[':transaction_id'] = '%' . $transactionSearch . '%';
+    }
+
+    if ($dateFrom !== '') {
+        $where .= ' AND DATE(COALESCE(TranTime, CreatedAt)) >= :date_from';
+        $params[':date_from'] = $dateFrom;
+    }
+
+    if ($dateTo !== '') {
+        $where .= ' AND DATE(COALESCE(TranTime, CreatedAt)) <= :date_to';
+        $params[':date_to'] = $dateTo;
+    }
+
+    return [$where, $params];
+}
+
+function loadReportTransactions(PDO $pdo, string $type, int $limit, int $page, string $transactionSearch, string $dateFrom, string $dateTo): array
+{
+    [$where, $params] = reportFilterSql($type, $transactionSearch, $dateFrom, $dateTo);
+
+    $countStmt = $pdo->prepare("SELECT COUNT(*) FROM member_transactions {$where}");
+    $countStmt->execute($params);
     $totalRecords = (int)$countStmt->fetchColumn();
     $totalPages = max(1, (int)ceil($totalRecords / $limit));
     $page = min(max(1, $page), $totalPages);
@@ -115,24 +150,26 @@ function loadReportTransactions(PDO $pdo, string $type, int $limit, int $page): 
     $stmt = $pdo->prepare(
         "SELECT *
          FROM member_transactions
-         WHERE TransactionType = :type
+         {$where}
          ORDER BY COALESCE(TranTime, CreatedAt) DESC
          LIMIT {$limit} OFFSET {$offset}"
     );
-    $stmt->execute([':type' => $type]);
+    $stmt->execute($params);
 
     return [$stmt->fetchAll(), $totalRecords, $totalPages, $page];
 }
 
-function loadReportTransactionsForPdf(PDO $pdo, string $type): array
+function loadReportTransactionsForPdf(PDO $pdo, string $type, string $transactionSearch, string $dateFrom, string $dateTo): array
 {
+    [$where, $params] = reportFilterSql($type, $transactionSearch, $dateFrom, $dateTo);
+
     $stmt = $pdo->prepare(
         "SELECT *
          FROM member_transactions
-         WHERE TransactionType = :type
+         {$where}
          ORDER BY COALESCE(TranTime, CreatedAt) DESC"
     );
-    $stmt->execute([':type' => $type]);
+    $stmt->execute($params);
 
     return $stmt->fetchAll();
 }
@@ -222,32 +259,15 @@ function renderPagination(int $currentPage, int $totalPages): string
   <title>Reports | Mashirikiano SACCO Admin</title>
   <link rel="icon" type="image/x-icon" href="../assets/img/logo.png">
   <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="admin.css" rel="stylesheet">
   <style>
-    body { background: #f4f7fb; }
-    .admin-header { background: #0b3b66; color: #fff; }
-    .panel, .metric { border: 0; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.08); }
-    .table thead th { color: #617083; font-size: .78rem; text-transform: uppercase; letter-spacing: .02em; }
-    .table td, .table th { vertical-align: middle; }
     @media (max-width: 767px) { .table { min-width: 1040px; } }
   </style>
 </head>
 <body>
-  <header class="admin-header py-3">
-    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
-      <div class="fw-bold">Mashirikiano SACCO Admin</div>
-      <nav class="d-flex gap-2">
-        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
-        <a class="btn btn-sm btn-outline-light" href="manage_jobs.php">Manage Jobs</a>
-        <a class="btn btn-sm btn-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
-        <a class="btn btn-sm btn-outline-light" href="loan_applications.php">Loan Applications</a>
-        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
-        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
-      </nav>
-    </div>
-  </header>
+  <?php admin_header('reports', 'Transaction reporting'); ?>
 
-  <main class="container py-4">
+  <main class="container-fluid admin-shell py-4">
     <div class="row g-4 mb-4">
       <div class="col-md-4">
         <div class="card metric h-100"><div class="card-body"><div class="text-muted small">Total Contributions</div><div class="h3 fw-bold">KES <?= number_format((float)($summary['TotalContributions'] ?? 0), 2) ?></div></div></div>
@@ -272,6 +292,15 @@ function renderPagination(int $currentPage, int $totalPages): string
               </select>
             </div>
             <div class="col-lg-2">
+              <input class="form-control" id="transactionIdSearch" name="transaction_id" value="<?= e($transactionSearch) ?>" placeholder="Transaction ID">
+            </div>
+            <div class="col-lg-2">
+              <input class="form-control" id="dateFrom" name="date_from" type="date" value="<?= e($dateFrom) ?>" aria-label="Date from">
+            </div>
+            <div class="col-lg-2">
+              <input class="form-control" id="dateTo" name="date_to" type="date" value="<?= e($dateTo) ?>" aria-label="Date to">
+            </div>
+            <div class="col-lg-2">
               <select class="form-select" id="rowLimit" name="limit">
                 <?php foreach ($allowedLimits as $limitOption): ?>
                   <option value="<?= (int)$limitOption ?>" <?= $rowLimit === $limitOption ? 'selected' : '' ?>><?= (int)$limitOption ?> rows</option>
@@ -279,7 +308,13 @@ function renderPagination(int $currentPage, int $totalPages): string
               </select>
             </div>
             <div class="col-lg-2">
+              <button class="btn btn-primary w-100" type="submit">Search</button>
+            </div>
+            <div class="col-lg-2">
               <a class="btn btn-outline-primary w-100" id="downloadReportPdf" href="reports.php?<?= e(http_build_query($downloadReportParams)) ?>">Download PDF</a>
+            </div>
+            <div class="col-lg-1">
+              <a class="btn btn-outline-secondary w-100" href="reports.php">Clear</a>
             </div>
           </form>
         </div>
@@ -307,6 +342,9 @@ function renderPagination(int $currentPage, int $totalPages): string
   <script>
     const reportControls = document.getElementById('reportControls');
     const reportType = document.getElementById('reportType');
+    const transactionIdSearch = document.getElementById('transactionIdSearch');
+    const dateFrom = document.getElementById('dateFrom');
+    const dateTo = document.getElementById('dateTo');
     const rowLimit = document.getElementById('rowLimit');
     const reportTableBody = document.getElementById('reportTableBody');
     const reportResultSummary = document.getElementById('reportResultSummary');
@@ -319,6 +357,21 @@ function renderPagination(int $currentPage, int $totalPages): string
       const url = new URL(window.location.href);
       url.searchParams.set('download', 'pdf');
       url.searchParams.set('type', reportType.value);
+      if (transactionIdSearch.value) {
+        url.searchParams.set('transaction_id', transactionIdSearch.value);
+      } else {
+        url.searchParams.delete('transaction_id');
+      }
+      if (dateFrom.value) {
+        url.searchParams.set('date_from', dateFrom.value);
+      } else {
+        url.searchParams.delete('date_from');
+      }
+      if (dateTo.value) {
+        url.searchParams.set('date_to', dateTo.value);
+      } else {
+        url.searchParams.delete('date_to');
+      }
       url.searchParams.delete('ajax');
       url.searchParams.delete('page');
       url.searchParams.delete('limit');
@@ -335,6 +388,9 @@ function renderPagination(int $currentPage, int $totalPages): string
       const params = new URLSearchParams(window.location.search);
       params.set('ajax', 'reports');
       params.set('type', reportType.value);
+      params.set('transaction_id', transactionIdSearch.value);
+      params.set('date_from', dateFrom.value);
+      params.set('date_to', dateTo.value);
       params.set('limit', rowLimit.value);
       params.set('page', currentPage);
 
@@ -356,6 +412,21 @@ function renderPagination(int $currentPage, int $totalPages): string
 
           const url = new URL(window.location.href);
           url.searchParams.set('type', reportType.value);
+          if (transactionIdSearch.value) {
+            url.searchParams.set('transaction_id', transactionIdSearch.value);
+          } else {
+            url.searchParams.delete('transaction_id');
+          }
+          if (dateFrom.value) {
+            url.searchParams.set('date_from', dateFrom.value);
+          } else {
+            url.searchParams.delete('date_from');
+          }
+          if (dateTo.value) {
+            url.searchParams.set('date_to', dateTo.value);
+          } else {
+            url.searchParams.delete('date_to');
+          }
           url.searchParams.set('limit', rowLimit.value);
           url.searchParams.set('page', currentPage);
           window.history.replaceState({}, '', url);

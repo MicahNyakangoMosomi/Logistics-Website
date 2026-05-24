@@ -1,8 +1,10 @@
 <?php
 require_once __DIR__ . '/../classes/Auth.php';
 require_once __DIR__ . '/../classes/Database.php';
+require_once __DIR__ . '/admin_layout.php';
 
 Auth::requireAdmin();
+Auth::startSession();
 
 $pdo = Database::connection();
 
@@ -20,6 +22,15 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS `jobs` (
 $message = '';
 $error = '';
 
+if (isset($_SESSION['flash_message'])) {
+    $message = $_SESSION['flash_message'];
+    unset($_SESSION['flash_message']);
+}
+if (isset($_SESSION['flash_error'])) {
+    $error = $_SESSION['flash_error'];
+    unset($_SESSION['flash_error']);
+}
+
 // Handle Job Posting
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_job'])) {
     $title = trim($_POST['job_title']);
@@ -31,13 +42,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['post_job'])) {
     if ($title && $category && $description && $requirements && $deadline) {
         $stmt = $pdo->prepare("INSERT INTO jobs (job_title, job_category, job_description, job_requirements, job_deadline) VALUES (?, ?, ?, ?, ?)");
         if ($stmt->execute([$title, $category, $description, $requirements, $deadline])) {
-            $message = "Job posted successfully!";
+            $_SESSION['flash_message'] = "Job posted successfully!";
         } else {
-            $error = "Failed to post job.";
+            $_SESSION['flash_error'] = "Failed to post job.";
         }
     } else {
-        $error = "Please fill in all fields.";
+        $_SESSION['flash_error'] = "Please fill in all fields.";
     }
+
+    header('Location: manage_jobs.php');
+    exit;
 }
 
 // Handle Job Deletion
@@ -45,8 +59,11 @@ if (isset($_GET['delete'])) {
     $jobId = (int)$_GET['delete'];
     $stmt = $pdo->prepare("DELETE FROM jobs WHERE job_id = ?");
     if ($stmt->execute([$jobId])) {
-        $message = "Job deleted successfully!";
+        $_SESSION['flash_message'] = "Job deleted successfully!";
     }
+
+    header('Location: manage_jobs.php');
+    exit;
 }
 
 // Fetch all jobs
@@ -60,41 +77,21 @@ $jobs = $pdo->query("SELECT * FROM jobs ORDER BY job_deadline ASC")->fetchAll();
     <title>Manage Jobs | Admin</title>
     <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/css/main.css" rel="stylesheet">
+    <link href="admin.css" rel="stylesheet">
     <style>
-        body { background: #f8f9fa; }
-        .admin-card { background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 25px; margin-bottom: 30px; }
-        .admin-header { background: #0b3b66; color: #fff; }
+        .admin-card { background: white; padding: 25px; margin-bottom: 30px; }
     </style>
 </head>
 <body>
 
-<header class="admin-header py-3 mb-4">
-    <div class="container-fluid d-flex flex-wrap justify-content-between align-items-center gap-3" style="max-width: 1440px;">
-      <div class="d-flex align-items-center gap-3">
-        <img src="../assets/img/logo.png" alt="Mashirikiano SACCO" width="48">
-        <div>
-          <div class="fw-bold text-white">Mashirikiano SACCO Admin</div>
-          <div class="small text-white opacity-75">Job posting management</div>
-        </div>
-      </div>
-      <nav class="d-flex flex-wrap gap-2">
-        <a class="btn btn-sm btn-outline-light" href="register_member.php">Register Member</a>
-        <a class="btn btn-sm btn-light" href="manage_jobs.php">Manage Jobs</a>
-        <a class="btn btn-sm btn-outline-light" href="reports.php">Reports</a>
-        <a class="btn btn-sm btn-outline-light" href="members.php">Members</a>
-        <a class="btn btn-sm btn-outline-light" href="loan_applications.php">Loan Applications</a>
-        <a class="btn btn-sm btn-outline-light" href="settings.php">Settings</a>
-        <a class="btn btn-sm btn-outline-light" href="../auth/admin_logout.php">Logout</a>
-      </nav>
-    </div>
-</header>
+<?php admin_header('manage_jobs', 'Job posting management'); ?>
 
-<div class="container">
+<div class="container-fluid admin-shell py-4">
     <?php if ($message): ?>
-        <div class="alert alert-success"><?= $message ?></div>
+        <div class="alert alert-success"><?= admin_e($message) ?></div>
     <?php endif; ?>
     <?php if ($error): ?>
-        <div class="alert alert-danger"><?= $error ?></div>
+        <div class="alert alert-danger"><?= admin_e($error) ?></div>
     <?php endif; ?>
 
     <div class="row">
@@ -149,8 +146,8 @@ $jobs = $pdo->query("SELECT * FROM jobs ORDER BY job_deadline ASC")->fetchAll();
                         <tbody>
                             <?php foreach ($jobs as $job): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($job['job_title']) ?></td>
-                                    <td><span class="badge bg-secondary"><?= ucfirst($job['job_category']) ?></span></td>
+                                    <td><?= admin_e($job['job_title']) ?></td>
+                                    <td><span class="badge bg-secondary"><?= admin_e(ucfirst($job['job_category'])) ?></span></td>
                                     <td>
                                         <?php 
                                         $deadline = strtotime($job['job_deadline']);
