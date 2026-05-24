@@ -257,7 +257,11 @@ function dashboardUrl(array $params): string
     .member-top-nav a { color: #5e7068; font-weight: 700; text-decoration: none; padding: 14px 0 12px; border-bottom: 3px solid transparent; }
     .member-top-nav a:hover, .member-top-nav a.active { color: #087a43; border-bottom-color: #087a43; }
     .member-hero { background: linear-gradient(135deg, #087a43, #0a5534); color: #fff; border-radius: 8px; padding: 22px; box-shadow: 0 18px 40px rgba(8, 122, 67, .18); }
-    .profile-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .member-profile-summary { display: flex; align-items: center; gap: 18px; }
+    .member-profile-photo { width: 86px; height: 86px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,.92); background: #fff; flex: 0 0 86px; }
+    .member-profile-name { font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 800; line-height: 1.12; margin: 0 0 6px; }
+    .member-profile-id { color: rgba(255,255,255,.82); font-size: 1.08rem; font-weight: 700; margin: 0; }
+    .profile-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
     .profile-detail { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 12px; min-width: 0; }
     .profile-detail .label { display: block; color: rgba(255,255,255,.72); font-size: .76rem; font-weight: 700; text-transform: uppercase; }
     .profile-detail .value { display: block; color: #fff; font-weight: 700; overflow-wrap: anywhere; }
@@ -301,10 +305,13 @@ function dashboardUrl(array $params): string
       .member-top-nav { gap: 14px; overflow-x: auto; justify-content: flex-start; padding: 0 14px; flex-wrap: nowrap; }
       .member-top-nav a { white-space: nowrap; }
       .member-hero { padding: 18px; }
-      .profile-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .table { min-width: 760px; }
     }
     @media (max-width: 480px) {
+      .member-profile-summary { align-items: flex-start; gap: 12px; }
+      .member-profile-photo { width: 68px; height: 68px; flex-basis: 68px; }
+      .member-profile-name { font-size: 1.25rem; }
+      .member-profile-id { font-size: .95rem; }
       .profile-detail-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -344,15 +351,14 @@ function dashboardUrl(array $params): string
       <!-- DASHBOARD TAB -->
       <?php if ($activeTab === 'dashboard'): ?>
         <section class="member-hero mb-4">
+          <div class="member-profile-summary">
+            <img class="member-profile-photo" src="../assets/img/default-profile.svg" alt="">
+            <div>
+              <h1 class="member-profile-name"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
+              <p class="member-profile-id">Member ID: <?= e($member['MemberID']) ?></p>
+            </div>
+          </div>
           <div class="profile-detail-grid">
-            <div class="profile-detail">
-              <span class="label">Member Name</span>
-              <span class="value"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></span>
-            </div>
-            <div class="profile-detail">
-              <span class="label">MemberID</span>
-              <span class="value"><?= e($member['MemberID']) ?></span>
-            </div>
             <div class="profile-detail">
               <span class="label">Email</span>
               <span class="value"><?= e($member['Email'] ?: 'Not provided') ?></span>
