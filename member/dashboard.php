@@ -344,64 +344,56 @@ function dashboardUrl(array $params): string
       </div>
     <?php endif; ?>
 
-    <section class="member-hero mb-4">
-      <div class="row g-4 align-items-center">
-        <div class="col-lg-6">
-          <div class="d-flex align-items-center gap-3">
-            <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
-            <div>
-              <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
-              <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
-              <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="hero-stat">
-            <div class="small opacity-75">Total Contributions</div>
-            <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
-          </div>
-        </div>
-        <div class="col-sm-6 col-lg-3">
-          <div class="hero-stat">
-            <div class="small opacity-75">Status</div>
-            <div class="h4 fw-bold mb-0"><?= e($member['Status']) ?></div>
-          </div>
-        </div>
-      </div>
-      <div class="profile-detail-grid">
-        <div class="profile-detail">
-          <span class="label">Full Name</span>
-          <span class="value"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></span>
-        </div>
-        <div class="profile-detail">
-          <span class="label">Member ID</span>
-          <span class="value"><?= e($member['MemberID']) ?></span>
-        </div>
-        <div class="profile-detail">
-          <span class="label">National ID</span>
-          <span class="value"><?= e($member['NationalID']) ?></span>
-        </div>
-        <div class="profile-detail">
-          <span class="label">Phone</span>
-          <span class="value"><?= e($member['PrimaryNumber']) ?></span>
-        </div>
-        <div class="profile-detail">
-          <span class="label">Email</span>
-          <span class="value"><?= e($member['Email'] ?: 'Not provided') ?></span>
-        </div>
-        <div class="profile-detail">
-          <span class="label">Account Status</span>
-          <span class="value"><?= e($member['Status']) ?></span>
-        </div>
-      </div>
-    </section>
-
     <!-- Tab Content -->
     <div class="tab-content" id="dashboardTabsContent">
       
       <!-- DASHBOARD TAB -->
       <?php if ($activeTab === 'dashboard'): ?>
+        <section class="member-hero mb-4">
+          <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+              <div class="d-flex align-items-center gap-3">
+                <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
+                <div>
+                  <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
+                  <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
+                  <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="hero-stat">
+                <div class="small opacity-75">Total Contributions</div>
+                <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
+              </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+              <div class="hero-stat">
+                <div class="small opacity-75">Loan Applications</div>
+                <div class="h4 fw-bold mb-0"><?= count($loanApplications) ?> total</div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-detail-grid">
+            <div class="profile-detail">
+              <span class="label">Name</span>
+              <span class="value"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></span>
+            </div>
+            <div class="profile-detail">
+              <span class="label">Email</span>
+              <span class="value"><?= e($member['Email'] ?: 'Not provided') ?></span>
+            </div>
+            <div class="profile-detail">
+              <span class="label">ID</span>
+              <span class="value"><?= e($member['NationalID']) ?></span>
+            </div>
+            <div class="profile-detail">
+              <span class="label">MemberID</span>
+              <span class="value"><?= e($member['MemberID']) ?></span>
+            </div>
+          </div>
+        </section>
+
         <div class="row g-3 mb-4">
           <div class="col-md-6">
             <div class="card metric h-100">
