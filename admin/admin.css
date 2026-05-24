@@ -6,11 +6,7 @@ body {
 .admin-header {
   background: #0b3b66;
   color: #fff;
-  padding: 12px 0 0;
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-  box-shadow: 0 10px 24px rgba(5, 33, 58, .16);
+  padding: 12px 0;
 }
 
 .admin-shell {
@@ -24,7 +20,6 @@ body {
 .admin-header .admin-shell {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .admin-header-top {
@@ -52,29 +47,31 @@ body {
   font-size: .86rem;
 }
 
-.admin-nav {
+.admin-top-nav {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
-  gap: 18px;
-  width: 100%;
-  padding: 4px 0 10px;
-  border-top: 1px solid rgba(255, 255, 255, .14);
+  gap: 22px;
+  background: #fff;
+  border-bottom: 1px solid #dce8e1;
+  box-shadow: 0 8px 24px rgba(13, 38, 67, .08);
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
-.admin-nav a {
-  color: rgba(255, 255, 255, .82);
+.admin-top-nav a {
+  color: #5e7068;
   font-size: .9rem;
   font-weight: 700;
   text-decoration: none;
-  padding: 6px 0;
-  border-bottom: 2px solid transparent;
+  padding: 14px 0 12px;
+  border-bottom: 3px solid transparent;
 }
 
-.admin-nav a:hover,
-.admin-nav a.active {
-  color: #fff;
+.admin-top-nav a:hover,
+.admin-top-nav a.active {
+  color: #0b3b66;
   border-bottom-color: #f4a621;
 }
 
@@ -115,14 +112,15 @@ body {
     align-items: flex-start;
   }
 
-  .admin-nav {
+  .admin-top-nav {
     gap: 12px;
     justify-content: flex-start;
     overflow-x: auto;
     flex-wrap: nowrap;
+    padding: 0 14px;
   }
 
-  .admin-nav a {
+  .admin-top-nav a {
     white-space: nowrap;
   }
 }

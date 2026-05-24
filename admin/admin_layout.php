@@ -34,13 +34,13 @@ if (!function_exists('admin_header')) {
               </div>
               <a class="admin-logout-link" href="../auth/admin_logout.php">Logout</a>
             </div>
-            <nav class="admin-nav" aria-label="Admin navigation">
-              <?php foreach ($links as $key => $link): ?>
-                <a class="<?= $active === $key ? 'active' : '' ?>" href="<?= admin_e($link[1]) ?>"><?= admin_e($link[0]) ?></a>
-              <?php endforeach; ?>
-            </nav>
           </div>
         </header>
+        <nav class="admin-top-nav" aria-label="Admin navigation">
+          <?php foreach ($links as $key => $link): ?>
+            <a class="<?= $active === $key ? 'active' : '' ?>" href="<?= admin_e($link[1]) ?>"><?= admin_e($link[0]) ?></a>
+          <?php endforeach; ?>
+        </nav>
         <?php
     }
 }

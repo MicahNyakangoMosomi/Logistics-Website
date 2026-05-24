@@ -109,14 +109,10 @@ $recentTransactions = $recentStmt->fetchAll();
 $loanAppsStmt = $pdo->prepare("SELECT * FROM loan_applications WHERE MemberID = :member_id ORDER BY CreatedAt DESC");
 $loanAppsStmt->execute([':member_id' => $member['MemberID']]);
 $loanApplications = $loanAppsStmt->fetchAll();
-$pendingLoanCount = 0;
-$approvedLoanCount = 0;
+$totalLoanBalance = 0.00;
 foreach ($loanApplications as $loanApplication) {
-    if ($loanApplication['Status'] === 'Pending') {
-        $pendingLoanCount++;
-    }
     if ($loanApplication['Status'] === 'Approved') {
-        $approvedLoanCount++;
+        $totalLoanBalance += (float)$loanApplication['Amount'];
     }
 }
 
@@ -261,9 +257,7 @@ function dashboardUrl(array $params): string
     .member-top-nav a { color: #5e7068; font-weight: 700; text-decoration: none; padding: 14px 0 12px; border-bottom: 3px solid transparent; }
     .member-top-nav a:hover, .member-top-nav a.active { color: #087a43; border-bottom-color: #087a43; }
     .member-hero { background: linear-gradient(135deg, #087a43, #0a5534); color: #fff; border-radius: 8px; padding: 22px; box-shadow: 0 18px 40px rgba(8, 122, 67, .18); }
-    .member-avatar { width: 76px; height: 76px; border-radius: 50%; object-fit: cover; border: 4px solid rgba(255,255,255,.88); background: #fff; }
-    .hero-stat { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 14px; height: 100%; }
-    .profile-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+    .profile-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
     .profile-detail { background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 12px; min-width: 0; }
     .profile-detail .label { display: block; color: rgba(255,255,255,.72); font-size: .76rem; font-weight: 700; text-transform: uppercase; }
     .profile-detail .value { display: block; color: #fff; font-weight: 700; overflow-wrap: anywhere; }
@@ -350,34 +344,14 @@ function dashboardUrl(array $params): string
       <!-- DASHBOARD TAB -->
       <?php if ($activeTab === 'dashboard'): ?>
         <section class="member-hero mb-4">
-          <div class="row g-4 align-items-center">
-            <div class="col-lg-6">
-              <div class="d-flex align-items-center gap-3">
-                <img class="member-avatar" src="../assets/img/default-profile.svg" alt="">
-                <div>
-                  <div class="small text-uppercase opacity-75 fw-bold">Member Account</div>
-                  <h1 class="h3 fw-bold mb-1"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></h1>
-                  <div class="opacity-75">Member ID: <?= e($member['MemberID']) ?></div>
-                </div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-              <div class="hero-stat">
-                <div class="small opacity-75">Total Contributions</div>
-                <div class="h4 fw-bold mb-0">KES <?= number_format($total, 2) ?></div>
-              </div>
-            </div>
-            <div class="col-sm-6 col-lg-3">
-              <div class="hero-stat">
-                <div class="small opacity-75">Loan Applications</div>
-                <div class="h4 fw-bold mb-0"><?= count($loanApplications) ?> total</div>
-              </div>
-            </div>
-          </div>
           <div class="profile-detail-grid">
             <div class="profile-detail">
-              <span class="label">Name</span>
+              <span class="label">Member Name</span>
               <span class="value"><?= e($member['FirstName'] . ' ' . $member['LastName']) ?></span>
+            </div>
+            <div class="profile-detail">
+              <span class="label">MemberID</span>
+              <span class="value"><?= e($member['MemberID']) ?></span>
             </div>
             <div class="profile-detail">
               <span class="label">Email</span>
@@ -386,10 +360,6 @@ function dashboardUrl(array $params): string
             <div class="profile-detail">
               <span class="label">ID</span>
               <span class="value"><?= e($member['NationalID']) ?></span>
-            </div>
-            <div class="profile-detail">
-              <span class="label">MemberID</span>
-              <span class="value"><?= e($member['MemberID']) ?></span>
             </div>
           </div>
         </section>
@@ -409,11 +379,10 @@ function dashboardUrl(array $params): string
           <div class="col-md-6">
             <div class="card metric h-100">
               <div class="card-body d-flex align-items-center gap-3">
-                <span class="metric-icon"><i class="bi bi-file-earmark-text"></i></span>
+                <span class="metric-icon danger"><i class="bi bi-cash-stack"></i></span>
                 <div>
-                  <div class="text-muted small">Loan Applications</div>
-                  <div class="h4 fw-bold mb-0"><?= count($loanApplications) ?> total</div>
-                  <div class="text-muted small"><?= $pendingLoanCount ?> pending, <?= $approvedLoanCount ?> approved</div>
+                  <div class="text-muted small">Total Loan Balance</div>
+                  <div class="h4 fw-bold mb-0">KES <?= number_format($totalLoanBalance, 2) ?></div>
                 </div>
               </div>
             </div>
