@@ -5,7 +5,7 @@ require_once __DIR__ . '/../classes/Auth.php';
 Auth::startSession();
 
 if (!empty($_SESSION['admin_user_id']) && in_array($_SESSION['admin_role'] ?? '', ['admin', 'staff'], true)) {
-    header('Location: ../admin/members.php');
+    header('Location: ../admin/index.php');
     exit;
 }
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         if (Auth::loginAdmin($email, $password)) {
-            header('Location: ../admin/members.php');
+            header('Location: ../admin/index.php');
             exit;
         }
 
